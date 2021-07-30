@@ -1,0 +1,897 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "sms-app api documentation",
+        "description": "sms-app api documentation",
+        "contact": {
+            "email": "orutu1@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Login User"
+                ],
+                "description": "Users login method",
+                "operationId": "UsersLogin",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Users email address",
+                        "required": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Users password",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Logout User"
+                ],
+                "summary": "Logout users",
+                "description": "Logout users from the system",
+                "operationId": "LogoutUsers",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Authenticate users token",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User logged out successfully"
+                    },
+                    "500": {
+                        "description": "Failed to logout, please try again."
+                    }
+                }
+            }
+        },
+        "/refresh": {
+            "post": {
+                "tags": [
+                    "Refresh User Token"
+                ],
+                "summary": "Refresh Token",
+                "description": "Create new token for and returns the token",
+                "operationId": "refreshToken",
+                "responses": {
+                    "200": {
+                        "description": "New Token"
+                    }
+                }
+            }
+        },
+        "/user-profile": {
+            "get": {
+                "tags": [
+                    "View User Profile"
+                ],
+                "summary": "Get auth users profile",
+                "description": "Returns the authenticated users profile",
+                "operationId": "Authenticated Users Profile",
+                "responses": {
+                    "200": {
+                        "description": "User"
+                    }
+                }
+            }
+        },
+        "/create-account": {
+            "post": {
+                "tags": [
+                    "Create User Account"
+                ],
+                "summary": "Create User Account",
+                "description": "Create new users account",
+                "operationId": "CreateUser",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Users fullname",
+                        "required": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Users email address",
+                        "required": true
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "Users phone number",
+                        "required": true
+                    },
+                    {
+                        "name": "organization_name",
+                        "in": "query",
+                        "description": "Enter organization name",
+                        "required": true
+                    },
+                    {
+                        "name": "office_address",
+                        "in": "query",
+                        "description": "Enter office address",
+                        "required": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Users password",
+                        "required": true
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "description": "Users password confirmation"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account created successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to create accounnt"
+                    },
+                    "422": {
+                        "description": "Validation error occured"
+                    }
+                }
+            }
+        },
+        "/update-profile/{id}": {
+            "patch": {
+                "tags": [
+                    "Update User Account"
+                ],
+                "summary": "Update Users Account",
+                "description": "Update existing users account",
+                "operationId": "UpdateUser",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Users fullname"
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "Users phone number"
+                    },
+                    {
+                        "name": "organization_name",
+                        "in": "query",
+                        "description": "Enter organization name"
+                    },
+                    {
+                        "name": "office_address",
+                        "in": "query",
+                        "description": "Enter office address"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to update profile"
+                    },
+                    "404": {
+                        "description": "Sorry this data do not exist"
+                    },
+                    "422": {
+                        "description": "Validation error occured"
+                    }
+                }
+            }
+        },
+        "/reset-password/{id}": {
+            "patch": {
+                "tags": [
+                    "Reset User Password"
+                ],
+                "summary": "Reset users password",
+                "description": "Reset users account password",
+                "operationId": "ResetPassword",
+                "parameters": [
+                    {
+                        "name": "old_password",
+                        "in": "query",
+                        "description": "Enter old password",
+                        "required": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Enter new password for users account",
+                        "required": true
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "description": "Enter password confrimation for users account",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User password reset successful"
+                    },
+                    "400": {
+                        "description": "Sorry the password reset process failed"
+                    },
+                    "422": {
+                        "description": "Validation error occured"
+                    },
+                    "404": {
+                        "description": "Sorry this user do not exist"
+                    },
+                    "401": {
+                        "description": "Sorry new password can not be the old password!"
+                    },
+                    "402": {
+                        "description": "Sorry old password doesnt matched"
+                    }
+                }
+            }
+        },
+        "/delete-user/{id}": {
+            "delete": {
+                "tags": [
+                    "Delete Users Account"
+                ],
+                "summary": "Delete user account",
+                "description": "Delete users account form the system",
+                "operationId": "Delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Enter users id to add image",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to delete user"
+                    },
+                    "404": {
+                        "description": "Sorry this user do not exist"
+                    }
+                }
+            }
+        },
+        "/email-verification-notification": {
+            "post": {
+                "tags": [
+                    "User Forgot Password"
+                ],
+                "description": "User Forgot Password",
+                "operationId": "ForgotPassword",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "User token",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful"
+                    }
+                }
+            }
+        },
+        "/email/verify/{id}/{hash}": {
+            "get": {
+                "tags": [
+                    "User Forgot Password"
+                ],
+                "description": "User Forgot Password",
+                "operationId": "ForgotPassword",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "User token",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful"
+                    }
+                }
+            }
+        },
+        "/plans": {
+            "get": {
+                "tags": [
+                    "Show All Clans"
+                ],
+                "description": "Show all plans",
+                "operationId": "AllPlans",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Plan"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sorry no category found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Create Plan"
+                ],
+                "description": "Create new plan",
+                "operationId": "CreatePlan",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Enter plan name",
+                        "required": true
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Enter plan description",
+                        "required": true
+                    },
+                    {
+                        "name": "duration",
+                        "in": "query",
+                        "description": "Enter plan duration",
+                        "required": true
+                    },
+                    {
+                        "name": "cost",
+                        "in": "query",
+                        "description": "Enter plan cost",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Plan created successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to create plan"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/plans/{id}": {
+            "get": {
+                "tags": [
+                    "Show Plan"
+                ],
+                "description": "Show single plan",
+                "operationId": "ShowPlan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Enter plan id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Plan"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Sorry this data do not exist"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Delete Plan"
+                ],
+                "summary": "Delete existing plan",
+                "description": "Deletes a plan and returns no content",
+                "operationId": "deletePlan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Plan Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sorry this plan do not exist"
+                    },
+                    "400": {
+                        "description": "Sorry unable to delete plan"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Update Plan"
+                ],
+                "description": "Update  plan",
+                "operationId": "UpdatePlan",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Enter plan name"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Enter plan description"
+                    },
+                    {
+                        "name": "duration",
+                        "in": "query",
+                        "description": "Enter plan duration"
+                    },
+                    {
+                        "name": "cost",
+                        "in": "query",
+                        "description": "Enter plan cost"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category updated successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to update category"
+                    },
+                    "404": {
+                        "description": "Sorry this data do not exist"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/forgot-password": {
+            "post": {
+                "tags": [
+                    "User Forgot Password"
+                ],
+                "description": "User Forgot Password",
+                "operationId": "ForgotPassword",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Users email address",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/reset-password": {
+            "post": {
+                "tags": [
+                    "User Reset Forgot Password"
+                ],
+                "description": "User Reset Forgot Password",
+                "operationId": "ResetPassword",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token sent to users email",
+                        "required": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Users email address",
+                        "required": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "New password",
+                        "required": true
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "description": "New password confirmation",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/units": {
+            "get": {
+                "tags": [
+                    "Show All Units"
+                ],
+                "description": "Show all units",
+                "operationId": "AllUnits",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unit"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sorry no unit price found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Create unit"
+                ],
+                "description": "Create new unit",
+                "operationId": "CreateUnit",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Enter unit name",
+                        "required": true
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Enter unit description",
+                        "required": true
+                    },
+                    {
+                        "name": "unit",
+                        "in": "query",
+                        "description": "Enter unit range",
+                        "required": true
+                    },
+                    {
+                        "name": "cost_per_unit",
+                        "in": "query",
+                        "description": "Enter cost per unit",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unit created successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to create unit"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/units/{id}": {
+            "get": {
+                "tags": [
+                    "Show Unit"
+                ],
+                "description": "Show single unit details",
+                "operationId": "ShowUnit",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Enter unit id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unit"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Sorry this data do not exist"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Delete Unit"
+                ],
+                "summary": "Delete existing unit",
+                "description": "Deletes a unit and returns no content",
+                "operationId": "deleteUnit",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Unit Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sorry this unit do not exist"
+                    },
+                    "400": {
+                        "description": "Sorry unable to delete unit"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Update unit"
+                ],
+                "description": "Update existing unit",
+                "operationId": "UpdateUnit",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Enter unit name",
+                        "required": true
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Enter unit description",
+                        "required": true
+                    },
+                    {
+                        "name": "unit",
+                        "in": "query",
+                        "description": "Enter unit range",
+                        "required": true
+                    },
+                    {
+                        "name": "cost_per_unit",
+                        "in": "query",
+                        "description": "Enter cost per unit",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unit updated successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to update unit"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Plan": {
+                "title": "Plan",
+                "description": "Plan model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of the category",
+                        "type": "string",
+                        "example": "Cars and Trucks"
+                    },
+                    "duration": {
+                        "title": "Duration",
+                        "description": "Enter duration of this plan",
+                        "type": "string",
+                        "example": "One Month"
+                    },
+                    "cost": {
+                        "title": "Cost",
+                        "description": "Enter the cost of this plan",
+                        "type": "string",
+                        "example": "1000"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Description of the category",
+                        "type": "string",
+                        "example": "This is for cars and truck description"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "slug": {
+                        "title": "Slug",
+                        "description": "Slug",
+                        "type": "string",
+                        "example": "cars-and-trucks"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Plan"
+                }
+            },
+            "Unit": {
+                "title": "Unit",
+                "description": "Unit model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "One",
+                        "type": "string",
+                        "example": "ONe unit"
+                    },
+                    "duration": {
+                        "title": "Unit",
+                        "description": "Enter the range",
+                        "type": "string",
+                        "example": "1 to 1999"
+                    },
+                    "cost_per_unit": {
+                        "title": "Cost Per Unit",
+                        "description": "Enter the cost per unit",
+                        "type": "string",
+                        "example": "1000"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Description of the category",
+                        "type": "string",
+                        "example": "This is for cars and truck description"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Unit"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "sms-app",
+            "description": "API Endpoints of sms-app"
+        }
+    ],
+    "security": [
+        []
+    ]
+}
