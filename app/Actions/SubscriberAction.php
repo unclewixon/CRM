@@ -4,8 +4,9 @@ namespace App\Actions;
 
 use App\Models\Subscriber;
 use App\Http\Resources\SubscriberResource;
-use App\Actions\UserAction;
 use App\Helpers\Payment;
+use Carbon\Carbon;
+use App\Helpers\Helper;
 
 class SubscriberAction
 {
@@ -13,63 +14,70 @@ class SubscriberAction
     public $model;
     public $user_action;
     public $payment;
+    public $helper;
 
-    public function __construct(Subscriber $model, UserAction $user_action, Payment $payment)
+    public function __construct(Subscriber $model, Payment $payment, Helper $helper)
     {
        $this->model = $model;
-       $this->user_action = $user_action;
        $this->payment = $payment;
+       $this->helper   =  $helper;
     }
 
-    //create user account
+    //create
     public function create($request)
     {
-        $user = $this->model->create([
+        $subscriber = $this->model->create([
             'user_id' => auth()->user()->id,
             'plan_id' => $request->plan_id,
-            'from' => $request->from,
-            'to' => $request->cost
+            'from' => Carbon::now(),
+            'to' => $this->helper->to($request->plan_id)
         ]);
-        if ($user) {
-            $sub = $this->user_action->isSubscribed(auth()->user()->id, 1);
-            return response()->json([
-                'message' => 'Subscriber created successfully',
-            ], 200);
+        if ($subscriber) {
+            $pay = $this->payment->initialize($request, 'Subscription', $this->helper->getCost($request->plan_id));
+            if ($pay) {
+                return response()->json([
+                    'url' => $pay
+                ], 200);
+            }
         }else {
            return response()->json([
-               'message' => 'Sorry unable to create subscriber'
+               'message' => 'Sorry unable to subscribe'
            ], 400);
         }
     }
 
-    //get all users
+    //get
     public function all()
     {
-      $plans = $this->model->latest()->paginate(20);
-      if (count($plans) < 1) {
-        return response()->json([
-            'message' => 'Sorry no subscriber found'
-        ], 400);
-      }else {
-          return PlanResource::collection($plans);
-      }
+        if (auth()->user()->role_id == 1) {
+            $subscriber = $this->model->with(['plan','user'])->latest()->paginate(20);
+        }else {
+            $subscriber = $this->model->with(['plan'])->where('user_id', auth()->user()->id)->latest()->paginate(20);
+        }
+        if (count($subscriber) < 1) {
+          return response()->json([
+              'message' => 'Sorry no subscriber found'
+          ], 400);
+        }else {
+            return SubscriberResource::collection($subscriber);
+        }
     }
 
-    //get single user
+    //get
     public function get($id)
     {
-      $data = $this->model->where('id', '=', $id)->exists();
-      if ($data) {
-          $plan = $this->model->find($id);
-          return new PlanResource($plan);
-      }else {
-           return response()->json([
-               'message' => 'Sorry this subscriber do not exist'
-           ], 400);
-      }
+        $data = $this->model->where('id', '=', $id)->exists();
+        if ($data) {
+            $subscriber = $this->model->find($id);
+            return new SubscriberResource($subscriber);
+        }else {
+             return response()->json([
+                 'message' => 'Sorry this subscriber do not exist'
+             ], 400);
+        }
     }
 
-    //delete user
+    //delete
     public function delete($id)
     {
         $data = $this->model->where('id', '=', $id)->exists();

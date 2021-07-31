@@ -15,7 +15,7 @@ class UnitAction
        $this->model = $model;
     }
 
-    //create user account
+    //create
     public function create($request)
     {
         $unit = $this->model->create([
@@ -35,7 +35,7 @@ class UnitAction
         }
     }
 
-    //get all users
+    //get
     public function all()
     {
       $plans = $this->model->latest()->paginate(20);
@@ -48,7 +48,7 @@ class UnitAction
       }
     }
 
-    //get single user
+    //get
     public function get($id)
     {
       $data = $this->model->where('id', '=', $id)->exists();
@@ -62,7 +62,7 @@ class UnitAction
       }
     }
 
-    //update user account
+    //update
     public function update($request, $id)
     {
         $data = $this->model->where('id', '=', $id)->exists();
@@ -91,7 +91,7 @@ class UnitAction
         }
     }
 
-    //delete user
+    //delete
     public function delete($id)
     {
         $data = $this->model->where('id', '=', $id)->exists();

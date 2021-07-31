@@ -14,14 +14,14 @@ class PlanController extends Controller
     {
         $this->planRepository = $planRepository;
         $this->middleware('auth:api',['except' => ['index','show']]);
-         $this->middleware('admin', ['except' => ['index', 'show']]);
+        $this->middleware('admin', ['except' => ['index', 'show']]);
     }
 
     /**
      * @OA\Get(
      *      path="/plans",
      *      operationId="AllPlans",
-     *      tags={"Show All Clans"},
+     *      tags={"Show All Plans"},
      *      description="Show all plans",
      *      @OA\Response(
      *          response=200,
@@ -30,7 +30,7 @@ class PlanController extends Controller
      *       ),
      *      @OA\Response(
      *          response=404,
-     *          description="Sorry no category found",
+     *          description="Sorry no plan found",
      *      ),
      *     )
      */

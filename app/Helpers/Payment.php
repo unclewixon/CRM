@@ -4,38 +4,49 @@ namespace App\Helpers;
 
 use Yabacon\Paystack;
 use App\Models\Transaction;
+use App\Actions\UserAction;
+use App\Mail\BuyUnitsMail;
+use App\Mail\SubscriptionMail;
+use Illuminate\Support\Facades\Mail;
 
 class Payment
 {
+    private $user_action;
+
+    public function __construct(UserAction $user_action)
+    {
+        $this->user_action = $user_action;
+    }
+
     //make paystack payment
-    public function initialize($request, $type)
+    public function initialize($request, $type, $cost)
     {
         $paymentReference = "VS".sprintf("%0.9s",str_shuffle(rand(12,30000) * time()));
 
          $tr = Transaction::create([
-            'type' => $type
+            'type' => $type,
             'user_id' => auth()->user()->id,
             'trans_ref' => $paymentReference
          ]);
-        $payStack = new Paystack("sk_test_2a3345566113793b468c574ea74028fa50c2497d");
+        $payStack = new Paystack(config('paystack.paystack_secret'));
         $trx = $payStack->transaction->initialize(
             [
-                'amount'=> $request->total * 100, /* in kobo */
+                'amount'=> $cost * 100, /* in kobo */
                 'email'=>auth()->user()->email,
                 'reference' => $paymentReference,
-                'callback_url'=>"http://127.0.0.1:8000/verify/$paymentReference",
+                'callback_url'=>"http://127.0.0.1:8000/api/v0.01/verify/$paymentReference",
                 'metadata'=> [
                     'user_id'=> auth()->user()->id,
                     'reference'=> $paymentReference,
                     'transaction_id' => $tr->id,
-                    'total' => $request->total,
+                    'total' => $cost,
                 ],
             ]
         );
         if(!$trx) {
             exit($trx->data->message);
         }
-        return redirect($trx->data->authorization_url);
+        return $trx->data->authorization_url;
     }
 
     //verify paystack payment
@@ -44,7 +55,7 @@ class Payment
         if (!$reference) {
             die('No reference supplied');
         }
-        $payStack = new Paystack( "sk_test_2a3345566113793b468c574ea74028fa50c2497d" );
+        $payStack = new Paystack( config('paystack.paystack_secret') );
         $trx = $payStack->transaction->verify([
             'reference'=>$reference
         ]);
@@ -53,13 +64,33 @@ class Payment
             exit($trx->message);
         }
         $trans_ref = $trx->data->metadata->reference;
-
-        Transaction::where('trans_ref',$trans_ref)
-            ->where('user_id',auth()->user()->id)
-            ->update([
+          $transType = Transaction::where('trans_ref',$trans_ref)->where('user_id',auth()->user()->id)->first();
+          $update = $transType->update([
                 'paid' => true,
-        ]);
-        return redirect('http://127.0.0.1:8000/verify-confirmed');
+         ]);
+        if ($transType->type == "Subscription") {
+          $sub = $this->user_action->isSubscribed(auth()->user()->id, 1);
+          $details = [
+              'title' => 'Subscription',
+              'body'  => 'You have successfully subscribed',
+              'url' => 'siteurl'
+          ];
+          Mail::to(auth()->user()->email)->send(new SubscriptionMail($details));
+          return response()->json([
+              'message' => 'You have subscribed successfully',
+          ], 200);
+        }elseif ($transType->type == "Unit") {
+           // $sub = $this->user_action->addUpUnit(auth()->user()->id, $transType->unit_number);
+            $detail = [
+                'title' => 'SMS Unit',
+                'body'  => 'You have bought some units',
+                'url' => 'siteurl'
+            ];
+            Mail::to(auth()->user()->email)->send(new BuyUnitsMail($detail));
+            return response()->json([
+                'message' => "You have successfully bought $transType->unit_number of units",
+            ], 200);
+        }
     }
 
 }

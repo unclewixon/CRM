@@ -23,7 +23,7 @@ class UserAction
        $this->role = $role;
     }
 
-    //create user account
+    //create
     public function create($request)
     {
         $user = $this->model->create([
@@ -50,7 +50,7 @@ class UserAction
         }
     }
 
-    //get all users
+    //get
     public function all()
     {
       $users = $this->model->latest()->paginate(20);
@@ -63,7 +63,7 @@ class UserAction
       }
     }
 
-    //get single user
+    //get
     public function get($id)
     {
       $data = $this->model->where('id', '=', $id)->exists();
@@ -77,13 +77,13 @@ class UserAction
       }
     }
 
-    //get authenticated user
+    //get
     public function authUser()
     {
        return new UserResource(auth()->user());
     }
 
-    //update user account
+    //update
     public function update($request, $id)
     {
         $data = $this->model->where('id', '=', $id)->exists();
@@ -119,6 +119,26 @@ class UserAction
         if ($data) {
             $user = $this->model->find($id)->update([
                 'is_subscribed' => $value
+            ]);
+            if ($user) {
+              return true;
+            }else {
+              return false;
+            }
+        }else {
+            return response()->json([
+                'message' => 'Sorry this data do not exist'
+            ], 404);
+        }
+    }
+
+    //add up unit
+    public function addUpUnit($id, $unit)
+    {
+        $data = $this->model->where('id', '=', $id)->exists();
+        if ($data) {
+            $user = $this->model->find($id)->update([
+                'unit' => $unit
             ]);
             if ($user) {
               return true;
@@ -177,7 +197,7 @@ class UserAction
          }
     }
 
-    //delete user
+    //delete
     public function delete($id)
     {
         $data = $this->model->where('id', '=', $id)->exists();

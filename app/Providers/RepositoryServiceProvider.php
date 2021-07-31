@@ -49,6 +49,25 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\UnitRepository::class
         );
 
+        //recharge repository binding
+        $this->app->bind(
+            \App\Repositories\Contracts\RechargeRepositoryInterface::class,
+            \App\Repositories\RechargeRepository::class
+        );
+
+        //group repository binding
+        $this->app->bind(
+            \App\Repositories\Contracts\GroupRepositoryInterface::class,
+            \App\Repositories\GroupRepository::class
+        );
+
+        //contats repository binding
+        $this->app->bind(
+            \App\Repositories\Contracts\ContactRepositoryInterface::class,
+            \App\Repositories\ContactRepository::class
+        );
+
+
     }
 
     /**

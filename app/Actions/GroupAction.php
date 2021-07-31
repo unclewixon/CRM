@@ -2,16 +2,16 @@
 
 namespace App\Actions;
 
-use App\Models\Plan;
-use App\Http\Resources\PlanResource;
+use App\Models\Group;
+use App\Http\Resources\GroupResource;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
 
-class PlanAction
+class GroupAction
 {
 
     public $model;
 
-    public function __construct(Plan $model)
+    public function __construct(Group $model)
     {
        $this->model = $model;
     }
@@ -20,43 +20,46 @@ class PlanAction
     public function create($request)
     {
         $user = $this->model->create([
+            'user_id' => auth()->user()->id,
             'name' => $request->name,
             'description' => $request->description,
-            'duration' => $request->duration,
-            'cost' => $request->cost,
             'slug' => SlugService::createSlug($this->model, 'slug', $request->name)
         ]);
         if ($user) {
             return response()->json([
-                'message' => 'Plan created successfully',
+                'message' => 'Group created successfully',
             ], 200);
         }else {
            return response()->json([
-               'message' => 'Sorry unable to create plan'
+               'message' => 'Sorry unable to create group'
            ], 400);
         }
     }
 
-    //get
+    //get all users
     public function all()
     {
-      $plans = $this->model->latest()->paginate(20);
-      if (count($plans) < 1) {
+        if (auth()->user()->role_id == 1) {
+            $groups = $this->model->with(['user'])->latest()->paginate(20);
+        }else {
+            $groups  = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);
+        }
+        if (count($groups) < 1) {
         return response()->json([
-            'message' => 'Sorry no plan found'
+            'message' => 'Sorry no group found'
         ], 400);
-      }else {
-          return PlanResource::collection($plans);
-      }
+        }else {
+            return GroupResource::collection($groups);
+        }
     }
 
-    //get
+    //get single user
     public function get($id)
     {
       $data = $this->model->where('id', '=', $id)->exists();
       if ($data) {
-          $plan = $this->model->find($id);
-          return new PlanResource($plan);
+          $groups = $this->model->find($id);
+          return new GroupResource($groups);
       }else {
            return response()->json([
                'message' => 'Sorry this data do not exist'
@@ -64,26 +67,24 @@ class PlanAction
       }
     }
 
-    //update
+    //update user account
     public function update($request, $id)
     {
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
-           $plan = $this->model->find($id);
-           $plan->slug = null;
-           $update = $plan->update([
-             'name' => empty($request->name) ? $plan->name : $request->name,
-             'description' =>   empty($request->description) ? $plan->description : $request->description,
-             'duration' =>  empty($request->duration) ? $plan->duration : $request->duration,
-             'cost' =>  empty($request->cost) ? $plan->cost : $request->cost
+           $groups = $this->model->find($id);
+           $groups->slug = null;
+           $update = $groups->update([
+             'name' => empty($request->name) ? $groups->name : $request->name,
+             'description' =>   empty($request->description) ? $groups->description : $request->description,
            ]);
            if ($update) {
              return response()->json([
-                 'message' => 'Plan updated successfully'
+                 'message' => 'Group updated successfully'
              ], 200);
            }else {
               return response()->json([
-                  'message' => 'Sorry unable to update plan'
+                  'message' => 'Sorry unable to update group'
               ], 400);
            }
         }else {
@@ -93,7 +94,7 @@ class PlanAction
         }
     }
 
-    //delete
+    //delete user
     public function delete($id)
     {
         $data = $this->model->where('id', '=', $id)->exists();
@@ -101,16 +102,16 @@ class PlanAction
             $delete =  $this->model->find($id)->delete();
             if ($delete) {
               return response()->json([
-                   'message' => 'Plan deleted successfully'
+                   'message' => 'Group deleted successfully'
                ], 200);
             }else {
                return response()->json([
-                   'message' => 'Sorry unable to delete plan'
+                   'message' => 'Sorry unable to delete group'
                ], 400);
             }
         }else {
           return response()->json([
-              'message' => 'Sorry this data do not exist'
+              'message' => 'Sorry this group do not exist'
           ], 404);
         }
     }

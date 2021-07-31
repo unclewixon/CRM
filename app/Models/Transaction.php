@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id', 'trans_ref', 'type', 'paid'
+    ];
+
+    public function users() {
+        return $this->belongsToMany(User::class);
+    }
 }

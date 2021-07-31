@@ -37,7 +37,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        $units = $this->unitRepository->allUnits();        ;
+        $units = $this->unitRepository->allUnits();
         return $units;
     }
 
@@ -87,7 +87,7 @@ class UnitController extends Controller
    */
     public function store(Request $request)
     {
-        $unit = $this->unitRepository->createUnit($request);        ;
+        $unit = $this->unitRepository->createUnit($request);
         return $unit;
     }
 
@@ -116,7 +116,7 @@ class UnitController extends Controller
     */
     public function show($id)
     {
-        $units = $this->unitRepository->showUnit($id);        ;
+        $units = $this->unitRepository->showUnit($id);
         return $units;
     }
 
@@ -166,7 +166,7 @@ class UnitController extends Controller
    */
     public function update(Request $request, $id)
     {
-        $units = $this->unitRepository->updateUnit($request, $id);        ;
+        $units = $this->unitRepository->updateUnit($request, $id);
         return $units;
     }
 
@@ -203,7 +203,7 @@ class UnitController extends Controller
    */
     public function destroy($id)
     {
-      $units = $this->unitRepository->deleteUnit($id);        ;
+      $units = $this->unitRepository->deleteUnit($id);
       return $units;
     }
 }

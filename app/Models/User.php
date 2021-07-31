@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'office_address',
         'role_id',
         'is_subscribed',
+        'unit',
         'password',
     ];
 
@@ -60,6 +61,18 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 
     public function role() {
         return $this->BelongsTo(Role::class, 'role_id');
+    }
+
+    public function groups() {
+        return $this->hasMany(Group::class);
+    }
+
+    public function contacts() {
+        return $this->hasMany(Contact::class);
+    }
+
+    public function recharges() {
+        return $this->hasMany(Recharge::class);
     }
 
     public function sluggable(): array

@@ -10,7 +10,5 @@ interface SubscriberRepositoryInterface
 
     public function showSubscriber($id);
 
-    public function updateSubscriber($request, $id);
-
     public function deleteSubscriber($id);
 }

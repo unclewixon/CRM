@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\Contracts\SubscriberRepositoryInterface;
+use App\Http\Controllers\Controller;
+use App\Repositories\Contracts\RechargeRepositoryInterface;
 
-class SubscriberController extends Controller
+class RechargeController extends Controller
 {
+    private $rechargeRepository;
 
-    private $subscriberRepository;
-
-    public function __construct(SubscriberRepositoryInterface $subscriberRepository)
+    public function __construct(RechargeRepositoryInterface $rechargeRepository)
     {
-        $this->subscriberRepository = $subscriberRepository;
+        $this->rechargeRepository = $rechargeRepository;
         $this->middleware('auth:api');
     }
 
@@ -24,8 +23,8 @@ class SubscriberController extends Controller
      */
     public function index()
     {
-        $subscribers = $this->subscriberRepository->allSubscribers();
-        return $subscribers;
+        $recharges = $this->rechargeRepository->rechargeHistory();        ;
+        return $recharges;
     }
 
     /**
@@ -36,8 +35,8 @@ class SubscriberController extends Controller
      */
     public function store(Request $request)
     {
-        $subscriber = $this->subscriberRepository->createSubscriber($request);
-        return $subscriber;
+        $recharges = $this->rechargeRepository->rechargeAcct($request);        ;
+        return $recharges;
     }
 
     /**
@@ -48,8 +47,8 @@ class SubscriberController extends Controller
      */
     public function show($id)
     {
-        $subscriber = $this->subscriberRepository->showSubscriber($id);
-        return $subscriber;
+        $recharge = $this->rechargeRepository->singelRechargeHistory($id);        ;
+        return $recharge;
     }
 
     /**
@@ -60,7 +59,7 @@ class SubscriberController extends Controller
      */
     public function destroy($id)
     {
-        $subscriber = $this->subscriberRepository->deleteSubscriber($id);
-        return $subscriber;
+        $recharge = $this->rechargeRepository->deleteRecharge($id);        ;
+        return $recharge;
     }
 }

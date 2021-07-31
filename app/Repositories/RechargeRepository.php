@@ -2,24 +2,25 @@
 
 namespace App\Repositories;
 
-use App\Actions\SubscriberAction;
+use App\Actions\RechargeAction;
 use Illuminate\Support\Facades\Validator;
-use App\Repositories\Contracts\SubscriberRepositoryInterface;
+use App\Repositories\Contracts\RechargeRepositoryInterface;
 
-class SubscriberRepository implements SubscriberRepositoryInterface
+class RechargeRepository implements RechargeRepositoryInterface
 {
     private $action;
 
-    public function __construct(SubscriberAction $action)
+    public function __construct(RechargeAction $action)
     {
         $this->action = $action;
     }
 
-    //create
-    public function createSubscriber($request)
+    //buy
+    public function rechargeAcct($request)
     {
         $validator =  Validator::make($request->all(),[
-            'plan_id' => 'required'
+            'unit_id' => 'required',
+            'unit_number' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -31,22 +32,21 @@ class SubscriberRepository implements SubscriberRepositoryInterface
         }
     }
 
-    //view all
-    public function allSubscribers()
+    //all
+    public function rechargeHistory()
     {
         return $this->action->all();
     }
 
     //show
-    public function showSubscriber($id)
+    public function singelRechargeHistory($id)
     {
-      return $this->action->all();
+        return $this->action->get($id);
     }
 
     //delete
-    public function deleteSubscriber($id)
+    public function deleteRecharge($id)
     {
         return $this->action->delete($id);
     }
-
 }
