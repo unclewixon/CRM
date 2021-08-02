@@ -21,7 +21,8 @@ class GroupResource extends JsonResource
             'name'      => $general_helper->clean($this->name),
             'description'     => $general_helper->clean($this->description),
             'slug'  => $general_helper->clean($this->slug),
-            'user'     => $general_helper->clean($this->whenLoaded('user')),
+            'user'     => new UserResource($this->whenLoaded('user')),
+            'contacts'     => ContactResource::collection($this->whenLoaded('contacts')),
             'created_at'=> $this->created_at,
             'updated_at'=> $this->updated_at
         ];

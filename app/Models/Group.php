@@ -27,6 +27,10 @@ class Group extends Model
       return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function groups() {
+        return $this->belongsToMany(Contact::class);
+    }
+
     public function sluggable(): array
     {
         return [

@@ -56,6 +56,11 @@ Route::group(['middleware' => 'api', 'prefix' => 'v0.01'], function ($router) {
             Route::patch('/contacts/{id}', [App\Http\Controllers\Api\ContactController::class, 'update']);
             Route::delete('/contacts/{id}', [App\Http\Controllers\Api\ContactController::class, 'destroy']);
 
+        Route::post('/add-contacts', [App\Http\Controllers\Api\ContactGroupController::class, 'addContactM']);
+            Route::delete('/remove-contacts', [App\Http\Controllers\Api\ContactGroupController::class, 'removeContactM']);
+        Route::post('/add-single-contact', [App\Http\Controllers\Api\ContactGroupController::class, 'addSingleContact']);
+            Route::delete('/delete-single-contact', [App\Http\Controllers\Api\ContactGroupController::class, 'removeSingleContact']);
+
         Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
         Route::post('/refresh', [App\Http\Controllers\Api\AuthController::class, 'refresh']);
         Route::get('/user-profile', [App\Http\Controllers\Api\AuthController::class, 'userProfile']);

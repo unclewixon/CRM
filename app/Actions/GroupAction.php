@@ -40,9 +40,9 @@ class GroupAction
     public function all()
     {
         if (auth()->user()->role_id == 1) {
-            $groups = $this->model->with(['user'])->latest()->paginate(20);
+            $groups = $this->model->with(['user', 'contacts'])->latest()->paginate(20);
         }else {
-            $groups  = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);
+            $groups  = $this->model->with('contacts')->where('user_id', auth()->user()->id)->latest()->paginate(20);
         }
         if (count($groups) < 1) {
         return response()->json([

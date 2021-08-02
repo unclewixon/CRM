@@ -26,6 +26,10 @@ class Contact extends Model
       return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function groups() {
+        return $this->belongsToMany(Group::class);
+    }
+
     /**
      * @OA\Property(
      *     title="ID",

@@ -32,9 +32,9 @@ class RechargeAction
         if ($unit) {
           $pay = $this->payment->initialize($request, 'Unit', $unit->amount);
           if ($pay) {
-              return response()->json([
-                  'url' => $pay
-              ], 200);
+            return response()->json([
+                'url' => $pay
+            ], 200);
           }
         }else {
            return response()->json([

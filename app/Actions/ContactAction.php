@@ -4,15 +4,18 @@ namespace App\Actions;
 
 use App\Models\Contact;
 use App\Http\Resources\ContactResource;
+use App\Models\Group;
 
 class ContactAction
 {
 
     public $model;
+    public $group;
 
-    public function __construct(Contact $model)
+    public function __construct(Contact $model, Group $group)
     {
        $this->model = $model;
+       $this->group = $group;
     }
 
     //create
@@ -42,9 +45,9 @@ class ContactAction
     public function all()
     {
         if (auth()->user()->role_id == 1) {
-            $contacts = $this->model->with(['user'])->latest()->paginate(20);
+            $contacts = $this->model->with(['user','groups'])->latest()->paginate(20);
         }else {
-            $contacts = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);
+            $contacts = $this->model->with('groups')->where('user_id', auth()->user()->id)->latest()->paginate(20);
         }
         if (count($contacts) < 1) {
             return response()->json([
@@ -54,6 +57,66 @@ class ContactAction
             return ContactResource::collection($contacts);
         }
     }
+
+    //add contacts to group
+    public function addContactsToGroup($request)
+    {
+        $group = $this->group->where('id', '=', $request->group_id)->where('user_id', auth()->user()->id)->first();
+        foreach($request->contacts_id as $contact){
+            $contactPerson = $this->model->find($contact);
+            $attach = $contactPerson->groups()->attach($group->id);
+        }
+        return response()->json([
+            'message' => 'Contacts add to group successfully'
+        ], 200);
+    }
+
+     //remove contacts to group
+     public function removeContactsFromGroup($request)
+     {
+         $group = $this->group->where('id', '=', $request->group_id)->where('user_id', auth()->user()->id)->first();
+         foreach($request->contacts_id as $contact){
+             $contactPerson = $this->model->find($contact);
+             $contactPerson->groups()->detach($group->id);
+         }
+         return response()->json([
+            'message' => 'Contacts removed from group successfully'
+        ], 200);
+     }
+
+    //add contacts to group
+    public function addContactToGroup($request)
+    {
+        $group = $this->group->where('id', '=', $request->group_id)->where('user_id', auth()->user()->id)->first();
+        $contactPerson = $this->model->find($request->contact_id);
+        $attach = $contactPerson->groups()->attach($group->id);
+        if ($attach) {
+            return response()->json([
+                'message' => 'Contact add to group successfully'
+            ], 200);
+        }else {
+            return response()->json([
+                'message' => 'Unable to add contact to group'
+            ], 400);
+        }
+    }
+
+     //remove contact to group
+     public function removeContactFromGroup($request)
+     {
+        $group = $this->group->where('id', '=', $request->group_id)->where('user_id', auth()->user()->id)->first();
+        $contactPerson = $this->model->find($request->contact_id);
+        $detach = $contactPerson->groups()->detach($group->id);
+        if ($detach) {
+            return response()->json([
+                'message' => 'Contact removed from group successfully'
+            ], 200);
+        }else {
+            return response()->json([
+                'message' => 'Unable to remove contact from group'
+            ], 400);
+        }
+     }
 
     //get
     public function get($id)

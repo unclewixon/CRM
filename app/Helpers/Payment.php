@@ -8,6 +8,8 @@ use App\Actions\UserAction;
 use App\Mail\BuyUnitsMail;
 use App\Mail\SubscriptionMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Recharge;
+use Carbon\Carbon;
 
 class Payment
 {
@@ -80,7 +82,8 @@ class Payment
               'message' => 'You have subscribed successfully',
           ], 200);
         }elseif ($transType->type == "Unit") {
-           // $sub = $this->user_action->addUpUnit(auth()->user()->id, $transType->unit_number);
+            $recharge = Recharge::where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->whereTime('created_at' , '>', Carbon::now()->subMinutes(15))->first();
+            $sub = $this->user_action->addUpUnit(auth()->user()->id, $recharge->number);
             $detail = [
                 'title' => 'SMS Unit',
                 'body'  => 'You have bought some units',

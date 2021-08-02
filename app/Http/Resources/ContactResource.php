@@ -24,6 +24,8 @@ class ContactResource extends JsonResource
             'scheme' => $general_helper->clean($this->scheme),
             'gender' => $general_helper->clean($this->gender),
             'dob'  => $this->dob,
+            'user'     => new UserResource($this->whenLoaded('user')),
+            'groups'     => GroupResource::collection($this->whenLoaded('groups')),
             'created_at'=> $this->created_at,
             'updated_at'=> $this->updated_at
         ];

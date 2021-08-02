@@ -48,6 +48,74 @@ class ContactRepository implements ContactRepositoryInterface
         return $this->action->get($id);
     }
 
+    //add single contact
+    public function addContactsToGrouop($request)
+    {
+        $validator =  Validator::make($request->all(),[
+            'group_id' => 'required',
+            'contacts_id' => 'required|array'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ], 422);
+        }else {
+             return  $this->action->addContactsToGroup($request);
+        }
+    }
+
+    //remove mutiple contacts
+    public function removeContactsFromGrouop($id, $request)
+    {
+        $validator =  Validator::make($request->all(),[
+            'group_id' => 'required',
+            'contacts_id' => 'required|array'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ], 422);
+        }else {
+             return  $this->action->removeContactsFromGroup($request);
+        }
+    }
+
+    //add single contact
+    public function addContactToGrouop($id, $contact_id)
+    {
+        $validator =  Validator::make($request->all(),[
+            'group_id' => 'required',
+            'contact_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ], 422);
+        }else {
+             return  $this->action->addContactToGroup($request);
+        }
+    }
+
+    //remove single contact
+    public function removeContactFromGrouop($id, $contact_id)
+    {
+        $validator =  Validator::make($request->all(),[
+            'group_id' => 'required',
+            'contact_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ], 422);
+        }else {
+             return  $this->action->removeContactFromGroup($request);
+        }
+    }
+
     public function updateContact($request, $id)
     {
         $validator =  Validator::make($request->all(),[
