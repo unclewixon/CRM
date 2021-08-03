@@ -101,6 +101,39 @@ class ContactController extends Controller
         return $contact;
     }
 
+
+       /**
+     * @OA\Post(
+     *      path="/contacts-batch",
+     *      operationId="UploadBatchContacts",
+     *      tags={"UploadContact"},
+     *      description="Upload batch contacts",
+     *     @OA\Parameter(
+     *         name="file",
+     *         in="query",
+     *         description="Csv file is required",
+     *         required=true,
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Contacts uploaded successfully",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Sorry unable to create contact",
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *      ),
+     *     )
+   */
+    public function storeBatch(Request $request)
+    {
+        $contact = $this->contactRepository->batchContactUpload($request);
+        return $contact;
+    }
+
     /**
      * @OA\Get(
      *      path="/contacts/{id}",
@@ -116,7 +149,6 @@ class ContactController extends Controller
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
-     *          @OA\JsonContent(ref="#/components/schemas/Contact")
      *       ),
      *      @OA\Response(
      *          response=400,

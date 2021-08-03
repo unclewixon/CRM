@@ -67,6 +67,18 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\ContactRepository::class
         );
 
+        //email configuration repository binding
+        $this->app->bind(
+            \App\Repositories\Contracts\EmailConfigurationRepositoryInterface::class,
+            \App\Repositories\EmailConfigurationRepository::class
+        );
+
+        //send email repository binding
+        $this->app->bind(
+            \App\Repositories\Contracts\SendEmailRepositoryInterface::class,
+            \App\Repositories\SendEmailRepository::class
+        );
+
 
     }
 

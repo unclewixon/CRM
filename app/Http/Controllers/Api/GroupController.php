@@ -102,35 +102,59 @@ class GroupController extends Controller
     */
     public function show($id)
     {
-        $group = $this->groupRepository->showGroup($id);        ;
+        $group = $this->groupRepository->showGroup($id);
         return $group;
     }
 
-    /**
+
+         /**
       * @OA\Patch(
       *      path="/groups/{id}",
       *      operationId="UpdateGroup",
       *      tags={"Update Group"},
-      *      description="Update  existing group detials",
-       *     @OA\Parameter(
-        *         name="name",
-        *         in="query",
-        *         description="Enter group name",
-        *         required=true,
-        *     ),
-        *     @OA\Parameter(
-        *         name="description",
-        *         in="query",
-        *         description="Enter group description",
-        *         required=true,
+      * *     @OA\Parameter(
+     *         name="sur_name",
+     *         in="query",
+     *         description="Enter sur name of the contact person",
+     *         required=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="first_name",
+     *         in="query",
+     *         description="Enter first name of the contact person",
+     *         required=true,
+     *     ),
+     *    @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="Enter email address of the contact person",
+     *         required=true,
+     *     ),
+     *   @OA\Parameter(
+     *         name="scheme",
+     *         in="query",
+     *         description="Enter scheme of the contact person",
+     *         required=true,
+     *     ),
+     *   @OA\Parameter(
+     *         name="gender",
+     *         in="query",
+     *         description="Enter gender of the contact person",
+     *         required=true,
+     *     ),
+     *    @OA\Parameter(
+     *         name="dob",
+     *         in="query",
+     *         description="Enter date of birth of the contact person",
+     *         required=true,
      *     ),
       *      @OA\Response(
       *          response=200,
-      *          description="Group updated successfully",
+      *          description="Contact updated successfully",
       *       ),
       *      @OA\Response(
       *          response=400,
-      *          description="Sorry unable to update group",
+      *          description="Sorry unable to update contact",
       *      ),
       *      @OA\Response(
       *          response=404,
@@ -142,6 +166,7 @@ class GroupController extends Controller
       *      ),
       *     )
     */
+  
     public function update(Request $request, $id)
     {
         $group = $this->groupRepository->updateGroup($request, $id);        ;

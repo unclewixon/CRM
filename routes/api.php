@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Exports\ContactExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +41,10 @@ Route::group(['middleware' => 'api', 'prefix' => 'v0.01'], function ($router) {
 
     Route::group(['middleware' => ['jwt.verify']], function() {
 
+        Route::get('/batch', function () {
+            return $emp = Excel::download(new ContactExport(), 'contacts-template.xlsx');
+        });
+
         Route::get('/email/verify', function () { return "verification link send "; })->middleware('auth')->name('verification.notice');
             Route::post('/email-verification-notification', [App\Http\Controllers\Api\EmailVerificationController::class, 'send'])->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
             Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Api\EmailVerificationController::class, 'verify'])->middleware(['auth:api', 'signed'])->name('verification.verify');
@@ -53,13 +59,22 @@ Route::group(['middleware' => 'api', 'prefix' => 'v0.01'], function ($router) {
         Route::get('/contacts', [App\Http\Controllers\Api\ContactController::class, 'index']);
             Route::get('/contacts/{id}', [App\Http\Controllers\Api\ContactController::class, 'show']);
             Route::post('/contacts', [App\Http\Controllers\Api\ContactController::class, 'store']);
+            Route::post('/contacts-batch', [App\Http\Controllers\Api\ContactController::class, 'storeBatch']);
             Route::patch('/contacts/{id}', [App\Http\Controllers\Api\ContactController::class, 'update']);
             Route::delete('/contacts/{id}', [App\Http\Controllers\Api\ContactController::class, 'destroy']);
+
+        Route::get('/configurations', [App\Http\Controllers\Api\EmailConfigurationController::class, 'index']);
+            Route::get('/configurations/{id}', [App\Http\Controllers\Api\EmailConfigurationController::class, 'show']);
+            Route::post('/configurations', [App\Http\Controllers\Api\EmailConfigurationController::class, 'store']);
+            Route::patch('/configurations/{id}', [App\Http\Controllers\Api\EmailConfigurationController::class, 'update']);
+            Route::delete('/configurations/{id}', [App\Http\Controllers\Api\EmailConfigurationController::class, 'destroy']);
 
         Route::post('/add-contacts', [App\Http\Controllers\Api\ContactGroupController::class, 'addContactM']);
             Route::delete('/remove-contacts', [App\Http\Controllers\Api\ContactGroupController::class, 'removeContactM']);
         Route::post('/add-single-contact', [App\Http\Controllers\Api\ContactGroupController::class, 'addSingleContact']);
             Route::delete('/delete-single-contact', [App\Http\Controllers\Api\ContactGroupController::class, 'removeSingleContact']);
+
+        Route::post('/send-bulk-email', [App\Http\Controllers\Api\SendEmailController::class, 'send']);
 
         Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
         Route::post('/refresh', [App\Http\Controllers\Api\AuthController::class, 'refresh']);
@@ -80,7 +95,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'v0.01'], function ($router) {
             Route::post('/units', [App\Http\Controllers\Api\UnitController::class, 'store']);
                 Route::patch('/units/{id}', [App\Http\Controllers\Api\UnitController::class, 'update']);
                 Route::delete('/units/{id}', [App\Http\Controllers\Api\UnitController::class, 'destroy']);
-
 
                 Route::patch('/delete-user/{id}', [App\Http\Controllers\Api\AuthController::class, 'delete']);
 

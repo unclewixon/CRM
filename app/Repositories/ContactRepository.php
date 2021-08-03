@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Actions\ContactAction;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Contracts\ContactRepositoryInterface;
+use App\Imports\ContactImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ContactRepository implements ContactRepositoryInterface
 {
@@ -116,6 +118,23 @@ class ContactRepository implements ContactRepositoryInterface
         }
     }
 
+    //batch contacts
+    public function batchContactUpload($request)
+    {
+        $validator =  Validator::make($request->all(),[
+            'file' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ], 422);
+        }else {
+            $insert =  Excel::import(new ContactImport,request()->file('file'));
+            return $insert;
+        }
+    }
+
+    //update contact details
     public function updateContact($request, $id)
     {
         $validator =  Validator::make($request->all(),[
