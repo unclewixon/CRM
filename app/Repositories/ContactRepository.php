@@ -68,7 +68,7 @@ class ContactRepository implements ContactRepositoryInterface
     }
 
     //remove mutiple contacts
-    public function removeContactsFromGrouop($id, $request)
+    public function removeContactsFromGrouop($request)
     {
         $validator =  Validator::make($request->all(),[
             'group_id' => 'required',
@@ -85,7 +85,7 @@ class ContactRepository implements ContactRepositoryInterface
     }
 
     //add single contact
-    public function addContactToGrouop($id, $contact_id)
+    public function addContactToGrouop($request)
     {
         $validator =  Validator::make($request->all(),[
             'group_id' => 'required',
@@ -102,7 +102,7 @@ class ContactRepository implements ContactRepositoryInterface
     }
 
     //remove single contact
-    public function removeContactFromGrouop($id, $contact_id)
+    public function removeContactFromGrouop($request)
     {
         $validator =  Validator::make($request->all(),[
             'group_id' => 'required',

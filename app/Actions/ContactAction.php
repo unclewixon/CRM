@@ -89,16 +89,10 @@ class ContactAction
     {
         $group = $this->group->where('id', '=', $request->group_id)->where('user_id', auth()->user()->id)->first();
         $contactPerson = $this->model->find($request->contact_id);
-        $attach = $contactPerson->groups()->attach($group->id);
-        if ($attach) {
-            return response()->json([
-                'message' => 'Contact add to group successfully'
-            ], 200);
-        }else {
-            return response()->json([
-                'message' => 'Unable to add contact to group'
-            ], 400);
-        }
+        $contactPerson->groups()->attach($group->id);
+        return response()->json([
+            'message' => 'Contact add to group successfully'
+        ], 200);
     }
 
      //remove contact to group
@@ -107,15 +101,9 @@ class ContactAction
         $group = $this->group->where('id', '=', $request->group_id)->where('user_id', auth()->user()->id)->first();
         $contactPerson = $this->model->find($request->contact_id);
         $detach = $contactPerson->groups()->detach($group->id);
-        if ($detach) {
-            return response()->json([
-                'message' => 'Contact removed from group successfully'
-            ], 200);
-        }else {
-            return response()->json([
-                'message' => 'Unable to remove contact from group'
-            ], 400);
-        }
+        return response()->json([
+            'message' => 'Contact removed from group successfully'
+        ], 200);
      }
 
     //get

@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\EmailConfiguration;
+use App\Http\Resources\EmailConfigurationResoucrce;
 
 class EmailConfigurationAction
 {
@@ -52,7 +53,7 @@ class EmailConfigurationAction
                 'message' => 'Sorry no configuration found'
             ], 400);
         }else {
-            return $configuration;
+            return EmailConfigurationResoucrce::collection($configuration);
         }
     }
 
@@ -61,8 +62,12 @@ class EmailConfigurationAction
     {
       $data = $this->model->where('id', '=', $id)->exists();
       if ($data) {
-            $configuration = $this->model->find($id);
-            return $configuration;
+            if (auth()->user()->role_id == 1) {
+                 $configuration = $this->model->with(['user'])->find($id);
+            }else {
+                 $configuration = $this->model->find($id);
+            }
+            return new EmailConfigurationResoucrce($configuration);
       }else {
            return response()->json([
                'message' => 'Sorry this data do not exist'

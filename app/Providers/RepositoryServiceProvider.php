@@ -78,8 +78,6 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\SendEmailRepositoryInterface::class,
             \App\Repositories\SendEmailRepository::class
         );
-
-
     }
 
     /**
