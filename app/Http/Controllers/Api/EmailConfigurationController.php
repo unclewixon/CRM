@@ -25,6 +25,7 @@ class EmailConfigurationController extends Controller
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/EmailConfiguration")
      *       ),
      *      @OA\Response(
      *          response=404,

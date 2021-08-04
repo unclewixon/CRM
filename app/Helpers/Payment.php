@@ -82,7 +82,7 @@ class Payment
               'message' => 'You have subscribed successfully',
           ], 200);
         }elseif ($transType->type == "Unit") {
-            $recharge = Recharge::where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->whereTime('created_at' , '>', Carbon::now()->subMinutes(15))->first();
+            $recharge = Recharge::where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->whereTime('created_at' , '>', Carbon::now()->subMinutes(15))->last();
             $sub = $this->user_action->addUpUnit(auth()->user()->id, $recharge->number);
             $detail = [
                 'title' => 'SMS Unit',

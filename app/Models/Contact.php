@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * @OA\Schema(
+ *     title="Contact",
+ *     description="Contact model",
+ *     @OA\Xml(
+ *         name="Contact"
+ *     )
+ * )
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,4 +29,109 @@ class Contact extends Model
     public function groups() {
         return $this->belongsToMany(Group::class);
     }
+
+    /**
+     * @OA\Property(
+     *     title="ID",
+     *     description="ID",
+     *     format="int64",
+     *     example=1
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *      title="Sur name",
+     *      description="Sur name of the contact person ",
+     *      example="Orutu"
+     * )
+     *
+     * @var string
+     */
+    protected $sur_name;
+
+    /**
+    * @OA\Property(
+    *      title="First Name",
+    *      description="Frist name of contact person",
+    *      example="Akposieyefa"
+    * )
+    *
+    * @var string
+    */
+    protected $first_name;
+
+     /**
+    * @OA\Property(
+    *      title="Email",
+    *      description="Email address of the contact person",
+    *      example="orutu1@gmail.com"
+    * )
+    *
+    * @var string
+    */
+    protected $email;
+
+     /**
+    * @OA\Property(
+    *      title="Scheme",
+    *      description="Enter scheme of the contact person",
+    *      example="NHIS"
+    * )
+    *
+    * @var string
+    */
+    protected $scheme;
+
+     /**
+    * @OA\Property(
+    *      title="Gender",
+    *      description="Enter gender of the contact person",
+    *      example="Male"
+    * )
+    *
+    * @var string
+    */
+    protected $gender;
+
+     /**
+    * @OA\Property(
+    *      title="DOB",
+    *      description="Date of birth of the contact person",
+    *      example="1995-06-15"
+    * )
+    *
+    * @var string
+    */
+    protected $dob;
+
+   /**
+    * @OA\Property(
+    *     title="Created at",
+    *     description="Created at",
+    *     example="2020-01-27 17:50:45",
+    *     format="datetime",
+    *     type="string"
+    * )
+    *
+    * @var \DateTime
+    */
+   private $created_at;
+
+   /**
+    * @OA\Property(
+    *     title="Updated at",
+    *     description="Updated at",
+    *     example="2020-01-27 17:50:45",
+    *     format="datetime",
+    *     type="string"
+    * )
+    *
+    * @var \DateTime
+    */
+   private $updated_at;
+
 }

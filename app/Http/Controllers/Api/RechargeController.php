@@ -17,49 +17,128 @@ class RechargeController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *      path="/recharges",
+     *      operationId="AllReacharge",
+     *      tags={"Show All Reacharge"},
+     *      description="Show all reacharge",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/Recharge")
+     *       ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Sorry no recharge found",
+     *      ),
+     *     )
      */
     public function index()
     {
-        $recharges = $this->rechargeRepository->rechargeHistory();        ;
+        $recharges = $this->rechargeRepository->rechargeHistory();
         return $recharges;
     }
-
+    
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+     * @OA\Post(
+     *      path="/recharges",
+     *      operationId="CreateRecharge",
+     *      tags={"Create Recharge"},
+     *      description="Create new Recharge",
+     *     @OA\Parameter(
+     *         name="unit_id",
+     *         in="query",
+     *         description="Enter the unit id",
+     *         required=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="number",
+     *         in="query",
+     *         description="Enter the number of unit",
+     *         required=true,
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Recharge successfully",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Sorry unable to Recharge",
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *      ),
+     *     )
+   */
     public function store(Request $request)
     {
-        $recharges = $this->rechargeRepository->rechargeAcct($request);        ;
+        $recharges = $this->rechargeRepository->rechargeAcct($request);
         return $recharges;
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+     * @OA\Get(
+     *      path="/recharges/{id}",
+     *      operationId="ShowRecharge",
+     *      tags={"Show Recharge"},
+     *      description="Show single Recharge",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="query",
+     *         description="Enter Recharge id",
+     *         required=true,
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Sorry this data do not exist",
+     *      ),
+     *     )
+    */
     public function show($id)
     {
-        $recharge = $this->rechargeRepository->singelRechargeHistory($id);        ;
+        $recharge = $this->rechargeRepository->singelRechargeHistory($id);
         return $recharge;
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+     * @OA\Delete(
+     *      path="/recharges/{id}",
+     *      operationId="deleteRecharge",
+     *      tags={"Delete Recharge"},
+     *      summary="Delete existing Recharge",
+     *      description="Deletes a Recharge and returns no content",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Recharge Id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=204,
+     *          description="Successful operation",
+     *          @OA\JsonContent()
+     *       ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Sorry this Recharge do not exist"
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Sorry unable to delete Recharge"
+     *      ),
+     * )
+    */
     public function destroy($id)
     {
-        $recharge = $this->rechargeRepository->deleteRecharge($id);        ;
+        $recharge = $this->rechargeRepository->deleteRecharge($id);
         return $recharge;
     }
 }

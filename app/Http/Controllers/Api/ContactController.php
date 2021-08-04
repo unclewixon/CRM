@@ -8,7 +8,7 @@ use App\Repositories\Contracts\ContactRepositoryInterface;
 
 class ContactController extends Controller
 {
-    private $groupRepository;
+    private $contactRepository;
 
     public function __construct(ContactRepositoryInterface $contactRepository)
     {
@@ -163,11 +163,11 @@ class ContactController extends Controller
     }
 
      /**
-      * @OA\Patch(
-      *      path="/groups/{id}",
-      *      operationId="UpdateGroup",
-      *      tags={"Update Group"},
-      * *     @OA\Parameter(
+     * @OA\Patch(
+     *      path="/contacts/{id}",
+     *      operationId="UpdateContacts",
+     *      tags={"Update Contacts"},
+     *      @OA\Parameter(
      *         name="sur_name",
      *         in="query",
      *         description="Enter sur name of the contact person",

@@ -56,6 +56,10 @@ Route::group(['middleware' => 'api', 'prefix' => 'v0.01'], function ($router) {
             Route::patch('/groups/{id}', [App\Http\Controllers\Api\GroupController::class, 'update']);
             Route::delete('/groups/{id}', [App\Http\Controllers\Api\GroupController::class, 'destroy']);
 
+        Route::get('/transactions', [App\Http\Controllers\Api\TransactionController::class, 'index']);
+            Route::get('/transactions/{id}', [App\Http\Controllers\Api\TransactionController::class, 'show']);
+            Route::delete('/transactions/{id}', [App\Http\Controllers\Api\TransactionController::class, 'destroy']);
+
         Route::get('/contacts', [App\Http\Controllers\Api\ContactController::class, 'index']);
             Route::get('/contacts/{id}', [App\Http\Controllers\Api\ContactController::class, 'show']);
             Route::post('/contacts', [App\Http\Controllers\Api\ContactController::class, 'store']);

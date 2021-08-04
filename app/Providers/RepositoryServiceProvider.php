@@ -78,6 +78,12 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\SendEmailRepositoryInterface::class,
             \App\Repositories\SendEmailRepository::class
         );
+
+        //transactions repository binding
+        $this->app->bind(
+            \App\Repositories\Contracts\TransactionRepositoryInterface::class,
+            \App\Repositories\TransactionRepository::class
+        );
     }
 
     /**

@@ -73,7 +73,7 @@ class GroupController extends Controller
    */
     public function store(Request $request)
     {
-        $group = $this->groupRepository->createGroup($request);        ;
+        $group = $this->groupRepository->createGroup($request);
         return $group;
     }
 
@@ -107,54 +107,31 @@ class GroupController extends Controller
     }
 
 
-         /**
-      * @OA\Patch(
-      *      path="/groups/{id}",
-      *      operationId="UpdateGroup",
-      *      tags={"Update Group"},
-      * *     @OA\Parameter(
-     *         name="sur_name",
+    /**
+     * @OA\Patch(
+     *      path="/groups/{id}",
+     *      operationId="UpdateGroup",
+     *      tags={"UpdateGroup"},
+     *      description="Update existing group",
+    *       @OA\Parameter(
+     *         name="name",
      *         in="query",
-     *         description="Enter sur name of the contact person",
+     *         description="Enter group name",
      *         required=true,
      *     ),
      *     @OA\Parameter(
-     *         name="first_name",
+     *         name="description",
      *         in="query",
-     *         description="Enter first name of the contact person",
-     *         required=true,
-     *     ),
-     *    @OA\Parameter(
-     *         name="email",
-     *         in="query",
-     *         description="Enter email address of the contact person",
-     *         required=true,
-     *     ),
-     *   @OA\Parameter(
-     *         name="scheme",
-     *         in="query",
-     *         description="Enter scheme of the contact person",
-     *         required=true,
-     *     ),
-     *   @OA\Parameter(
-     *         name="gender",
-     *         in="query",
-     *         description="Enter gender of the contact person",
-     *         required=true,
-     *     ),
-     *    @OA\Parameter(
-     *         name="dob",
-     *         in="query",
-     *         description="Enter date of birth of the contact person",
+     *         description="Enter group description",
      *         required=true,
      *     ),
       *      @OA\Response(
       *          response=200,
-      *          description="Contact updated successfully",
+      *          description="group updated successfully",
       *       ),
       *      @OA\Response(
       *          response=400,
-      *          description="Sorry unable to update contact",
+      *          description="Sorry unable to update group",
       *      ),
       *      @OA\Response(
       *          response=404,
@@ -169,7 +146,7 @@ class GroupController extends Controller
   
     public function update(Request $request, $id)
     {
-        $group = $this->groupRepository->updateGroup($request, $id);        ;
+        $group = $this->groupRepository->updateGroup($request, $id);
         return $group;
     }
 
@@ -206,7 +183,7 @@ class GroupController extends Controller
    */
     public function destroy($id)
     {
-        $group = $this->groupRepository->deleteGroup($id);        ;
+        $group = $this->groupRepository->deleteGroup($id);
         return $group;
     }
 }
