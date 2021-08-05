@@ -75,6 +75,10 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->hasMany(Recharge::class);
     }
 
+    public function subscriptions() {
+        return $this->hasMany(Subscriber::class);
+    }
+
     public function sluggable(): array
     {
         return [

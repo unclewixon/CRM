@@ -23,8 +23,8 @@ class PlanResource extends JsonResource
             'duration'     => $general_helper->clean($this->duration),
             'cost'  => $general_helper->clean($this->cost),
             'slug'      => $general_helper->clean($this->slug),
-            'created_at'=> $this->created_at,
-            'updated_at'=> $this->updated_at
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 }

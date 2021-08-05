@@ -52,6 +52,20 @@ class SubscriberController extends Controller
         return $subscriber;
     }
 
+    //active sub
+    public function activeSub()
+    {
+         $subscriber = $this->subscriberRepository->active();
+         return $subscriber;
+    }
+
+    //inactive sub
+    public function inActiveSub()
+    {
+         $subscriber = $this->subscriberRepository->inactive();
+         return $subscriber;
+    }
+
     /**
      * Remove the specified resource from storage.
      *

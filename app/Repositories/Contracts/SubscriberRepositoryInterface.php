@@ -10,5 +10,9 @@ interface SubscriberRepositoryInterface
 
     public function showSubscriber($id);
 
+    public function active();
+
+    public function inactive();
+
     public function deleteSubscriber($id);
 }

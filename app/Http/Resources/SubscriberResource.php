@@ -17,11 +17,12 @@ class SubscriberResource extends JsonResource
     {
         $general_helper = new General();
         return [
-            'id'        => $this->id,
-            'from'      => $general_helper->clean($this->from),
+            'id'    => $this->id,
+            'from'   => $general_helper->clean($this->from),
             'to'     => $general_helper->clean($this->to),
-            'user'     => $general_helper->clean($this->whenLoaded('user')),
+            'user' => $general_helper->clean($this->whenLoaded('user')),
             'plan'  => $general_helper->clean($this->whenLoaded('plan')),
+            'days_remaining' => general_helper->subCalculator($this->to),
             'created_at'=> $this->created_at,
             'updated_at'=> $this->updated_at
         ];

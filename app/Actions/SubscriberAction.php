@@ -63,6 +63,46 @@ class SubscriberAction
         }
     }
 
+    //activate subscription
+    public function activateSubscription()
+    {
+        $activeSub = $this->model->where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->first();
+        $update =  $activeSub->update([
+            'status' => true
+        ]);
+        if ($update) {
+            return true
+        }else {
+            return false;
+        }
+    }
+
+    //active subscribers
+    public function activeSubscribers()
+    {
+        if (auth()->user()->role_id == 1) {
+            $active_subscribers = $this->model->with(['plan','user'])->where('status', '=' true)->latest()->paginate(20);
+            return SubscriberResource::collection($active_subscribers);
+        }else {
+          return response()->json([
+              'message' => 'Sorry you are not allowed to access this page'
+          ], 400);
+        }
+    }
+
+    //inactive subscribers
+    public function inactiveSubscribers()
+    {
+        if (auth()->user()->role_id == 1) {
+            $active_subscribers = $this->model->with(['plan','user'])->where('status', '=' false)->latest()->paginate(20);
+            return SubscriberResource::collection($active_subscribers);
+        }else {
+          return response()->json([
+              'message' => 'Sorry you are not allowed to access this page'
+          ], 400);
+        }
+    }
+
     //get
     public function get($id)
     {

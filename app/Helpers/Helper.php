@@ -8,6 +8,7 @@
 
   class Helper
   {
+   
     public $newDateTime;
 
     //set duration
@@ -46,5 +47,5 @@
           $total = $unit_number * $unit->cost_per_unit;
           return $total;
      }
-
+     
   }

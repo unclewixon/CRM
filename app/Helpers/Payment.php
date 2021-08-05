@@ -10,14 +10,17 @@ use App\Mail\SubscriptionMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Recharge;
 use Carbon\Carbon;
+use App\Actions\SubscriberAction;
 
 class Payment
 {
     private $user_action;
+    private $subscriber;
 
-    public function __construct(UserAction $user_action)
+    public function __construct(UserAction $user_action, SubscriberAction $subscriber)
     {
         $this->user_action = $user_action;
+        $this->subscriber = $subscriber;
     }
 
     //make paystack payment
@@ -71,7 +74,10 @@ class Payment
                 'paid' => true,
          ]);
         if ($transType->type == "Subscription") {
-          $sub = $this->user_action->isSubscribed(auth()->user()->id, 1);
+          $active = $this->subscriber->activateSubscription();
+          if ($active) {
+              $sub = $this->user_action->isSubscribed(auth()->user()->id, true);
+          }
           $details = [
               'title' => 'Subscription',
               'body'  => 'You have successfully subscribed',

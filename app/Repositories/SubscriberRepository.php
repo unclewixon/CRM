@@ -31,6 +31,18 @@ class SubscriberRepository implements SubscriberRepositoryInterface
         }
     }
 
+    //active subscribers
+    public function active()
+    {
+         return $this->action->activeSubscribers();
+    }
+
+    //inactive subscribers
+    public function inactive()
+    {
+         return $this->action->inactiveSubscribers();
+    }
+
     //view all
     public function allSubscribers()
     {

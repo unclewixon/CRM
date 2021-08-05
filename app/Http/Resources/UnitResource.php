@@ -12,18 +12,18 @@ class UnitResource extends JsonResource
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
-     */
+    */
     public function toArray($request)
     {
-      $general_helper = new General();
-      return [
-          'id'        => $this->id,
-          'name'      => $general_helper->clean($this->name),
-          'description'     => $general_helper->clean($this->description),
-          'unit'     => $general_helper->clean($this->unit),
-          'cost'  => $general_helper->clean($this->cost_per_unit),
-          'created_at'=> $this->created_at,
-          'updated_at'=> $this->updated_at
-      ];
+        $general_helper = new General();
+        return [
+            'id'  => $this->id,
+            'name'  => $general_helper->clean($this->name),
+            'description'  => $general_helper->clean($this->description),
+            'unit'  => $general_helper->clean($this->unit),
+            'cost'  => $general_helper->clean($this->cost_per_unit),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
+        ];
     }
 }
