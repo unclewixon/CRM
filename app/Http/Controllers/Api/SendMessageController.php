@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\Contracts\SendEmailRepositoryInterface;
+use App\Repositories\Contracts\SendMessageRepositoryInterface;
 
-class SendEmailController extends Controller
+class SendMessageController extends Controller
 {
-    private $sendEmailRepository;
+    private $sendMessageRepository;
 
-    public function __construct(SendEmailRepositoryInterface $sendEmailRepository)
+    public function __construct(SendMessageRepositoryInterface $sendMessageRepository)
     {
-        $this->sendEmailRepository = $sendEmailRepository;
+        $this->sendMessageRepository = $sendMessageRepository;
         $this->middleware('auth:api');
     }
 
       /**
      * @OA\Post(
-     *      path="/send-bulk-email",
-     *      operationId="SendEmail in bulk",
-     *      tags={"Send Email"},
-     *      description="Send email in batch",
+     *      path="/send-bulk-message",
+     *      operationId="SendSMS in bulk",
+     *      tags={"Send SMS"},
+     *      description="Send sms in batch",
      *     @OA\Parameter(
      *         name="group_id",
      *         in="query",
@@ -28,24 +29,18 @@ class SendEmailController extends Controller
      *         required=true,
      *     ),
      *   @OA\Parameter(
-     *         name="title",
+     *         name="message",
      *         in="query",
-     *         description="Enter email title",
-     *         required=true,
-     *     ),
-     *   @OA\Parameter(
-     *         name="body",
-     *         in="query",
-     *         description="Enter email body",
+     *         description="Enter message body",
      *         required=true,
      *     ),
      *      @OA\Response(
      *          response=200,
-     *          description="Email sent successfully",
+     *          description="Message sent successfully",
      *       ),
      *      @OA\Response(
      *          response=400,
-     *          description="Sorry unable to send email",
+     *          description="Sorry unable to send message",
      *      ),
      *      @OA\Response(
      *          response=422,
@@ -55,16 +50,16 @@ class SendEmailController extends Controller
    */
     public function sendBulk(Request $request)
     {
-        $send_email = $this->sendEmailRepository->sendBulkEmail($request);
-        return $send_email;
+        $send_message = $this->sendMessageRepository->sendBulkSms($request);
+        return $send_message;
     }
 
     /**
      * @OA\Post(
-     *      path="/send-single-email",
-     *      operationId="SendEmail in bulk",
-     *      tags={"Send Email"},
-     *      description="Send email in batch",
+     *      path="/send-single-message",
+     *      operationId="SendMessag",
+     *      tags={"Send Message"},
+     *      description="Send sms",
      *     @OA\Parameter(
      *         name="contact_id",
      *         in="query",
@@ -72,13 +67,7 @@ class SendEmailController extends Controller
      *         required=true,
      *     ),
      *   @OA\Parameter(
-     *         name="title",
-     *         in="query",
-     *         description="Enter email title",
-     *         required=true,
-     *     ),
-     *   @OA\Parameter(
-     *         name="body",
+     *         name="message",
      *         in="query",
      *         description="Enter email body",
      *         required=true,
@@ -89,7 +78,7 @@ class SendEmailController extends Controller
      *       ),
      *      @OA\Response(
      *          response=400,
-     *          description="Sorry unable to send email",
+     *          description="Sorry unable to send message",
      *      ),
      *      @OA\Response(
      *          response=422,
@@ -99,8 +88,7 @@ class SendEmailController extends Controller
    */
     public function sendSingle(Request $request)
     {
-        $send_email = $this->sendEmailRepository->sendSingleEmail($request);
-        return $send_email;
+        $send_message = $this->sendMessageRepository->sendSingleMessage($request);
+        return $send_message;
     }
-
 }

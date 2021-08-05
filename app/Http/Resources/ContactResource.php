@@ -23,6 +23,7 @@ class ContactResource extends JsonResource
             'email'  => $general_helper->clean($this->first_name),
             'scheme' => $general_helper->clean($this->scheme),
             'gender' => $general_helper->clean($this->gender),
+            'phone' => $general_helper->clean($this->phone_number),
             'dob'  => $this->dob,
             'user'  => new UserResource($this->whenLoaded('user')),
             'groups'  => GroupResource::collection($this->whenLoaded('groups')),

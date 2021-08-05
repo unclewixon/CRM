@@ -29,6 +29,7 @@ class ContactAction
             'scheme' => $request->scheme,
             'gender' => $request->gender,
             'dob' => $request->dob,
+            'phone_number' => $request->phone_number
         ]);
         if ($user) {
             return response()->json([
@@ -130,9 +131,11 @@ class ContactAction
            $update = $plan->update([
                 'sur_name' => empty($request->sur_name) ? $plan->sur_name : $request->sur_name,
                 'first_name' =>   empty($request->first_name) ? $plan->first_name : $request->first_name,
+                'email' =>   empty($request->email) ? $plan->email : $request->email,
                 'scheme' =>  empty($request->scheme) ? $plan->scheme : $request->scheme,
                 'gender' =>  empty($request->gender) ? $plan->gender : $request->gender,
-                'dob' =>  empty($request->dob) ? $plan->dob : $request->dob
+                'dob' =>  empty($request->dob) ? $plan->dob : $request->dob,
+                'phone_number' =>  empty($request->phone_number) ? $plan->phone_number : $request->phone_number
            ]);
            if ($update) {
              return response()->json([

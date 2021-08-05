@@ -78,7 +78,11 @@ Route::group(['middleware' => 'api', 'prefix' => 'v0.01'], function ($router) {
         Route::post('/add-single-contact', [App\Http\Controllers\Api\ContactGroupController::class, 'addSingleContact']);
             Route::delete('/delete-single-contact', [App\Http\Controllers\Api\ContactGroupController::class, 'removeSingleContact']);
 
-        Route::post('/send-bulk-email', [App\Http\Controllers\Api\SendEmailController::class, 'send']);
+        Route::post('/send-bulk-email', [App\Http\Controllers\Api\SendEmailController::class, 'sendBulk']);
+            Route::post('/send-single-email', [App\Http\Controllers\Api\SendEmailController::class, 'sendSingle']);
+
+        Route::post('/send-bulk-message', [App\Http\Controllers\Api\SendEmailController::class, 'sendBulk']);
+            Route::post('/send-single-message', [App\Http\Controllers\Api\SendEmailController::class, 'sendSingle']);
 
         Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
         Route::post('/refresh', [App\Http\Controllers\Api\AuthController::class, 'refresh']);

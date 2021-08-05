@@ -25,8 +25,9 @@ class ContactRepository implements ContactRepositoryInterface
             'first_name' => 'required',
             'email' => 'required|email',
             'scheme' => 'required',
+            'phone_number' => 'required',
             'gender' => 'required',
-            'dob' => 'required',
+            'dob' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -142,6 +143,7 @@ class ContactRepository implements ContactRepositoryInterface
             'first_name' => 'required',
             'email' => 'required|email',
             'scheme' => 'required',
+            'phone_number' => 'required',
             'gender' => 'required',
             'dob' => 'required',
         ]);

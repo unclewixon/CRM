@@ -18,6 +18,7 @@ class ContactExport implements WithHeadings
             'email',
             'scheme',
             'gender',
+            'phone_number',
             'dob (year-month-day)'
         ];
     }

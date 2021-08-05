@@ -81,6 +81,12 @@ class ContactController extends Controller
      *         description="Enter date of birth of the contact person",
      *         required=true,
      *     ),
+     *     @OA\Parameter(
+     *         name="phone_number",
+     *         in="query",
+     *         description="Enter phone number of the contact person",
+     *         required=true,
+     *     ),
      *      @OA\Response(
      *          response=200,
      *          description="Contact created successfully",
@@ -183,6 +189,12 @@ class ContactController extends Controller
      *         name="email",
      *         in="query",
      *         description="Enter email address of the contact person",
+     *         required=true,
+     *     ),
+     *    @OA\Parameter(
+     *         name="phone_number",
+     *         in="query",
+     *         description="Enter phone number of the contact person",
      *         required=true,
      *     ),
      *   @OA\Parameter(

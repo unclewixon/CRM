@@ -28,6 +28,7 @@ class ContactImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnE
             'email' => $row['email'],
             'scheme' => $row['scheme'],
             'gender' => $row['gender'],
+            'phone_number' => $row['phone_number'],
             'dob' =>  Carbon::parse($row['dob'])->format('Y-m-d')
         ]);
     }
@@ -41,7 +42,8 @@ class ContactImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnE
             '*.email' => ['required'],
             '*.scheme' => ['required'],
             '*.gender' => ['required'],
-            '*.dob' => ['required']
+            '*.dob' => ['required'],
+            '*.phone_number' => ['required']
         ];
     }
 

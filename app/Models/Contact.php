@@ -19,7 +19,7 @@ class Contact extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'user_id', 'sur_name', 'first_name', 'email', 'scheme', 'gender', 'dob'
+      'user_id', 'sur_name', 'first_name', 'email', 'scheme', 'gender', 'phone_number', 'dob'
     ];
 
     public function user() {
@@ -74,6 +74,18 @@ class Contact extends Model
     * @var string
     */
     protected $email;
+
+
+    /**
+    * @OA\Property(
+    *      title="Phone number",
+    *      description="Phone number of the contact person",
+    *      example="08100788859"
+    * )
+    *
+    * @var string
+    */
+    protected $phone_number
 
      /**
     * @OA\Property(

@@ -360,6 +360,12 @@
                         "in": "query",
                         "description": "Enter date of birth of the contact person",
                         "required": true
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "query",
+                        "description": "Enter phone number of the contact person",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -484,6 +490,12 @@
                         "name": "email",
                         "in": "query",
                         "description": "Enter email address of the contact person",
+                        "required": true
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "query",
+                        "description": "Enter phone number of the contact person",
                         "required": true
                     },
                     {
@@ -1475,6 +1487,114 @@
                 }
             }
         },
+        "/send-single-email": {
+            "post": {
+                "tags": [
+                    "Send Email"
+                ],
+                "description": "Send email in batch",
+                "operationId": "SendEmail in bulk",
+                "parameters": [
+                    {
+                        "name": "contact_id",
+                        "in": "query",
+                        "description": "Enter contact id",
+                        "required": true
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Enter email title",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "in": "query",
+                        "description": "Enter email body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message sent successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to send email"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/send-bulk-message": {
+            "post": {
+                "tags": [
+                    "Send SMS"
+                ],
+                "description": "Send sms in batch",
+                "operationId": "SendSMS in bulk",
+                "parameters": [
+                    {
+                        "name": "group_id",
+                        "in": "query",
+                        "description": "Enter group id",
+                        "required": true
+                    },
+                    {
+                        "name": "message",
+                        "in": "query",
+                        "description": "Enter message body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message sent successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to send message"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/send-single-message": {
+            "post": {
+                "tags": [
+                    "Send Message"
+                ],
+                "description": "Send sms",
+                "operationId": "SendMessag",
+                "parameters": [
+                    {
+                        "name": "contact_id",
+                        "in": "query",
+                        "description": "Enter contact id",
+                        "required": true
+                    },
+                    {
+                        "name": "message",
+                        "in": "query",
+                        "description": "Enter email body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message sent successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to send message"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
         "/units": {
             "get": {
                 "tags": [
@@ -1685,6 +1805,12 @@
                         "description": "Email address of the contact person",
                         "type": "string",
                         "example": "orutu1@gmail.com"
+                    },
+                    "phone_number": {
+                        "title": "Phone number",
+                        "description": "Phone number of the contact person",
+                        "type": "string",
+                        "example": "08100788859"
                     },
                     "scheme": {
                         "title": "Scheme",
