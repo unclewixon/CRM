@@ -16,7 +16,7 @@ class SendMessageController extends Controller
         $this->middleware('auth:api');
     }
 
-      /**
+    /**
      * @OA\Post(
      *      path="/send-bulk-message",
      *      operationId="SendSMS in bulk",
@@ -89,6 +89,38 @@ class SendMessageController extends Controller
     public function sendSingle(Request $request)
     {
         $send_message = $this->sendMessageRepository->sendSingleMessage($request);
+        return $send_message;
+    }
+
+    /**
+     * @OA\Post(
+     *      path="/message-contacts",
+     *      operationId="SendSMS in bulk to all contacts",
+     *      tags={"Send SMS"},
+     *      description="Send sms in bulk to all contacts",
+     *   @OA\Parameter(
+     *         name="message",
+     *         in="query",
+     *         description="Enter message body",
+     *         required=true,
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Message sent successfully",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Sorry unable to send message",
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *      ),
+     *     )
+   */
+    public function all(Request $request)
+    {
+        $send_message = $this->sendMessageRepository->sendMessageToAllContact($request);
         return $send_message;
     }
 }

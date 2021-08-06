@@ -79,5 +79,32 @@ class SendEmailRepository implements SendEmailRepositoryInterface
         }
     }   
 
+    public function sendMessageToAllContact($request) 
+    {
+         $request->validate([
+            'message'  => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ], 422);
+        }else {
+            $contacts = $this->model->where('user_id', auth()->user()->id)->get();
+            foreach ($contacts as $contact) {
+                $send = $this->message_helper->sendMessage($contact->phone_number, $request->message);
+            }
+            if ($send) {
+                return response()->json([
+                    'message' => 'Message sent successfully',
+                ], 200);
+            }else {
+                return response()->json([
+                    'message' => 'Message not sent',
+                ], 401);
+            }
+        }
+    }
+
 }
 

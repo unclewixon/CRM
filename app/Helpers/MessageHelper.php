@@ -12,7 +12,7 @@ class MessageHelper
 		 $sms = new \SMSGlobal\Resource\Sms();
 
 		 try {
-		 	$response = $sms->sendToOne($number, $message);
+		 	$response = $sms->sendToOne($number, $message, auth()->user()->organization_name);
 		 	return true;
 		 } catch (\Exception $e) {
 		 	return false;

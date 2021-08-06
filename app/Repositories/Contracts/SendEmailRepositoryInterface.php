@@ -7,4 +7,6 @@ interface SendEmailRepositoryInterface
     public function sendBulkEmail($request);
 
     public function sendSingleEmail($request);
+
+    public function sendEmailToAllContacts($request);
 }

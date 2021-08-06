@@ -1527,6 +1527,40 @@
                 }
             }
         },
+        "/send-contacts-email": {
+            "post": {
+                "tags": [
+                    "Send All Contacts Email"
+                ],
+                "description": "Send All Contacts Email",
+                "operationId": "AllEmailsToContact",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Enter email title",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "in": "query",
+                        "description": "Enter email body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to send email"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
         "/send-bulk-message": {
             "post": {
                 "tags": [
@@ -1579,6 +1613,34 @@
                         "name": "message",
                         "in": "query",
                         "description": "Enter email body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message sent successfully"
+                    },
+                    "400": {
+                        "description": "Sorry unable to send message"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/message-contacts": {
+            "post": {
+                "tags": [
+                    "Send SMS"
+                ],
+                "description": "Send sms in bulk to all contacts",
+                "operationId": "SendSMS in bulk to all contacts",
+                "parameters": [
+                    {
+                        "name": "message",
+                        "in": "query",
+                        "description": "Enter message body",
                         "required": true
                     }
                 ],

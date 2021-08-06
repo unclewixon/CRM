@@ -15,7 +15,7 @@ class SendEmailController extends Controller
         $this->middleware('auth:api');
     }
 
-      /**
+    /**
      * @OA\Post(
      *      path="/send-bulk-email",
      *      operationId="SendEmail in bulk",
@@ -100,6 +100,44 @@ class SendEmailController extends Controller
     public function sendSingle(Request $request)
     {
         $send_email = $this->sendEmailRepository->sendSingleEmail($request);
+        return $send_email;
+    }
+
+     /**
+     * @OA\Post(
+     *      path="/send-contacts-email",
+     *      operationId="AllEmailsToContact",
+     *      tags={"Send All Contacts Email"},
+     *      description="Send All Contacts Email",
+     *   @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Enter email title",
+     *         required=true,
+     *     ),
+     *   @OA\Parameter(
+     *         name="body",
+     *         in="query",
+     *         description="Enter email body",
+     *         required=true,
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Email sent successfully",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Sorry unable to send email",
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *      ),
+     *     )
+   */
+    public function all(Request $request)
+    {
+        $send_email = $this->sendEmailRepository->sendEmailToAllContacts($request);
         return $send_email;
     }
 

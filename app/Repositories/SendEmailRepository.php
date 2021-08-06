@@ -37,11 +37,11 @@ class SendEmailRepository implements SendEmailRepositoryInterface
                 $query->select(['id', 'email'])
                       ->where('group_id', '=', $groupID);
             }])->where('user_id', auth()->user()->id)->get();
+            $data = array(
+                'title' => $request->title,
+                'body' => $request->body
+            );
             foreach ($contacts as $contact) {
-                $data = array(
-                    'title' => $request->title,
-                    'body' => $request->body
-                );
                 Mail::to($contact->email)->send(new BulkMail($data));
             }
             return response()->json([
@@ -81,7 +81,33 @@ class SendEmailRepository implements SendEmailRepositoryInterface
            }
            
         }
-    }   
+    }  
 
+    //send to all
+    public function sendEmailToAllContacts($request)
+    {
+        $request->validate([
+            'title'     => 'required',
+            'body'    => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ], 422);
+        }else {
+            $contacts = $this->model->where('user_id', auth()->user()->id)->get();
+            $data = array(
+                'title' => $request->title,
+                'body' => $request->body
+            );
+            foreach ($contacts as $contact) {
+                Mail::to($contact->email)->send(new BulkMail($data));
+            }
+            return response()->json([
+                'message' => 'Message sent successfully',
+            ], 200);
+        }
+    } 
 
 }
