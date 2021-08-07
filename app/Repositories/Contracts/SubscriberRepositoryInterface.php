@@ -14,5 +14,7 @@ interface SubscriberRepositoryInterface
 
     public function inactive();
 
+    public function deActivateSubscriber();
+
     public function deleteSubscriber($id);
 }

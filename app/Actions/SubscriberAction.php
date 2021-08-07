@@ -7,6 +7,8 @@ use App\Http\Resources\SubscriberResource;
 use App\Helpers\Payment;
 use Carbon\Carbon;
 use App\Helpers\Helper;
+use App\Helpers\General;
+use App\Models\UserAction;
 
 class SubscriberAction
 {
@@ -15,12 +17,15 @@ class SubscriberAction
     public $user_action;
     public $payment;
     public $helper;
+    public $general_helper;
 
-    public function __construct(Subscriber $model, Payment $payment, Helper $helper)
+    public function __construct(Subscriber $model, Payment $payment, Helper $helper, General $general_helper, UserAction $user_action)
     {
        $this->model = $model;
        $this->payment = $payment;
        $this->helper   =  $helper;
+       $this->general_helper = $general_helper;
+       $this->user_action =$user_action;
     }
 
     //create
@@ -64,9 +69,9 @@ class SubscriberAction
     }
 
     //activate subscription
-    public function activateSubscription()
+    public function activateSubscription($id)
     {
-        $activeSub = $this->model->where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->first();
+        $activeSub = $this->model->where('user_id', '=', $id)->whereDate('created_at' , '=', Carbon::today())->first();
         $update =  $activeSub->update([
             'status' => true
         ]);
@@ -75,6 +80,22 @@ class SubscriberAction
         }else {
             return false;
         }
+    }
+
+    //activate subscription
+    public function deActivateSubscription()
+    {
+        $all_subscribers = $this->model->where('status', '=', true)->get();
+        foreach ($all_subscribers as $subscriber) {
+            $due_identifyer = $this->general_helper->subCalculator($subscriber->to);
+            if ($due_identifyer < 1) {
+                $update =  $this->model->where('id', '=', $subscriber->id)->update([
+                    'status' => false
+                ]);
+                $this->user_action->isSubscribed($subscriber->user_id, false);
+            }
+        }
+        
     }
 
     //active subscribers

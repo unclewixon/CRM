@@ -74,7 +74,7 @@ class Payment
                 'paid' => true,
          ]);
         if ($transType->type == "Subscription") {
-          $active = $this->subscriber->activateSubscription();
+          $active = $this->subscriber->activateSubscription(auth()->user()->id);
           if ($active) {
               $sub = $this->user_action->isSubscribed(auth()->user()->id, true);
           }

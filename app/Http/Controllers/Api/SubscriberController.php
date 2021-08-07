@@ -66,6 +66,14 @@ class SubscriberController extends Controller
          return $subscriber;
     }
 
+    //deactivate subscribersw
+    public function deActivateSub()
+    {
+         $subscriber = $this->subscriberRepository->deActivateSubscriber();
+         return $subscriber;
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *

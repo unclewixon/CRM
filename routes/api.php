@@ -99,6 +99,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'v0.01'], function ($router) {
           Route::delete('/subscribers/{id}', [App\Http\Controllers\Api\SubscriberController::class, 'destroy']);
             Route::get('/active-subscribers', [App\Http\Controllers\Api\SubscriberController::class, 'activeSub']);
             Route::get('/inactive-subscribers', [App\Http\Controllers\Api\SubscriberController::class, 'inActiveSub']);
+            Route::get('/deactive-subscribers', [App\Http\Controllers\Api\SubscriberController::class, 'deActivateSub']);
 
             Route::post('/plans', [App\Http\Controllers\Api\PlanController::class, 'store']);
                 Route::patch('/plans/{id}', [App\Http\Controllers\Api\PlanController::class, 'update']);

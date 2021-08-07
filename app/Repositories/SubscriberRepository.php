@@ -37,6 +37,12 @@ class SubscriberRepository implements SubscriberRepositoryInterface
          return $this->action->activeSubscribers();
     }
 
+    //deactivate subscribers
+    public function deActivateSubscriber()
+    {
+        return $this->action->deActivateSubscription();
+    }
+
     //inactive subscribers
     public function inactive()
     {
