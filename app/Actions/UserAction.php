@@ -137,10 +137,34 @@ class UserAction
     {
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
-            $user = $this->model->find($id)->update([
-                'unit' => $unit
+            $user = $this->model->find($id);
+            $new_unit = $user->unit + $unit;
+            $update = $user->update([
+                'unit' => $new_unit
             ]);
-            if ($user) {
+            if ($update) {
+              return true;
+            }else {
+              return false;
+            }
+        }else {
+            return response()->json([
+                'message' => 'Sorry this data do not exist'
+            ], 404);
+        }
+    }
+
+    //subtract unit
+    public function subtractUnit($id, $charge)
+    {
+        $data = $this->model->where('id', '=', $id)->exists();
+        if ($data) {
+            $user = $this->model->find($id);
+            $new_unit = $user->unit - $charge;
+            $update = $user->update([
+                'unit' => $new_unit
+            ]);
+            if ($update) {
               return true;
             }else {
               return false;

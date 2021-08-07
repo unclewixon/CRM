@@ -22,6 +22,10 @@ class Plan extends Model
         'name', 'description', 'duration', 'cost', 'slug'
     ];
 
+    public function subscribers() {
+      return $this->belongsToMany(Subscriber::class);
+    }
+
      /**
      * @OA\Property(
      *     title="ID",

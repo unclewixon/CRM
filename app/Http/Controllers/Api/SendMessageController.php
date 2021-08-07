@@ -34,6 +34,12 @@ class SendMessageController extends Controller
      *         description="Enter message body",
      *         required=true,
      *     ),
+     *    @OA\Parameter(
+     *         name="pages",
+     *         in="query",
+     *         description="number of pages",
+     *         required=true,
+     *     ),
      *      @OA\Response(
      *          response=200,
      *          description="Message sent successfully",
@@ -72,6 +78,12 @@ class SendMessageController extends Controller
      *         description="Enter email body",
      *         required=true,
      *     ),
+     *    @OA\Parameter(
+     *         name="pages",
+     *         in="query",
+     *         description="number of pages",
+     *         required=true,
+     *     ),
      *      @OA\Response(
      *          response=200,
      *          description="Message sent successfully",
@@ -102,6 +114,12 @@ class SendMessageController extends Controller
      *         name="message",
      *         in="query",
      *         description="Enter message body",
+     *         required=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="pages",
+     *         in="query",
+     *         description="number of pages",
      *         required=true,
      *     ),
      *      @OA\Response(
