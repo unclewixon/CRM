@@ -22,7 +22,7 @@ class SubscriberResource extends JsonResource
             'to'     => $general_helper->clean($this->to),
             'user' => $general_helper->clean($this->whenLoaded('user')),
             'plan'  => $general_helper->clean($this->whenLoaded('plan')),
-            'days_remaining' => general_helper->subCalculator($this->to),
+            'days_remaining' => $general_helper->subCalculator($this->to),
             'created_at'=> $this->created_at,
             'updated_at'=> $this->updated_at
         ];
