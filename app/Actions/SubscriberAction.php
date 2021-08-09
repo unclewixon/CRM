@@ -76,7 +76,7 @@ class SubscriberAction
             'status' => true
         ]);
         if ($update) {
-            return true
+            return true;
         }else {
             return false;
         }
@@ -102,7 +102,7 @@ class SubscriberAction
     public function activeSubscribers()
     {
         if (auth()->user()->role_id == 1) {
-            $active_subscribers = $this->model->with(['plan','user'])->where('status', '=' true)->latest()->paginate(20);
+            $active_subscribers = $this->model->with(['plan','user'])->where('status', '=', true)->latest()->paginate(20);
             return SubscriberResource::collection($active_subscribers);
         }else {
           return response()->json([
@@ -115,7 +115,7 @@ class SubscriberAction
     public function inactiveSubscribers()
     {
         if (auth()->user()->role_id == 1) {
-            $active_subscribers = $this->model->with(['plan','user'])->where('status', '=' false)->latest()->paginate(20);
+            $active_subscribers = $this->model->with(['plan','user'])->where('status', '=', false)->latest()->paginate(20);
             return SubscriberResource::collection($active_subscribers);
         }else {
           return response()->json([
