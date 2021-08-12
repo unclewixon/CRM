@@ -21,7 +21,7 @@ class ContactAction
         if (auth()->user()->role_id == 1) {
             $contacts = $this->model->with(['user'])->latest()->paginate(20);
         }else {
-            $contacts = $this->model->->where('user_id', auth()->user()->id)->latest()->paginate(20);
+            $contacts = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);
         }
         if (count($contacts) < 1) {
             return response()->json([
