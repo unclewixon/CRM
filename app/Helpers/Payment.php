@@ -10,14 +10,13 @@ use App\Mail\SubscriptionMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Recharge;
 use Carbon\Carbon;
-use App\Actions\SubscriberAction;
+use App\Models\Subscriber;
 
 class Payment
 {
     private $user_action;
-    private $subscriber;
 
-    public function __construct(UserAction $user_action, SubscriberAction $subscriber)
+    public function __construct(UserAction $user_action)
     {
         $this->user_action = $user_action;
         $this->subscriber = $subscriber;
@@ -74,19 +73,23 @@ class Payment
                 'paid' => true,
          ]);
         if ($transType->type == "Subscription") {
-          $active = $this->subscriber->activateSubscription(auth()->user()->id);
-          if ($active) {
-              $sub = $this->user_action->isSubscribed(auth()->user()->id, true);
-          }
-          $details = [
-              'title' => 'Subscription',
-              'body'  => 'You have successfully subscribed',
-              'url' => 'siteurl'
-          ];
-          Mail::to(auth()->user()->email)->send(new SubscriptionMail($details));
-          return response()->json([
-              'message' => 'You have subscribed successfully',
-          ], 200);
+
+            $active = Subscriber::where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->first();
+            $update =  $active->update([
+                'status' => true
+            ]);          
+            if ($update) {
+                  $sub = $this->user_action->isSubscribed(auth()->user()->id, true);
+            }
+            $details = [
+                'title' => 'Subscription',
+                'body'  => 'You have successfully subscribed',
+                'url' => 'siteurl'
+            ];
+            Mail::to(auth()->user()->email)->send(new SubscriptionMail($details));
+            return response()->json([
+                'message' => 'You have subscribed successfully',
+            ], 200);
         }elseif ($transType->type == "Unit") {
             $recharge = Recharge::where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->whereTime('created_at' , '>', Carbon::now()->subMinutes(15))->last();
             $sub = $this->user_action->addUpUnit(auth()->user()->id, $recharge->number);
