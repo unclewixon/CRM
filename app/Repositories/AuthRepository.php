@@ -130,7 +130,7 @@ class AuthRepository implements AuthRepositoryInterface
 
 
       //update user password
-      public function resetPassword($request, $id)
+      public function changePassword($request, $id)
       {
           $validator =  Validator::make($request->all(),[
               'old_password' => 'required',

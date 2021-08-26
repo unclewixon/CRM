@@ -39,7 +39,8 @@ class GroupAction
     //get all users
     public function all()
     {
-        if (auth()->user()->role_id == 1) {
+        $user_roles = auth()->user()->roles->pluck('name');
+        if ($user_roles->contains('SuperAdmin')) {
             $groups = $this->model->with(['user', 'contacts'])->latest()->paginate(20);
         }else {
             $groups  = $this->model->with('contacts')->where('user_id', auth()->user()->id)->latest()->paginate(20);

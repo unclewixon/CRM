@@ -16,7 +16,7 @@ interface AuthRepositoryInterface
 
     public function updateUserAcount($request, $id);
 
-    public function resetPassword($request, $id);
+    public function changePassword($request, $id);
 
 
 }

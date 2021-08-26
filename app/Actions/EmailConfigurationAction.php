@@ -43,7 +43,8 @@ class EmailConfigurationAction
     //get
     public function all()
     {
-        if (auth()->user()->role_id == 1) {
+        $user_roles = auth()->user()->roles->pluck('name');
+        if ($user_roles->contains('SuperAdmin')) {
             $configuration = $this->model->with(['user'])->latest()->paginate(20);
         }else {
             $configuration = $this->model->where('user_id', auth()->user()->id)->latest();

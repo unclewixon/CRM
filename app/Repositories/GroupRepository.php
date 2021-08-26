@@ -15,7 +15,7 @@ class GroupRepository implements GroupRepositoryInterface
         $this->action = $action;
     }
 
-    //buy
+    //create group
     public function createGroup($request)
     {
         $validator =  Validator::make($request->all(),[
@@ -57,7 +57,7 @@ class GroupRepository implements GroupRepositoryInterface
                 'message' => $validator->errors()
             ], 422);
         }else {
-             return  $this->action->update($request);
+             return  $this->action->update($request, $id);
         }
     }
 

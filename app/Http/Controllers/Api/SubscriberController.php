@@ -17,35 +17,21 @@ class SubscriberController extends Controller
         $this->middleware('auth:api');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //all subscribers
     public function index()
     {
         $subscribers = $this->subscriberRepository->allSubscribers();
         return $subscribers;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    //create
     public function store(Request $request)
     {
         $subscriber = $this->subscriberRepository->createSubscriber($request);
         return $subscriber;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //show details
     public function show($id)
     {
         $subscriber = $this->subscriberRepository->showSubscriber($id);
@@ -73,13 +59,7 @@ class SubscriberController extends Controller
          return $subscriber;
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //delete
     public function destroy($id)
     {
         $subscriber = $this->subscriberRepository->deleteSubscriber($id);

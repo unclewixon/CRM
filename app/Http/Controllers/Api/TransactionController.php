@@ -16,35 +16,21 @@ class TransactionController extends Controller
         $this->middleware('auth:api');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //all transactoin
     public function index()
     {
         $transactions = $this->contactGroupRepository->allTransactions();
         return $transactions;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //show details
     public function show($id)
     {
         $transaction = $this->contactGroupRepository->showTransaction($id);
         return $transaction;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //delete
     public function destroy($id)
     {
         $transaction = $this->contactGroupRepository->deleteTransaction($id);

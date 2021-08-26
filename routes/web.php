@@ -13,4 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [App\Helpers\MessageHelper::class, 'sendMessage']);
+Route::get('/', function() {
+    return view('welcome');
+});
+
+Route::get('/run-migrations', function () {
+     return Artisan::call('migrate', ["--force" => true ]);
+ });

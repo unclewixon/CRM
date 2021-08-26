@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'organization_name'  => $general_helper->clean($this->organization_name),
             'office_address'=> $general_helper->clean($this->office_address),
             'slug'      => $general_helper->clean($this->slug),
+            'roles'   =>  $this->whenLoaded('roles'),
             'created_at'=> $this->created_at,
             'updated_at'=> $this->updated_at
         ];

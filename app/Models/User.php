@@ -10,12 +10,13 @@ use App\Models\Concerns\UsesUuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
-    use HasFactory, SoftDeletes, UsesUuid, Notifiable, Sluggable;
+    use HasFactory, SoftDeletes, UsesUuid, Notifiable, Sluggable, CascadeSoftDeletes;
 
-    protected $fillable = ['name','email','phone','organization_name','office_address','role_id','is_subscribed','unit', 'password',];
+    protected $fillable = ['name','email','phone','organization_name','office_address','is_subscribed','unit', 'password', 'email_verified_at'];
 
     protected $hidden = [
         'password',
@@ -26,6 +27,8 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    protected $cascadeDeletes = ['roles'];
+
     public function getJWTIdentifier() {
         return $this->getKey();
     }
@@ -34,8 +37,8 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return [];
     }
 
-    public function role() {
-        return $this->BelongsTo(Role::class, 'role_id');
+    public function roles() {
+        return $this->belongsToMany(Role::class);
     }
 
     public function groups() {
@@ -50,8 +53,8 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->hasMany(Recharge::class);
     }
 
-    public function subscriptions() {
-        return $this->hasMany(Subscriber::class);
+    public function subscription() {
+        return $this->belongsTo(Subscriber::class);
     }
 
     public function sluggable(): array

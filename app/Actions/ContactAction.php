@@ -127,7 +127,6 @@ class ContactAction
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
            $plan = $this->model->find($id);
-           $plan->slug = null;
            $update = $plan->update([
                 'sur_name' => empty($request->sur_name) ? $plan->sur_name : $request->sur_name,
                 'first_name' =>   empty($request->first_name) ? $plan->first_name : $request->first_name,

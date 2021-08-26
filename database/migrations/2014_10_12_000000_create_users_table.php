@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('phone')->unique();
             $table->string('organization_name');
             $table->string('office_address');
-            $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('is_subscribed')->default(false);

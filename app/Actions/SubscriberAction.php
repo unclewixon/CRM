@@ -7,25 +7,20 @@ use App\Http\Resources\SubscriberResource;
 use App\Helpers\Payment;
 use Carbon\Carbon;
 use App\Helpers\Helper;
-use App\Helpers\General;
-use App\Models\UserAction;
+use App\Models\User;
 
 class SubscriberAction
 {
 
     public $model;
-    public $user_action;
     public $payment;
     public $helper;
-    public $general_helper;
 
-    public function __construct(Subscriber $model, Payment $payment, Helper $helper, General $general_helper, UserAction $user_action)
+    public function __construct(Subscriber $model, Payment $payment, Helper $helper)
     {
        $this->model = $model;
        $this->payment = $payment;
        $this->helper   =  $helper;
-       $this->general_helper = $general_helper;
-       $this->user_action =$user_action;
     }
 
     //create
@@ -54,7 +49,8 @@ class SubscriberAction
     //get
     public function all()
     {
-        if (auth()->user()->role_id == 1) {
+        $user_roles = auth()->user()->roles->pluck('name');
+        if ($user_roles->contains('SuperAdmin')) {
             $subscriber = $this->model->with(['plan','user'])->latest()->paginate(20);
         }else {
             $subscriber = $this->model->with(['plan'])->where('user_id', auth()->user()->id)->latest()->paginate(20);
@@ -73,41 +69,22 @@ class SubscriberAction
     {
         $all_subscribers = $this->model->where('status', '=', true)->get();
         foreach ($all_subscribers as $subscriber) {
-            $due_identifyer = $this->general_helper->subCalculator($subscriber->to);
+            $due_identifyer = $this->helper->subCalculator($subscriber->to);
             if ($due_identifyer < 1) {
                 $update =  $this->model->where('id', '=', $subscriber->id)->update([
                     'status' => false
                 ]);
-                $this->user_action->isSubscribed($subscriber->user_id, false);
+                $this->isSubscribed($subscriber->user_id, false);
             }
         }
-        
     }
 
-    //active subscribers
-    public function activeSubscribers()
+    //update user can_inspect
+    public function isSubscribed($id, $value)
     {
-        if (auth()->user()->role_id == 1) {
-            $active_subscribers = $this->model->with(['plan','user'])->where('status', '=', true)->latest()->paginate(20);
-            return SubscriberResource::collection($active_subscribers);
-        }else {
-          return response()->json([
-              'message' => 'Sorry you are not allowed to access this page'
-          ], 400);
-        }
-    }
-
-    //inactive subscribers
-    public function inactiveSubscribers()
-    {
-        if (auth()->user()->role_id == 1) {
-            $active_subscribers = $this->model->with(['plan','user'])->where('status', '=', false)->latest()->paginate(20);
-            return SubscriberResource::collection($active_subscribers);
-        }else {
-          return response()->json([
-              'message' => 'Sorry you are not allowed to access this page'
-          ], 400);
-        }
+        $user = User::find($id)->update([
+             'is_subscribed' => $value
+        ]);
     }
 
     //get

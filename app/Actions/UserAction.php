@@ -4,22 +4,24 @@ namespace App\Actions;
 
 use App\Models\Role;
 use App\Models\User;
-use App\Helpers\Token;
 use App\Http\Resources\UserResource;
-use Illuminate\Auth\Events\Registered;
+use App\Models\VerificationToken;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
+use App\Mail\VerificationMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserAction
 {
 
     public $model;
-    public $token;
+    public $verification_token;
     public $role;
 
-    public function __construct(User $model, Token $token, Role $role)
+    public function __construct(User $model, VerificationToken $verification_token, Role $role)
     {
        $this->model = $model;
-       $this->token = $token;
+       $this->verification_token = $verification_token;
        $this->role = $role;
     }
 
@@ -32,16 +34,25 @@ class UserAction
             'phone' => $request->phone,
             'organization_name' => $request->organization_name,
             'office_address' => $request->office_address,
-            'role_id' =>  $this->role->where('name', 'User')->first()->id,
             'password' => bcrypt($request->password),
             'slug' => SlugService::createSlug($this->model, 'slug', $request->name)
         ]);
+        $roleAttach =  $this->role->where('name', 'SuperAdmin')->first();
+        $user->roles()->attach($roleAttach->id);
         if ($user) {
-            event(new Registered($user));
-            $token =  auth()->login($user, true);
+            $token = Str::random(32);
+            $create_token =  $this->verification_token->create([
+                'email' => $user->email,
+                'token' => $token
+            ]);
+            $data = array(
+                'title' => 'Reset Password Notification',
+                'body' => 'You are receiving this email because we received a password reset request for your account.',
+                'token' => $token
+            );
+            Mail::to($user->email)->send(new VerificationMail($data));
             return response()->json([
                 'message' => 'Account created successfully',
-                'token' => $this->token->createNewToken($token)
             ], 200);
         }else {
            return response()->json([
@@ -80,7 +91,10 @@ class UserAction
     //get
     public function authUser()
     {
-       return new UserResource(auth()->user());
+        $user = $this->model->with(['roles' => function($query) {
+            $query->select(['name']);
+        } ])->find(auth()->user()->id);
+        return new UserResource($user);
     }
 
     //update
@@ -109,26 +123,6 @@ class UserAction
           return response()->json([
               'message' => 'Sorry this data do not exist'
           ], 404);
-        }
-    }
-
-    //update user can_inspect
-    public function isSubscribed($id, $value)
-    {
-        $data = $this->model->where('id', '=', $id)->exists();
-        if ($data) {
-            $user = $this->model->find($id)->update([
-                'is_subscribed' => $value
-            ]);
-            if ($user) {
-              return true;
-            }else {
-              return false;
-            }
-        }else {
-            return response()->json([
-                'message' => 'Sorry this data do not exist'
-            ], 404);
         }
     }
 
@@ -174,6 +168,14 @@ class UserAction
                 'message' => 'Sorry this data do not exist'
             ], 404);
         }
+    }
+
+    //update user can_inspect
+    public function isSubscribed($id, $value)
+    {
+        $user = User::find($id)->update([
+             'is_subscribed' => $value
+        ]);
     }
 
     //reset user password

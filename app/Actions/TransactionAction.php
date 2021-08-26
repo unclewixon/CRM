@@ -18,7 +18,8 @@ class ContactAction
     //get
     public function all()
     {
-        if (auth()->user()->role_id == 1) {
+        $user_roles = auth()->user()->roles->pluck('name');
+        if ($user_roles->contains('SuperAdmin')) {
             $contacts = $this->model->with(['user'])->latest()->paginate(20);
         }else {
             $contacts = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);

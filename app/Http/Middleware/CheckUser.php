@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Auth;
 
-class CheckAdmin
+class CheckUser
 {
     /**
      * Handle an incoming request.
@@ -18,7 +18,7 @@ class CheckAdmin
     public function handle(Request $request, Closure $next)
     {
         $user_roles = Auth::user()->roles->pluck('name');
-        if ($user_roles->contains('SuperAdmin') || $user_roles->contains('Admin') ) {
+        if ($user_roles->contains('SuperAdmin') || $user_roles->contains('Admin') || $user_roles->contains('User') ) {
             return $next($request);
         }else {
             return response()->json([

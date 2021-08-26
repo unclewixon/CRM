@@ -46,7 +46,8 @@ class RechargeAction
     //get
     public function all()
     {
-        if (auth()->user()->role_id == 1) {
+        $user_roles = auth()->user()->roles->pluck('name');
+        if ($user_roles->contains('SuperAdmin')) {
             $my_units = $this->model->with(['user'])->latest()->paginate(20);
         }else {
             $my_units  = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);

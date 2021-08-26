@@ -83,7 +83,7 @@ class Handler extends ExceptionHandler
            if ($e instanceof \Symfony\Component\Routing\Exception\RouteNotFoundException) {
                return response([
                    'status' => 'error',
-                   'errors' => $e->getMessage()
+                   'errors' => 'You are not logged in'
                ], 401);
            }
            dd($e);

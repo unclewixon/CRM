@@ -1,16 +1,17 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\ResetPasswordRepositoryInterface;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use App\Repositories\Contracts\ResetPasswordRepositoryInterface;
 
 class ResetPasswordRepository implements ResetPasswordRepositoryInterface
 {
-    //send password reset link 
+    //send password reset link
     public function sendPasswordResetLink($request)
     {
         $validator =  Validator::make($request->all(),[
@@ -23,13 +24,21 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface
 
         }else {
 
-            $status = Password::sendResetLink(
-                $request->only('email')
-            );
-        
-            return $status === Password::RESET_LINK_SENT
-                ? back()->with(['status' => __($status)])
-                : back()->withErrors(['email' => __($status)]);
+            $email_check = User::where('email', '=', $request->email)->first();
+            if ($email_check) {
+                $status = Password::sendResetLink(
+                    $request->only('email')
+                );
+                if ($status) {
+                    return response()->json([
+                        'message' => 'Email link sent successfully'
+                    ], 200);
+                }
+            }else {
+                return response()->json([
+                        'message' => 'Sorry this email do not exist in our system'
+                ], 404);
+            }
         }
     }
 
@@ -38,7 +47,6 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface
     {
         $validator =  Validator::make($request->all(),[
             'token' => 'required',
-            'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
         ]);
         if ($validator->fails()) {
@@ -48,21 +56,23 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface
 
         }else {
             $status = Password::reset(
-                $request->only('email', 'password', 'password_confirmation', 'token'),
+                $request->only('password', 'password_confirmation', 'token'),
                 function ($user, $password) {
                     $user->forceFill([
                         'password' => bcrypt($password)
                     ])->setRememberToken(Str::random(60));
-        
+
                     $user->save();
-        
+
                     event(new PasswordReset($user));
                 }
             );
-        
-            return $status === Password::PASSWORD_RESET
-                    ? back()->with(['status' => __($status)])
-                    : back()->withErrors(['email' => __($status)]);
+
+            if ($status) {
+                return response()->json([
+                    'message' => 'Password reset successfully'
+                ], 200);
+            }
         }
     }
 }
