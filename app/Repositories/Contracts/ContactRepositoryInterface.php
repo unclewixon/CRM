@@ -2,11 +2,13 @@
 
 namespace App\Repositories\Contracts;
 
+use Illuminate\Http\Request;
+
 interface ContactRepositoryInterface
 {
     public function createContact($request);
 
-    public function allContacts();
+    public function allContacts($request);
 
     public function showContact($id);
 
@@ -23,4 +25,6 @@ interface ContactRepositoryInterface
     public function batchContactUpload($request);
 
     public function deleteContact($id);
+
+    public function analytics();
 }

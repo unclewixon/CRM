@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Repositories\Contracts;
 
@@ -9,5 +9,9 @@ interface SendMessageRepositoryInterface
     public function sendSingleMessage($request);
 
     public function sendMessageToAllContact($request);
-    
+
+    public function smsAnalytics();
+
+    public function deliveredAnalytics();
+
 }

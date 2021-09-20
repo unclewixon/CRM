@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Mail;
 
 class SendEmailRepository implements SendEmailRepositoryInterface
 {
-        
     public $model;
 
     public function __construct(Contact $model)
@@ -48,7 +47,7 @@ class SendEmailRepository implements SendEmailRepositoryInterface
                 'message' => 'Message sent successfully',
             ], 200);
         }
-    }   
+    }
 
      //send single email
     public function sendSingleEmail($request)
@@ -79,9 +78,9 @@ class SendEmailRepository implements SendEmailRepositoryInterface
                     'message' => 'Message not sent',
                 ], 401);
            }
-           
+
         }
-    }  
+    }
 
     //send to all
     public function sendEmailToAllContacts($request)
@@ -108,6 +107,6 @@ class SendEmailRepository implements SendEmailRepositoryInterface
                 'message' => 'Message sent successfully',
             ], 200);
         }
-    } 
+    }
 
 }

@@ -40,53 +40,55 @@ class Handler extends ExceptionHandler
     }
 
     public function render($request, Throwable $e)
-   {
+    {
 
-       if($request->is('api*')) {
+        if ($request->wantsJson()) {
 
-           if ($e instanceof \Illuminate\Database\QueryException) {
-               return response([
-                   'status' => 'error',
-                   'errors' => $e->getMessage()
-               ], 400);
-           }
-           if ($e instanceof \Illuminate\Contracts\Container\BindingResolutionException) {
-               return response([
-                   'status' => 'error',
-                   'errors' => $e->getMessage()
-               ], 400);
-           }
-           if ($e instanceof  \Illuminate\Validation\ValidationException) {
-               return response([
-                   'status' => 'error',
-                   'errors' => $e->getMessage()
-               ], 400);
-           }
-           if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
-               return response([
-                   'status' => 'error',
-                   'errors' => $e->getMessage()
-               ], 400);
-           }
-           if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
-               return response([
-                   'status' => 'error',
-                   'errors' => $e->getMessage()
-               ], 400);
-           }
-           if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-               return response([
-                   'status' => 'error',
-                   'errors' => $e->getMessage()
-               ], 400);
-           }
-           if ($e instanceof \Symfony\Component\Routing\Exception\RouteNotFoundException) {
-               return response([
-                   'status' => 'error',
-                   'errors' => 'You are not logged in'
-               ], 401);
-           }
-           dd($e);
-       }
-   }
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                return response([
+                    'status' => 'error',
+                    'errors' => $e->getMessage()
+                ], 400);
+            }
+            if ($e instanceof \Illuminate\Contracts\Container\BindingResolutionException) {
+                return response([
+                    'status' => 'error',
+                    'errors' => $e->getMessage()
+                ], 400);
+            }
+            if ($e instanceof \Illuminate\Validation\ValidationException) {
+                return response([
+                    'status' => 'error',
+                    'errors' => $e->getMessage()
+                ], 400);
+            }
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
+                return response([
+                    'status' => 'error',
+                    'errors' => $e->getMessage()
+                ], 400);
+            }
+            if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                return response([
+                    'status' => 'error',
+                    'errors' => $e->getMessage()
+                ], 400);
+            }
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+                return response([
+                    'status' => 'error',
+                    'errors' => $e->getMessage()
+                ], 400);
+            }
+            if ($e instanceof \Symfony\Component\Routing\Exception\RouteNotFoundException) {
+                return response([
+                    'status' => 'error',
+                    'errors' => 'You are not logged in'
+                ], 401);
+            }
+            dd($e);
+        }
+
+        return parent::render($request, $e);
+    }
 }

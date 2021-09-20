@@ -77,7 +77,7 @@ class Payment
             $active = Subscriber::where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->first();
             $update =  $active->update([
                 'status' => true
-            ]);          
+            ]);
             if ($update) {
                   $sub = $this->user_action->isSubscribed(auth()->user()->id, true);
             }

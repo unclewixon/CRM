@@ -36,4 +36,18 @@ class SendMessageController extends Controller
         $send_message = $this->sendMessageRepository->sendMessageToAllContact($request);
         return $send_message;
     }
+
+    //send sms to all contacts
+    public function smsAnalytics()
+    {
+        $sms = $this->sendMessageRepository->smsAnalytics();
+        return $sms;
+    }
+
+    //send sms to all contacts
+    public function deliveredAnalytics()
+    {
+        $delivered = $this->sendMessageRepository->deliveredAnalytics();
+        return $delivered;
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function() {
-    return view('welcome');
+Route::domain(env('SITE_URL'))->group(function () {
+    Route::get('/{any}', [ApplicationController::class, 'index'])->where('any', '.*');
 });
-
-Route::get('/run-migrations', function () {
-     return Artisan::call('migrate', ["--force" => true ]);
- });

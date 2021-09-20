@@ -18,11 +18,13 @@ class ContactResource extends JsonResource
         $general_helper = new General();
         return [
             'id'   => $this->id,
-            'sur_name'  => $general_helper->clean($this->sur_name),
-            'first_name'  => $general_helper->clean($this->first_name),
-            'email'  => $general_helper->clean($this->first_name),
+            'surname'  => $general_helper->clean($this->surname),
+            'firstname'  => $general_helper->clean($this->firstname),
+            'email'  => $general_helper->clean($this->email),
             'scheme' => $general_helper->clean($this->scheme),
             'gender' => $general_helper->clean($this->gender),
+            'address' => $general_helper->clean($this->address),
+            'emr_id' => $general_helper->clean($this->emr_id),
             'phone' => $general_helper->clean($this->phone_number),
             'dob'  => $this->dob,
             'user'  => new UserResource($this->whenLoaded('user')),

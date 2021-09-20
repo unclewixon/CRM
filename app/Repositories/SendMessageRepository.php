@@ -3,13 +3,13 @@
 namespace App\Repositories;
 
 use App\Models\Contact;
+use App\Repositories\Contracts\SendMessageRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
-use App\Repositories\Contracts\SendEmailRepositoryInterface;
 use App\Helpers\MessageHelper;
-use App\Hepers\Charge;
+use App\Helpers\Charge;
 use App\Actions\UserAction;
 
-class SendEmailRepository implements SendEmailRepositoryInterface
+class SendMessageRepository implements SendMessageRepositoryInterface
 {
 
 	public $model;
@@ -90,7 +90,7 @@ class SendEmailRepository implements SendEmailRepositoryInterface
                 return response()->json([
                     'message' => 'Sorry you do not have enough to send this message ',
                 ], 401);
-            }else { 
+            }else {
                 $remove_charge_from_my_unit = $this->user_action->subtractUnit(auth()->user()->id, $my_charge);
                 $send = $this->message_helper->sendMessage($contact->phone_number, $request->message);
                 if ($send) {
@@ -104,13 +104,13 @@ class SendEmailRepository implements SendEmailRepositoryInterface
                 }
             }
         }
-    }   
+    }
 
-    public function sendMessageToAllContact($request) 
+    public function sendMessageToAllContact($request)
     {
          $request->validate([
             'message'  => 'required',
-            'page_number' => 'required', 
+            'page_number' => 'required',
             'pages' => 'required'
         ]);
 
@@ -139,9 +139,41 @@ class SendEmailRepository implements SendEmailRepositoryInterface
                     return response()->json([
                         'message' => 'Message not sent',
                     ], 401);
-                } 
+                }
             }
         }
+    }
+
+    public function smsAnalytics()
+    {
+        $result = (object)null;
+        $result->total = $this->model->count();
+
+        $series = (object)null;
+        $series->name = 'SMS Sent';
+        $series->data = [0, 0, 0, 0, 0];
+
+        $result->series = $series;
+
+        return response()->json([
+            'result' => $result
+        ], 200);
+    }
+
+    public function deliveredAnalytics()
+    {
+        $result = (object)null;
+        $result->total = $this->model->count();
+
+        $series = (object)null;
+        $series->name = 'SMS Delivered';
+        $series->data = [0, 0, 0, 0, 0];
+
+        $result->series = $series;
+
+        return response()->json([
+            'result' => $result
+        ], 200);
     }
 
 }

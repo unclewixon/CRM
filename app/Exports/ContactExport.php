@@ -13,8 +13,8 @@ class ContactExport implements WithHeadings
     public function headings(): array
     {
         return [
-            'sur_name',
-            'first_name',
+            'surname',
+            'firstname',
             'email',
             'scheme',
             'gender',

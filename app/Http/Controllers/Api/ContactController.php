@@ -17,10 +17,17 @@ class ContactController extends Controller
     }
 
     //all contacts
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = $this->contactRepository->allContacts();
+        $contacts = $this->contactRepository->allContacts($request);
         return $contacts;
+    }
+
+    //analytics
+    public function analytics()
+    {
+        $analytics = $this->contactRepository->analytics();
+        return $analytics;
     }
 
     //create account

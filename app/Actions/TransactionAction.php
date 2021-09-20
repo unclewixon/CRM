@@ -5,7 +5,7 @@ namespace App\Actions;
 use App\Models\Transaction;
 use App\Http\Resources\TransactionResource;
 
-class ContactAction
+class TransactionAction
 {
 
     public $model;

@@ -24,7 +24,7 @@ class RechargeAction
     public function create($request)
     {
         $unit = $this->model->create([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user('api')->id,
             'unit_id' => $request->unit_id,
             'number' => $request->unit_number,
             'amount' => $this->helper->calculateCost($request->unit_id,$request->unit_number)

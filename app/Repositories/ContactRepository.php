@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Actions\ContactAction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Contracts\ContactRepositoryInterface;
 use App\Imports\ContactImport;
@@ -20,9 +21,9 @@ class ContactRepository implements ContactRepositoryInterface
     //buy
     public function createContact($request)
     {
-        $validator =  Validator::make($request->all(),[
-            'sur_name' => 'required',
-            'first_name' => 'required',
+        $validator = Validator::make($request->all(), [
+            'surname' => 'required',
+            'firstname' => 'required',
             'email' => 'required|email',
             'scheme' => 'required',
             'phone_number' => 'required',
@@ -34,15 +35,15 @@ class ContactRepository implements ContactRepositoryInterface
             return response()->json([
                 'message' => $validator->errors()
             ], 422);
-        }else {
-             return  $this->action->create($request);
+        } else {
+            return $this->action->create($request);
         }
     }
 
     //all
-    public function allContacts()
+    public function allContacts($request)
     {
-        return $this->action->all();
+        return $this->action->all($request);
     }
 
     //show
@@ -54,7 +55,7 @@ class ContactRepository implements ContactRepositoryInterface
     //add single contact
     public function addContactsToGrouop($request)
     {
-        $validator =  Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'group_id' => 'required',
             'contacts_id' => 'required|array'
         ]);
@@ -63,15 +64,15 @@ class ContactRepository implements ContactRepositoryInterface
             return response()->json([
                 'message' => $validator->errors()
             ], 422);
-        }else {
-             return  $this->action->addContactsToGroup($request);
+        } else {
+            return $this->action->addContactsToGroup($request);
         }
     }
 
     //remove mutiple contacts
     public function removeContactsFromGrouop($request)
     {
-        $validator =  Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'group_id' => 'required',
             'contacts_id' => 'required|array'
         ]);
@@ -80,15 +81,15 @@ class ContactRepository implements ContactRepositoryInterface
             return response()->json([
                 'message' => $validator->errors()
             ], 422);
-        }else {
-             return  $this->action->removeContactsFromGroup($request);
+        } else {
+            return $this->action->removeContactsFromGroup($request);
         }
     }
 
     //add single contact
     public function addContactToGrouop($request)
     {
-        $validator =  Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'group_id' => 'required',
             'contact_id' => 'required'
         ]);
@@ -97,15 +98,15 @@ class ContactRepository implements ContactRepositoryInterface
             return response()->json([
                 'message' => $validator->errors()
             ], 422);
-        }else {
-             return  $this->action->addContactToGroup($request);
+        } else {
+            return $this->action->addContactToGroup($request);
         }
     }
 
     //remove single contact
     public function removeContactFromGrouop($request)
     {
-        $validator =  Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'group_id' => 'required',
             'contact_id' => 'required'
         ]);
@@ -114,33 +115,37 @@ class ContactRepository implements ContactRepositoryInterface
             return response()->json([
                 'message' => $validator->errors()
             ], 422);
-        }else {
-             return  $this->action->removeContactFromGroup($request);
+        } else {
+            return $this->action->removeContactFromGroup($request);
         }
     }
 
     //batch contacts
     public function batchContactUpload($request)
     {
-        $validator =  Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'file' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()
             ], 422);
-        }else {
-            $insert =  Excel::import(new ContactImport,request()->file('file'));
-            return $insert;
+        } else {
+            $count = Excel::toArray(new ContactImport, request()->file('file'));
+            Excel::import(new ContactImport, request()->file('file'));
+
+            return response()->json([
+                'total' => count($count[0]),
+            ]);
         }
     }
 
     //update contact details
     public function updateContact($request, $id)
     {
-        $validator =  Validator::make($request->all(),[
-            'sur_name' => 'required',
-            'first_name' => 'required',
+        $validator = Validator::make($request->all(), [
+            'surname' => 'required',
+            'firstname' => 'required',
             'email' => 'required|email',
             'scheme' => 'required',
             'phone_number' => 'required',
@@ -152,8 +157,8 @@ class ContactRepository implements ContactRepositoryInterface
             return response()->json([
                 'message' => $validator->errors()
             ], 422);
-        }else {
-             return  $this->action->update($request, $id);
+        } else {
+            return $this->action->update($request, $id);
         }
     }
 
@@ -161,5 +166,10 @@ class ContactRepository implements ContactRepositoryInterface
     public function deleteContact($id)
     {
         return $this->action->delete($id);
+    }
+
+    public function analytics()
+    {
+        return $this->action->analytics();
     }
 }

@@ -15,36 +15,34 @@ use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ContactImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnError, SkipsOnFailure
+class ContactImport implements ToModel, WithValidation, SkipsOnError, SkipsOnFailure
 {
     use Importable, SkipsErrors, SkipsFailures;
-    
+
     public function model(array $row)
     {
-        return new Employee([
+        try {
+            $dob = $row[5] == '' ? null : Carbon::parse($row[5])->format('Y-m-d');
+        } catch (\Exception $e) {
+            $dob = null;
+        }
+
+        return new Contact([
             'user_id' => auth()->user()->id,
-            'sur_name' => $row['sur_name'],
-            'first_name' => $row['first_name'],
-            'email' => $row['email'],
-            'scheme' => $row['scheme'],
-            'gender' => $row['gender'],
-            'phone_number' => $row['phone_number'],
-            'dob' =>  Carbon::parse($row['dob'])->format('Y-m-d')
+            'firstname' => $row[0],
+            'surname' => $row[1],
+            'email' => $row[2],
+            'phone_number' => $row[4],
+            'dob' => $dob,
+            'emr_id' => $row[6],
+            'address' => $row[7],
+            'scheme' => $row[8],
         ]);
     }
 
     public function rules(): array
     {
-        return [
-            '*.sur_name' => ['required'],
-            '*.first_name' => ['required'],
-            '*.email' => ['required'],
-            '*.email' => ['required'],
-            '*.scheme' => ['required'],
-            '*.gender' => ['required'],
-            '*.dob' => ['required'],
-            '*.phone_number' => ['required']
-        ];
+        return [];
     }
 
 
