@@ -75,7 +75,7 @@
           </b-card-title>
           <b-card-text>
             Add a <code class="highlighter-rouge">.border-{left/right}-{color} .border-{left/right}-3</code> helper
-            classes, where color can be any color from Vuexy Admin color palette.
+            classes, where color can be any color from Sendwift Admin color palette.
           </b-card-text>
           <blockquote class="blockquote pl-1 border-left-primary border-left-3">
             <p class="mb-0">

@@ -106,7 +106,7 @@
       <b-col md="6">
         <b-card title="Lists icons">
           <b-card-text>
-            list of terms with icons, use <code>.list-style-icons</code> class. You can use any icon from Vuexy Admin
+            list of terms with icons, use <code>.list-style-icons</code> class. You can use any icon from Sendwift Admin
             icon types.
           </b-card-text>
           <ul class="list-style-icons">

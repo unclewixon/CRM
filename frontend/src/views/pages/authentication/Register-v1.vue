@@ -7,7 +7,7 @@
         <b-link class="brand-logo">
           <vuexy-logo />
           <h2 class="brand-text text-primary ml-1">
-            Vuexy
+            Sendwift
           </h2>
         </b-link>
 

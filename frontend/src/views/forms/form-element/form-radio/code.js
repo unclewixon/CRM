@@ -206,7 +206,7 @@ export const codeSize = `
         </b-form-radio>
       </li>
     </ul>
-    <h1>Vuexy radio button sizes</h1>
+    <h1>Sendwift radio button sizes</h1>
     <ul class="list-unstyled mb-0">
       <li class="d-inline-block mr-2">
         <b-form-radio

@@ -26,7 +26,7 @@ export const codeBasic = `
               <b-form-input
                 id="item-name"
                 type="text"
-                placeholder="Vuexy Admin Template"
+                placeholder="Sendwift Admin Template"
               />
             </b-form-group>
           </b-col>
