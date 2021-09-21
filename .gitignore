@@ -1,10 +1,6 @@
 /node_modules
 /public/hot
 /public/storage
-/public/js
-/public/css
-/public/fonts
-/public/images
 /storage/*.key
 /vendor
 .env
@@ -21,4 +17,3 @@ supervisord.pid
 /.idea
 /.vscode
 worker.log
-/public/mix-manifest.json
