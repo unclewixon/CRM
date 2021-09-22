@@ -6,12 +6,19 @@
   >
     <template #button-content>
       <feather-icon
-        badge="6"
-        badge-classes="bg-danger"
+        badge="0"
+        badge-classes="bg-info"
         class="text-body"
         icon="BellIcon"
         size="21"
       />
+      <!--      <feather-icon-->
+      <!--        badge="6"-->
+      <!--        badge-classes="bg-danger"-->
+      <!--        class="text-body"-->
+      <!--        icon="BellIcon"-->
+      <!--        size="21"-->
+      <!--      />-->
     </template>
 
     <!-- Header -->
@@ -20,12 +27,12 @@
         <h4 class="notification-title mb-0 mr-auto">
           Notifications
         </h4>
-        <b-badge
-          pill
-          variant="light-primary"
-        >
-          6 New
-        </b-badge>
+        <!--        <b-badge-->
+        <!--          pill-->
+        <!--          variant="light-primary"-->
+        <!--        >-->
+        <!--          6 New-->
+        <!--        </b-badge>-->
       </div>
     </li>
 
@@ -58,17 +65,6 @@
           <small class="notification-text">{{ notification.subtitle }}</small>
         </b-media>
       </b-link>
-
-      <!-- System Notification Toggler -->
-      <div class="media d-flex align-items-center">
-        <h6 class="font-weight-bolder mr-auto mb-0">
-          System Notifications
-        </h6>
-        <b-form-checkbox
-          :checked="true"
-          switch
-        />
-      </div>
 
       <!-- System Notifications -->
       <b-link
@@ -127,48 +123,10 @@ export default {
   },
   setup() {
     /* eslint-disable global-require */
-    const notifications = [
-      {
-        title: 'Congratulation Sam 🎉',
-        avatar: require('@/assets/images/avatars/6-small.png'),
-        subtitle: 'Won the monthly best seller badge',
-        type: 'light-success',
-      },
-      {
-        title: 'New message received',
-        avatar: require('@/assets/images/avatars/9-small.png'),
-        subtitle: 'You have 10 unread messages',
-        type: 'light-info',
-      },
-      {
-        title: 'Revised Order 👋',
-        avatar: 'MD',
-        subtitle: 'MD Inc. order updated',
-        type: 'light-danger',
-      },
-    ]
+    const notifications = []
     /* eslint-disable global-require */
 
-    const systemNotifications = [
-      {
-        title: 'Server down',
-        subtitle: 'USA Server is down due to hight CPU usage',
-        type: 'light-danger',
-        icon: 'XIcon',
-      },
-      {
-        title: 'Sales report generated',
-        subtitle: 'Last month sales report generated',
-        type: 'light-success',
-        icon: 'CheckIcon',
-      },
-      {
-        title: 'High memory usage',
-        subtitle: 'BLR Server using high memory',
-        type: 'light-warning',
-        icon: 'AlertTriangleIcon',
-      },
-    ]
+    const systemNotifications = []
 
     const perfectScrollbarSettings = {
       maxScrollbarLength: 60,

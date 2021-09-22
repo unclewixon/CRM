@@ -24,10 +24,7 @@
     </div>
 
     <b-navbar-nav class="nav align-items-center ml-auto">
-      <locale />
       <dark-Toggler class="d-none d-lg-block" />
-      <search-bar />
-      <cart-dropdown />
       <notification-dropdown />
       <user-dropdown />
     </b-navbar-nav>

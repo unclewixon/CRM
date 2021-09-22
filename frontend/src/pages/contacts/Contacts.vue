@@ -82,18 +82,6 @@
 
           <div class="text-nowrap">
             <feather-icon
-              :id="`invoice-row-${data.item.id}-send-icon`"
-              icon="SendIcon"
-              class="cursor-pointer"
-              size="16"
-            />
-            <b-tooltip
-              title="Send SMS"
-              class="cursor-pointer"
-              :target="`invoice-row-${data.item.id}-send-icon`"
-            />
-
-            <feather-icon
               :id="`invoice-row-${data.item.id}-preview-icon`"
               icon="EyeIcon"
               size="16"
@@ -101,7 +89,7 @@
               @click="$router.push({ name: 'contact-view', params: { id: data.item.id }})"
             />
             <b-tooltip
-              title="Preview Invoice"
+              title="View Contact"
               :target="`invoice-row-${data.item.id}-preview-icon`"
             />
 

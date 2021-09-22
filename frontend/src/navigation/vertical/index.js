@@ -46,5 +46,5 @@ import formAndTable from './forms-and-table'
 import apps from './apps'
 
 // Array of sections
-export default [...apps, ...dashboard, ...appsAndPages, ...others, ...chartsAndMaps, ...uiElements, ...formAndTable]
-// export default [...apps]
+// export default [...apps, ...dashboard, ...appsAndPages, ...others, ...chartsAndMaps, ...uiElements, ...formAndTable]
+export default [...apps]
