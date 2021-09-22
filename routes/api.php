@@ -141,7 +141,7 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
     });
 
     Route::get('/', function () {
-        return response()->json(['message' => 'CRM API']);
+        return response()->json(['message' => 'SendSwift API']);
     });
 
 });
