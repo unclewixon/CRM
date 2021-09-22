@@ -1,7 +1,0 @@
-/*!
- * BootstrapVue Icons, generated from Bootstrap Icons 1.2.1
- *
- * @link https://icons.getbootstrap.com/
- * @license MIT
- * https://github.com/twbs/icons/blob/master/LICENSE.md
- */

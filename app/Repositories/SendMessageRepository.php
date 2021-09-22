@@ -2,25 +2,26 @@
 
 namespace App\Repositories;
 
+use App\Jobs\SendSMS;
 use App\Models\Contact;
 use App\Repositories\Contracts\SendMessageRepositoryInterface;
-use Illuminate\Support\Facades\Validator;
-use App\Helpers\MessageHelper;
+use Illuminate\Http\Request;
 use App\Helpers\Charge;
 use App\Actions\UserAction;
+use SMSGlobal\Credentials;
 
 class SendMessageRepository implements SendMessageRepositoryInterface
 {
 
 	public $model;
-	public $message_helper;
     public $charge;
     public $user_action;
 
-	public function __construct(Contact $model, MessageHelper $message_helper, Charge $charge, UserAction $user_action)
+	public function __construct(Contact $model, Charge $charge, UserAction $user_action)
 	{
+        Credentials::set(config('smsglobal.key_public'), config('smsglobal.key_secret'));
+
 		$this->model = $model;
-		$this->message_helper = $message_helper;
         $this->charge = $charge;
         $this->user_action = $user_action;
 	}
@@ -52,18 +53,12 @@ class SendMessageRepository implements SendMessageRepositoryInterface
             }else {
                 $remove_charge_from_my_unit = $this->user_action->subtractUnit(auth()->user()->id, $my_charge);
                 foreach ($contacts as $contact) {
-                    $send = $this->message_helper->sendMessage($contact->phone_number, $request->message);
+                    dispatch(new SendSMS($contact, $request->message));
                 }
 
-                if ($send) {
-                    return response()->json([
-                        'message' => 'Message sent successfully',
-                    ], 200);
-                }else {
-                    return response()->json([
-                        'message' => 'Message not sent',
-                    ], 401);
-                }
+                return response()->json([
+                    'message' => 'Message scheduled successfully',
+                ], 200);
             }
 
         }
@@ -92,16 +87,11 @@ class SendMessageRepository implements SendMessageRepositoryInterface
                 ], 401);
             }else {
                 $remove_charge_from_my_unit = $this->user_action->subtractUnit(auth()->user()->id, $my_charge);
-                $send = $this->message_helper->sendMessage($contact->phone_number, $request->message);
-                if ($send) {
-                    return response()->json([
-                        'message' => 'Message sent successfully',
-                    ], 200);
-                }else {
-                    return response()->json([
-                        'message' => 'Message not sent',
-                    ], 401);
-                }
+                dispatch(new SendSMS($contact, $request->message));
+
+                return response()->json([
+                    'message' => 'Message scheduled successfully',
+                ], 200);
             }
         }
     }
@@ -129,17 +119,12 @@ class SendMessageRepository implements SendMessageRepositoryInterface
             }else {
                 $remove_charge_from_my_unit = $this->user_action->subtractUnit(auth()->user()->id, $my_charge);
                 foreach ($contacts as $contact) {
-                    $send = $this->message_helper->sendMessage($contact->phone_number, $request->message);
+                    dispatch(new SendSMS($contact, $request->message));
                 }
-                if ($send) {
-                    return response()->json([
-                        'message' => 'Message sent successfully',
-                    ], 200);
-                }else {
-                    return response()->json([
-                        'message' => 'Message not sent',
-                    ], 401);
-                }
+
+                return response()->json([
+                    'message' => 'Message scheduled successfully',
+                ], 200);
             }
         }
     }
@@ -173,6 +158,18 @@ class SendMessageRepository implements SendMessageRepositoryInterface
 
         return response()->json([
             'result' => $result
+        ], 200);
+    }
+
+    public function receipt(Request $request)
+    {
+        error_log(json_encode($request->all));
+
+        //update sms scheduled
+        //ScheduledSms::where('')->update(['status' => '']);
+
+        return response()->json([
+            'result' => true,
         ], 200);
     }
 

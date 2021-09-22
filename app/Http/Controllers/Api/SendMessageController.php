@@ -50,4 +50,11 @@ class SendMessageController extends Controller
         $delivered = $this->sendMessageRepository->deliveredAnalytics();
         return $delivered;
     }
+
+    //get delivery receipt
+    public function deliveryReceipt(Request  $request)
+    {
+        $delivered = $this->sendMessageRepository->receipt($request);
+        return $delivered;
+    }
 }

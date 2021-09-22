@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Contracts;
 
+use Illuminate\Http\Request;
+
 interface SendMessageRepositoryInterface
 {
     public function sendBulkSms($request);
@@ -13,5 +15,7 @@ interface SendMessageRepositoryInterface
     public function smsAnalytics();
 
     public function deliveredAnalytics();
+
+    public function receipt(Request $request);
 
 }

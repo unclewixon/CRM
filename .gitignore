@@ -1,11 +1,14 @@
 /node_modules
 /public/hot
 /public/storage
+/public/js
+/public/css
+/public/fonts
+/public/images
 /storage/*.key
 /vendor
 .env
 .env.production
-.env.backup
 .phpunit.result.cache
 docker-compose.override.yml
 Homestead.json
@@ -17,4 +20,5 @@ supervisord.pid
 .DS_Store
 /.idea
 /.vscode
+/public/mix-manifest.json
 worker.log

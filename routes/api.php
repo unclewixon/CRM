@@ -107,6 +107,7 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::post('/message-contacts', [SendMessageController::class, 'sendSingle']);
             Route::get('/sms-analytics', [SendMessageController::class, 'smsAnalytics']);
             Route::get('/delivered-analytics', [SendMessageController::class, 'deliveredAnalytics']);
+            Route::get('/delivery-receipt', [SendMessageController::class, 'deliveryReceipt']);
 
             Route::post('/logout', [AuthController::class, 'logout']);
             Route::post('/refresh', [AuthController::class, 'refresh']);

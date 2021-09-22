@@ -19,7 +19,7 @@ class Payment
     public function __construct(UserAction $user_action)
     {
         $this->user_action = $user_action;
-        $this->subscriber = $subscriber;
+//        $this->subscriber = $subscriber;
     }
 
     //make paystack payment
@@ -79,7 +79,7 @@ class Payment
                 'status' => true
             ]);
             if ($update) {
-                  $sub = $this->user_action->isSubscribed(auth()->user()->id, true);
+                  $this->user_action->isSubscribed(auth()->user()->id, true);
             }
             $details = [
                 'title' => 'Subscription',
@@ -103,6 +103,10 @@ class Payment
                 'message' => "You have successfully bought $transType->unit_number of units",
             ], 200);
         }
+
+        return response()->json([
+            'error' => "",
+        ], 400);
     }
 
 }
