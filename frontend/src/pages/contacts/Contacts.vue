@@ -229,7 +229,7 @@
     </b-modal>
 
     <!-- Compose Email Modal -->
-    <send-sms
+    <send-message
       v-if="openModal"
       v-model="openModal"
       :contacts="selectedUsers"
@@ -250,7 +250,7 @@ import Ripple from 'vue-ripple-directive'
 import store from '@/store'
 import useContacts from './useContacts'
 import contactModule from '../contactModule'
-import SendSms from './SendSms.vue'
+import SendMessage from './SendMessage.vue'
 
 export default {
   components: {
@@ -272,7 +272,7 @@ export default {
     BFormCheckbox,
 
     vSelect,
-    SendSms,
+    SendMessage,
   },
   directives: {
     'b-modal': VBModal,
