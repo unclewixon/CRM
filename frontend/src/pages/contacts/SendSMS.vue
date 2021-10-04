@@ -1,121 +1,214 @@
 <template>
-  <b-card>
-    <!-- form -->
-    <b-form @submit.prevent="sendSMS">
-      <b-row>
+  <b-modal
+    id="compose-sms"
+    :visible="shallShowSmsComposeModal"
+    title="Send SMS"
+    modal-class="modal-sticky"
+    footer-class="d-flex justify-content-between"
+    body-class=""
+    size="lg"
+    no-fade
+    hide-backdrop
+    static
+    @change="val => $emit('update:shall-show-sms-compose-modal', val)"
+  >
+    <!-- Modal Header -->
+    <template #modal-header>
+      <h5 class="modal-title">
+        Send SMS
+      </h5>
+      <div class="modal-actions">
+        <feather-icon
+          icon="MinusIcon"
+          class="cursor-pointer"
+          @click="$emit('update:shall-show-sms-compose-modal', false)"
+        />
+        <feather-icon
+          icon="XIcon"
+          class="ml-1 cursor-pointer"
+          @click="discardSms"
+        />
+      </div>
+    </template>
 
-        <!-- website -->
-        <b-col md="6">
-          <b-form-group
-            label-for="sender-id"
-            label="Sender ID"
-          >
-            <b-form-input
-              id="website"
-              v-model="sender_id"
-              placeholder="Sender ID"
-            />
-          </b-form-group>
-        </b-col>
-        <!--/ website -->
+    <!-- Modal Footer -->
+    <template #modal-footer>
+      <!-- Footer: Left Content -->
+      <div>
+        <b-button
+          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+          variant="primary"
+          @click="sendSMS"
+        >
+          Send SMS
+        </b-button>
+      </div>
 
-        <!-- phone -->
-        <b-col md="6">
-          <b-form-group
-            label-for="phone"
-            label="Phone"
-          >
-            <b-form-input
-              id="phone"
-              v-model="phone"
-              placeholder="Phone number"
-            />
-          </b-form-group>
-        </b-col>
-        <!-- phone -->
+      <!-- Footer: Right Content -->
+      <div>
+        <!-- Discard Compose -->
+        <feather-icon
+          icon="TrashIcon"
+          size="17"
+          class="ml-75 cursor-pointer"
+          @click="discardSms"
+        />
+      </div>
+    </template>
 
-        <!-- bio -->
-        <b-col cols="12">
-          <b-form-group
-            label="Message"
-            label-for="message"
-          >
-            <b-form-textarea
-              id="bio-area"
-              v-model="message"
-              rows="4"
-              placeholder="Your message here..."
-            />
-          </b-form-group>
-        </b-col>
-        <!--/ bio -->
+    <!-- Modal: Body -->
+    <b-form>
+      <!-- Field: To -->
+      <div class="compose-sms-form-field">
+        <label for="sms-to">To: </label>
+        <b-form-input
+          id="sms-to"
+          v-model="composeData.to"
+          :disabled="isSelectedAll"
+        />
+      </div>
 
-        <b-col cols="12">
-          <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            variant="primary"
-            class="mt-1 mr-1"
-            type="submit"
-          >
-            Send
-          </b-button>
-          <b-button
-            v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-            type="reset"
-            class="mt-1"
-            variant="outline-secondary"
-            @click.prevent="resetForm"
-          >
-            Reset
-          </b-button>
-        </b-col>
-      </b-row>
+      <!-- Field: Subject -->
+      <!-- <div class="compose-sms-form-field">
+        <label for="sms-subject">Sender ID: </label>
+        <b-form-input
+          id="sms-sender-id"
+          v-model="composeData.senderId"
+        />
+      </div> -->
+
+      <!-- Field: Message - Quill Editor -->
+      <div class="message-editor">
+        <label for="textarea-auto-height">Message:</label>
+        <b-form-textarea
+          id="textarea-auto-height"
+          v-model="composeData.message"
+          placeholder="Message"
+          rows="3"
+          max-rows="8"
+        />
+      </div>
     </b-form>
-  </b-card>
+  </b-modal>
 </template>
 
 <script>
 import {
-  BButton, BForm, BFormGroup, BFormInput, BRow, BCol, BCard, BFormTextarea,
+  BButton, BForm, BFormInput, BFormTextarea,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-
-// eslint-disable-next-line import/no-extraneous-dependencies
-import 'cleave.js/dist/addons/cleave-phone.us'
+import { ref } from '@vue/composition-api'
+import { useToast } from 'vue-toastification/composition'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import useContacts from './useContacts'
 
 export default {
-  components: {
-    BButton,
-    BForm,
-    BFormGroup,
-    BFormInput,
-    BRow,
-    BCol,
-    BCard,
-    BFormTextarea,
-  },
   directives: {
     Ripple,
   },
-  data() {
-    return {
-      sender_id: '',
-      phone: '',
-      message: '',
-    }
+  components: {
+    // BSV
+    BButton,
+    BForm,
+    BFormInput,
+    BFormTextarea,
   },
-  methods: {
-    resetForm() {
-      this.sender_id = ''
-      this.phone = ''
-      this.message = ''
+  model: {
+    prop: 'shallShowSmsComposeModal',
+    event: 'update:shall-show-sms-compose-modal',
+  },
+  props: {
+    shallShowSmsComposeModal: {
+      type: Boolean,
+      required: true,
     },
-    sendSMS() {
-      console.log(this.message)
+    contacts: {
+      type: Array,
+      required: true,
     },
+    isSelectedAll: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const toast = useToast()
+
+    const composeData = ref({
+      to: props.isSelectedAll ? 'All Contacts' : props.contacts.map(u => u.phone_number).join(','),
+    })
+
+    const discardSms = () => {
+      composeData.value = {}
+      emit('update:shall-show-sms-compose-modal', false)
+    }
+
+    const { send } = useContacts()
+
+    const sendSMS = () => {
+      const { to, message } = composeData.value
+
+      // if (!senderId || senderId === '') {
+      //   toast({
+      //     component: ToastificationContent,
+      //     props: {
+      //       title: 'Enter sender ID',
+      //       icon: 'AlertTriangleIcon',
+      //       variant: 'danger',
+      //     },
+      //   })
+      //   return
+      // }
+
+      if (!message || message === '') {
+        toast({
+          component: ToastificationContent,
+          props: {
+            title: 'Enter your message',
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+          },
+        })
+        return
+      }
+
+      const data = { to, message }
+
+      send(data, () => {
+        toast({
+          component: ToastificationContent,
+          props: {
+            title: 'SMS Scheduled successfully',
+            icon: 'CheckIcon',
+            variant: 'success',
+          },
+        })
+        discardSms()
+      })
+    }
+
+    return {
+      composeData,
+
+      // SMS actions
+      sendSMS,
+      discardSms,
+    }
   },
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+form ::v-deep {
+    // Mail To vue-select style
+    .v-select {
+        .vs__dropdown-toggle {
+            border: 0;
+            box-shadow: none;
+        }
+        .vs__open-indicator {
+            display: none;
+        }
+    }
+}
 </style>

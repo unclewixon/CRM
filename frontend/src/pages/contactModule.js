@@ -34,5 +34,13 @@ export default {
           .catch(error => reject(error))
       })
     },
+    sendSMS(ctx, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post('/send-bulk-message', data)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
   },
 }

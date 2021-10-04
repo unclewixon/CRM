@@ -10,11 +10,6 @@ export default [
     component: () => import('@/pages/contacts/Contacts.vue'),
   },
   {
-    path: '/send-sms',
-    name: 'send-sms',
-    component: () => import('@/pages/contacts/SendSMS.vue'),
-  },
-  {
     path: '/contact-preview',
     name: 'contact-preview',
     component: () => import('@/pages/contacts/Contacts.vue'),

@@ -9,28 +9,34 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use SMSGlobal\Credentials;
 use SMSGlobal\Resource\Sms;
 
 class SendSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $contact;
+    protected $userId;
+    protected $contactId;
+    protected $contactPhone;
     protected $message;
-    protected $sms;
+    protected $senderId;
 
     /**
      * Create a new job instance.
      *
-     * @param $contact
+     * @param $user_id
+     * @param $contact_id
+     * @param $contact_phone
      * @param $message
      */
-    public function __construct($contact, $message)
+    public function __construct($user_id, $contact_id, $contact_phone, $message, $sender_id)
     {
-        $this->contact = $contact;
+        $this->userId = $user_id;
+        $this->contactId = $contact_id;
+        $this->contactPhone = $contact_phone;
         $this->message = $message;
-
-        $this->sms = new Sms();
+        $this->senderId = $sender_id;
     }
 
     /**
@@ -41,16 +47,21 @@ class SendSMS implements ShouldQueue
     public function handle()
     {
         try {
-            $response = $this->sms->sendToOne($this->contact->phone_number, $this->message, auth()->user()->organization_name);
-
-            ScheduledSms::create([
-                'contact_id' => $this->contact->id,
+            $schedule = ScheduledSms::create([
+                'contact_id' => $this->contactId,
                 'message' => $this->message,
-                'scheduled_by' => auth()->user()->id,
-                'response' => $response,
+                'scheduled_by' => $this->userId,
+                'response' => json_encode([]),
             ]);
+
+            Credentials::set(config('smsglobal.key_public'), config('smsglobal.key_secret'));
+            $response = (new Sms)->sendToOne($this->contactPhone, $this->message, $this->senderId);
+
+            $schedule->response = json_encode($response);
+            $schedule->status = $response['messages'][0]['status'] ?? 'pending';
+            $schedule->save();
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getLine() . '-> ' . $e->getMessage());
         }
     }
 }

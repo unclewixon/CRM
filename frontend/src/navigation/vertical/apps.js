@@ -2,16 +2,11 @@ export default [
   {
     title: 'Dashboard',
     route: 'dashboard',
-    icon: 'MessageSquareIcon',
+    icon: 'HomeIcon',
   },
   {
     title: 'Contacts',
     route: 'contacts',
-    icon: 'MessageSquareIcon',
-  },
-  {
-    title: 'Send SMS',
-    route: 'send-sms',
-    icon: 'MessageSquareIcon',
+    icon: 'UserIcon',
   },
 ]

@@ -28,12 +28,28 @@
               class="per-page-selector d-inline-block ml-50 mr-1"
             />
             <b-button
-              id="toggle-btn"
               v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-              v-b-modal.modal-prevent-closing
               variant="primary"
+              class="btn-icon rounded-circle mr-1"
             >
-              Upload Contacts
+              <feather-icon icon="UploadIcon" />
+            </b-button>
+            <b-button
+              v-if="selectedUsers.length > 0"
+              v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+              variant="secondary"
+              class="btn-icon rounded-circle mr-1"
+              @click="openModal = true"
+            >
+              <feather-icon icon="SendIcon" />
+            </b-button>
+            <b-button
+              v-if="selectedUsers.length > 0"
+              v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+              variant="gradient-danger"
+              class="btn-icon rounded-circle"
+            >
+              <feather-icon icon="TrashIcon" />
             </b-button>
           </b-col>
 
@@ -56,7 +72,7 @@
 
       <b-table
         ref="refContactsTable"
-        :items="fetchContacts"
+        :items="contacts"
         responsive
         :fields="tableColumns"
         primary-key="id"
@@ -66,9 +82,27 @@
         :sort-desc.sync="isSortDirDesc"
         class="position-relative"
       >
+        <template v-slot:head(checkbox)="">
+          <b-form-checkbox
+            v-model="isSelectedAll"
+            :checked="isSelectedAll"
+            @change="selectAll($event)"
+          />
+        </template>
+
+        <template
+          v-slot:cell(checkbox)="data"
+        >
+          <b-form-checkbox
+            v-model="selectedUsers"
+            :value="data.item"
+            :options="contacts"
+            @change="onChecked(data.item.id)"
+          />
+        </template>
 
         <!-- Column: Id -->
-        <template #cell(id)="data">
+        <template #cell(emr_id)="data">
           <b-link
             :to="{ name: 'contact-preview', params: { id: data.item.id }}"
             class="font-weight-bold"
@@ -147,6 +181,7 @@
               class="mb-0 mt-1 mt-sm-0"
               prev-class="prev-item"
               next-class="next-item"
+              @change="doFetch"
             >
               <template #prev-text>
                 <feather-icon
@@ -192,13 +227,21 @@
         </b-form>
       </b-overlay>
     </b-modal>
+
+    <!-- Compose Email Modal -->
+    <send-sms
+      v-if="openModal"
+      v-model="openModal"
+      :contacts="selectedUsers"
+      :is-selected-all="isSelectedAll"
+    />
   </b-card>
 
 </template>
 
 <script>
 import {
-  BCard, BRow, BCol, BFormInput, BButton, BTable, BLink, BOverlay,
+  BCard, BRow, BCol, BFormInput, BButton, BTable, BLink, BOverlay, BFormCheckbox,
   BDropdown, BDropdownItem, BPagination, BTooltip, BModal, VBModal, BForm, BFormFile,
 } from 'bootstrap-vue'
 import vSelect from 'vue-select'
@@ -207,6 +250,7 @@ import Ripple from 'vue-ripple-directive'
 import store from '@/store'
 import useContacts from './useContacts'
 import contactModule from '../contactModule'
+import SendSms from './SendSms.vue'
 
 export default {
   components: {
@@ -225,8 +269,10 @@ export default {
     BForm,
     BFormFile,
     BOverlay,
+    BFormCheckbox,
 
     vSelect,
+    SendSms,
   },
   directives: {
     'b-modal': VBModal,
@@ -237,6 +283,10 @@ export default {
       file: null,
       show: false,
       deleting: false,
+      contacts: [],
+      isSelectedAll: false,
+      selectedUsers: [],
+      openModal: false,
     }
   },
   setup() {
@@ -276,9 +326,8 @@ export default {
       refetchData,
       uploadContacts,
       deleteContact,
-
-      resolveInvoiceStatusVariantAndIcon,
-      resolveClientAvatarVariant,
+      fetchNext,
+      fetchSearch,
     } = useContacts()
 
     return {
@@ -299,14 +348,28 @@ export default {
       refetchData,
       uploadContacts,
       deleteContact,
+      fetchNext,
+      fetchSearch,
 
       statusOptions,
-
-      resolveInvoiceStatusVariantAndIcon,
-      resolveClientAvatarVariant,
     }
   },
+  mounted() {
+    this.fetchContacts(null, data => {
+      this.contacts = [...data]
+    })
+  },
   methods: {
+    doFetch(data) {
+      this.fetchNext(data, rs => {
+        this.contacts = [...rs]
+      })
+    },
+    doSearch(data) {
+      this.fetchSearch(data, rs => {
+        this.contacts = [...rs]
+      })
+    },
     resetModal() {
       this.file = null
     },
@@ -370,6 +433,20 @@ export default {
         this.show = false
       })
     },
+    selectAll(clicked) {
+      console.log(`${clicked} :is not checked`)
+      if (!clicked) {
+        this.isSelectedAll = false
+        this.selectedUsers = []
+      } else {
+        this.isSelectedAll = true
+        this.selectedUsers = [...this.contacts]
+      }
+    },
+    onChecked(item) {
+      console.log(item)
+      this.isSelectedAll = false
+    },
   },
 }
 </script>
@@ -394,4 +471,5 @@ export default {
 
 <style lang="scss">
 @import '@core/scss/vue/libs/vue-select.scss';
+@import "~@core/scss/base/pages/app-sms.scss";
 </style>

@@ -61,7 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\GroupRepository::class
         );
 
-        //contats repository binding
+        //contacts repository binding
         $this->app->bind(
             \App\Repositories\Contracts\ContactRepositoryInterface::class,
             \App\Repositories\ContactRepository::class
@@ -83,6 +83,12 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Repositories\Contracts\TransactionRepositoryInterface::class,
             \App\Repositories\TransactionRepository::class
+        );
+
+        //send message repository binding
+        $this->app->bind(
+            \App\Repositories\Contracts\SendMessageRepositoryInterface::class,
+            \App\Repositories\SendMessageRepository::class
         );
     }
 

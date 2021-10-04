@@ -13,15 +13,11 @@ export default function useContacts() {
 
   // Table Handlers
   const tableColumns = [
-    { key: 'id', label: 'id', sortable: true },
-    { key: 'emr_id', sortable: true },
-    { key: 'firstname', sortable: true },
-    { key: 'surname', sortable: true },
+    { key: 'checkbox', label: '' },
+    { key: 'emr_id', label: 'Hosp. No', sortable: false },
+    { key: 'name', sortable: false },
     { key: 'email', sortable: false },
-    { key: 'phone_number', sortable: false },
-    // { key: 'dob', sortable: false },
-    // { key: 'scheme', sortable: true },
-    // { key: 'gender', sortable: true },
+    { key: 'phone_number', label: 'Phone', sortable: false },
     { key: 'actions' },
   ]
   const perPage = ref(10)
@@ -79,6 +75,16 @@ export default function useContacts() {
       })
   }
 
+  const fetchNext = (pageNumber, callback) => {
+    currentPage.value = pageNumber
+    fetchContacts(null, callback)
+  }
+
+  const fetchSearch = (q, callback) => {
+    searchQuery.value = q
+    fetchContacts(null, callback)
+  }
+
   const uploadContacts = (data, callback, callback2) => {
     store
       .dispatch('app-contact/uploadContacts', data)
@@ -129,28 +135,23 @@ export default function useContacts() {
       })
   }
 
-  // *===============================================---*
-  // *--------- UI ---------------------------------------*
-  // *===============================================---*
-
-  const resolveInvoiceStatusVariantAndIcon = status => {
-    if (status === 'Partial Payment') return { variant: 'warning', icon: 'PieChartIcon' }
-    if (status === 'Paid') return { variant: 'success', icon: 'CheckCircleIcon' }
-    if (status === 'Downloaded') return { variant: 'info', icon: 'ArrowDownCircleIcon' }
-    if (status === 'Draft') return { variant: 'primary', icon: 'SaveIcon' }
-    if (status === 'Sent') return { variant: 'secondary', icon: 'SendIcon' }
-    if (status === 'Past Due') return { variant: 'danger', icon: 'InfoIcon' }
-    return { variant: 'secondary', icon: 'XIcon' }
-  }
-
-  const resolveClientAvatarVariant = status => {
-    if (status === 'Partial Payment') return 'primary'
-    if (status === 'Paid') return 'danger'
-    if (status === 'Downloaded') return 'secondary'
-    if (status === 'Draft') return 'warning'
-    if (status === 'Sent') return 'info'
-    if (status === 'Past Due') return 'success'
-    return 'primary'
+  const send = (data, callback) => {
+    store
+      .dispatch('app-contact/sendSMS', data)
+      .then(() => {
+        callback()
+      })
+      .catch(e => {
+        console.log(e.response)
+        toast({
+          component: ToastificationContent,
+          props: {
+            title: 'Error could not schedule sms',
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+          },
+        })
+      })
   }
 
   return {
@@ -167,12 +168,12 @@ export default function useContacts() {
     refContactsTable,
 
     statusFilter,
-
-    resolveInvoiceStatusVariantAndIcon,
-    resolveClientAvatarVariant,
-
     refetchData,
     uploadContacts,
     deleteContact,
+    send,
+
+    fetchNext,
+    fetchSearch,
   }
 }
