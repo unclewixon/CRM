@@ -31,6 +31,7 @@
               v-ripple.400="'rgba(113, 102, 240, 0.15)'"
               variant="primary"
               class="btn-icon rounded-circle mr-1"
+              @click="$refs['my-modal'].show()"
             >
               <feather-icon icon="UploadIcon" />
             </b-button>
@@ -424,8 +425,10 @@ export default {
       formData.append('file', this.file)
 
       this.uploadContacts(formData, () => {
-        this.refetchData()
         this.$nextTick(() => {
+          this.fetchContacts(null, data => {
+            this.contacts = [...data]
+          })
           this.$refs['my-modal'].toggle('#toggle-btn')
         })
         this.show = false
