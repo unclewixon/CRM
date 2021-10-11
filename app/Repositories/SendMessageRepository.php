@@ -55,7 +55,7 @@ class SendMessageRepository implements SendMessageRepositoryInterface
             } else {
                 $remove_charge_from_my_unit = $this->user_action->subtractUnit(auth()->user()->id, $my_charge);
                 foreach ($contacts as $contact) {
-                    dispatch(new SendSMS(auth()->user()->id, $contact->id, $contact->phone_number, $request->message, auth()->user()->organization_name));
+                    dispatch(new SendSMS(auth()->user()->id, $contact->id, $contact->phone_number, $request->message, auth()->user()->sender_id));
                 }
 
                 return response()->json([

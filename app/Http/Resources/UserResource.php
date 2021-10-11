@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'email'     => $general_helper->clean($this->email),
             'phone'     => $general_helper->clean($this->phone),
             'organization_name'  => $general_helper->clean($this->organization_name),
+            'sender_id'  => $general_helper->clean($this->sender_id),
             'office_address'=> $general_helper->clean($this->office_address),
             'slug'      => $general_helper->clean($this->slug),
             'roles'   =>  $this->whenLoaded('roles'),

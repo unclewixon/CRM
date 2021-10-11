@@ -33,6 +33,7 @@ class UserAction
             'email' => $request->email,
             'phone' => $request->phone,
             'organization_name' => $request->organization_name,
+            'sender_id' => $request->sender_id,
             'office_address' => $request->office_address,
             'password' => bcrypt($request->password),
             'slug' => SlugService::createSlug($this->model, 'slug', $request->name)
@@ -108,6 +109,7 @@ class UserAction
              'name' => empty($request->name) ? $user->name : $request->name,
              'phone' =>   empty($request->phone) ? $user->phone : $request->phone,
              'organization_name' =>  empty($request->organization_name) ? $user->organization_name : $request->organization_name,
+             'sender_id' =>  empty($request->sender_id) ? $user->sender_id : $request->sender_id,
              'office_address' =>  empty($request->toffice_address) ? $user->office_address : $request->office_address
            ]);
            if ($update) {

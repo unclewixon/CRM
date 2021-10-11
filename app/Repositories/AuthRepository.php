@@ -27,6 +27,7 @@ class AuthRepository implements AuthRepositoryInterface
             'email' => 'required|email|unique:users',
             'phone' => 'required|unique:users',
             'organization_name' => 'required',
+            'sender_id' => 'required',
             'office_address' => 'required',
             'password' => 'required|confirmed'
         ]);
@@ -120,6 +121,7 @@ class AuthRepository implements AuthRepositoryInterface
             'name' => 'required',
             'phone' => 'sometimes',
             'organization_name' => 'sometimes',
+            'sender_id' => 'required',
             'office_address' => 'sometimes'
         ]);
 
