@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@sms.com',
             'phone' => '08063352837',
-            'organization_name' => 'SMS',
+            'organization_name' => 'DEDA HOSPITAL',
             'office_address' => 'DEDA',
             'password' => bcrypt('admin'),
             'email_verified_at' => Carbon::now()->format('Y-m-d H:m:s'),
