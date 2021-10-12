@@ -90,6 +90,12 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\SendMessageRepositoryInterface::class,
             \App\Repositories\SendMessageRepository::class
         );
+
+        //sms schedule repository binding
+        $this->app->bind(
+            \App\Repositories\Contracts\ScheduledSmsRepositoryInterface::class,
+            \App\Repositories\ScheduledSmsRepository::class
+        );
     }
 
     /**

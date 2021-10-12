@@ -15,8 +15,8 @@ export default [
     component: () => import('@/pages/contacts/Contacts.vue'),
   },
   {
-    path: '/contact-edit',
+    path: '/contact-edit/:id',
     name: 'contact-edit',
-    component: () => import('@/pages/contacts/Contacts.vue'),
+    component: () => import('@/pages/contacts/ContactEdit.vue'),
   },
 ]

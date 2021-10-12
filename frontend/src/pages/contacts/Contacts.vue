@@ -5,7 +5,7 @@
     no-body
   >
     <b-overlay
-      :show="deleting"
+      :show="deleting || loading"
       rounded="sm"
     >
       <div class="m-2">
@@ -65,6 +65,14 @@
                 class="d-inline-block mr-1"
                 placeholder="Search..."
               />
+              <b-button
+                v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                variant="primary"
+                class="btn-icon rounded-circle mr-1"
+                @click="doSearch"
+              >
+                <feather-icon icon="SearchIcon" />
+              </b-button>
             </div>
           </b-col>
         </b-row>
@@ -288,6 +296,9 @@ export default {
       isSelectedAll: false,
       selectedUsers: [],
       openModal: false,
+      loading: true,
+      searchQuery: '',
+      allUsers: [],
     }
   },
   setup() {
@@ -301,14 +312,6 @@ export default {
       if (store.hasModule(CONTACT_APP_STORE_MODULE_NAME)) store.unregisterModule(CONTACT_APP_STORE_MODULE_NAME)
     })
 
-    const statusOptions = [
-      'Downloaded',
-      'Draft',
-      'Paid',
-      'Partial Payment',
-      'Past Due',
-    ]
-
     const {
       fetchContacts,
       tableColumns,
@@ -317,7 +320,6 @@ export default {
       totalContacts,
       dataMeta,
       perPageOptions,
-      searchQuery,
       sortBy,
       isSortDirDesc,
       refContactsTable,
@@ -329,6 +331,7 @@ export default {
       deleteContact,
       fetchNext,
       fetchSearch,
+      fetchAllContacts,
     } = useContacts()
 
     return {
@@ -339,7 +342,6 @@ export default {
       totalContacts,
       dataMeta,
       perPageOptions,
-      searchQuery,
       sortBy,
       isSortDirDesc,
       refContactsTable,
@@ -351,24 +353,52 @@ export default {
       deleteContact,
       fetchNext,
       fetchSearch,
-
-      statusOptions,
+      fetchAllContacts,
     }
   },
   mounted() {
+    // if (this.allUsers.length <= 0) {
+    //   this.fetchAllContacts(null, data => {
+    //     this.allUsers = [...data]
+    //   })
+    // }
+
     this.fetchContacts(null, data => {
       this.contacts = [...data]
+      this.loading = false
+    }, () => {
+      this.loading = false
     })
   },
   methods: {
+    selectAll(clicked) {
+      if (!clicked) {
+        this.isSelectedAll = false
+        this.selectedUsers = []
+      } else {
+        this.isSelectedAll = true
+        this.selectedUsers = this.contacts
+      }
+    },
+    onChecked() {
+      this.isSelectedAll = false // this.sel/ectedUsers.length === this.allUsers.length
+    },
     doFetch(data) {
+      this.loading = true
       this.fetchNext(data, rs => {
         this.contacts = [...rs]
+        this.loading = false
+      }, () => {
+        this.loading = false
       })
     },
-    doSearch(data) {
-      this.fetchSearch(data, rs => {
+    doSearch() {
+      this.loading = true
+      this.fetchSearch(this.searchQuery, rs => {
         this.contacts = [...rs]
+        this.loading = false
+      }, () => {
+        this.loading = false
       })
     },
     resetModal() {
@@ -435,20 +465,6 @@ export default {
       }, () => {
         this.show = false
       })
-    },
-    selectAll(clicked) {
-      console.log(`${clicked} :is not checked`)
-      if (!clicked) {
-        this.isSelectedAll = false
-        this.selectedUsers = []
-      } else {
-        this.isSelectedAll = true
-        this.selectedUsers = [...this.contacts]
-      }
-    },
-    onChecked(item) {
-      console.log(item)
-      this.isSelectedAll = false
     },
   },
 }

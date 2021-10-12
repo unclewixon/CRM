@@ -63,19 +63,10 @@
         <label for="sms-to">To: </label>
         <b-form-input
           id="sms-to"
-          v-model="composeData.to"
-          :disabled="isSelectedAll"
+          v-model="composeData.chosen"
+          :disabled="true"
         />
       </div>
-
-      <!-- Field: Subject -->
-      <!-- <div class="compose-sms-form-field">
-        <label for="sms-subject">Sender ID: </label>
-        <b-form-input
-          id="sms-sender-id"
-          v-model="composeData.senderId"
-        />
-      </div> -->
 
       <!-- Field: Message - Quill Editor -->
       <div class="message-editor">
@@ -136,6 +127,7 @@ export default {
 
     const composeData = ref({
       to: props.isSelectedAll ? 'All Contacts' : props.contacts.map(u => u.phone_number).join(','),
+      chosen: props.isSelectedAll ? 'All Contacts' : `${props.contacts.length} contact${props.contacts.length > 1 ? 's' : ''}`,
     })
 
     const discardSms = () => {
@@ -147,18 +139,6 @@ export default {
 
     const sendSMS = () => {
       const { to, message } = composeData.value
-
-      // if (!senderId || senderId === '') {
-      //   toast({
-      //     component: ToastificationContent,
-      //     props: {
-      //       title: 'Enter sender ID',
-      //       icon: 'AlertTriangleIcon',
-      //       variant: 'danger',
-      //     },
-      //   })
-      //   return
-      // }
 
       if (!message || message === '') {
         toast({

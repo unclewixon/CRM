@@ -143,23 +143,7 @@ class ContactRepository implements ContactRepositoryInterface
     //update contact details
     public function updateContact($request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'surname' => 'required',
-            'firstname' => 'required',
-            'email' => 'required|email',
-            'scheme' => 'required',
-            'phone_number' => 'required',
-            'gender' => 'required',
-            'dob' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()
-            ], 422);
-        } else {
-            return $this->action->update($request, $id);
-        }
+        return $this->action->update($request, $id);
     }
 
     //delete

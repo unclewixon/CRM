@@ -53,9 +53,9 @@ export default {
   },
   data() {
     return {
-      contacts: {},
-      sms: {},
-      delivered: {},
+      contacts: { total: 0, series: [{ name: 'Contacts', data: [0, 0, 0, 0, 0] }] },
+      sms: { total: 0, series: [{ name: 'SMS Sent', data: [0, 0, 0, 0, 0] }] },
+      delivered: { total: 0, series: [{ name: 'SMS Delivered', data: [0, 0, 0, 0, 0] }] },
     }
   },
   created() {

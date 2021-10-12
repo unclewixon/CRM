@@ -19,6 +19,8 @@ class ContactResource extends JsonResource
         return [
             'id'   => $this->id,
             'name'  => $general_helper->clean($this->firstname).' '.$general_helper->clean($this->surname),
+            'firstname'  => $general_helper->clean($this->firstname),
+            'surname'  => $general_helper->clean($this->surname),
             'email'  => $general_helper->clean($this->email),
             'scheme' => $general_helper->clean($this->scheme),
             'gender' => $general_helper->clean($this->gender),

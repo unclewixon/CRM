@@ -131,38 +131,6 @@ class SendMessageRepository implements SendMessageRepositoryInterface
         }
     }
 
-    public function smsAnalytics()
-    {
-        $result = (object)null;
-        $result->total = $this->model->count();
-
-        $series = (object)null;
-        $series->name = 'SMS Sent';
-        $series->data = [0, 0, 0, 0, 0];
-
-        $result->series = $series;
-
-        return response()->json([
-            'result' => $result
-        ], 200);
-    }
-
-    public function deliveredAnalytics()
-    {
-        $result = (object)null;
-        $result->total = $this->model->count();
-
-        $series = (object)null;
-        $series->name = 'SMS Delivered';
-        $series->data = [0, 0, 0, 0, 0];
-
-        $result->series = $series;
-
-        return response()->json([
-            'result' => $result
-        ], 200);
-    }
-
     public function receipt(Request $request)
     {
         info(json_encode($request->all));

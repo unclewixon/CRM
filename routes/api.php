@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\RechargeController;
 use App\Http\Controllers\Api\ResetPasswordController;
+use App\Http\Controllers\Api\ScheduledSmsController;
 use App\Http\Controllers\Api\SendEmailController;
 use App\Http\Controllers\Api\SendMessageController;
 use App\Http\Controllers\Api\SubscriberController;
@@ -105,8 +106,6 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::post('/send-bulk-message', [SendMessageController::class, 'sendBulk']);
             Route::post('/send-single-message', [SendMessageController::class, 'sendSingle']);
             Route::post('/message-contacts', [SendMessageController::class, 'sendSingle']);
-            Route::get('/sms-analytics', [SendMessageController::class, 'smsAnalytics']);
-            Route::get('/delivered-analytics', [SendMessageController::class, 'deliveredAnalytics']);
             Route::get('/delivery-receipt', [SendMessageController::class, 'deliveryReceipt']);
 
             Route::post('/logout', [AuthController::class, 'logout']);
@@ -116,6 +115,9 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::patch('/update-profile/{id}', [AuthController::class, 'updateUserAcount']);
 
             Route::get('/verify/{id}', [App\Helpers\Payment::class, 'verify']);
+
+            Route::get('/sms-analytics', [ScheduledSmsController::class, 'smsAnalytics']);
+            Route::get('/delivered-analytics', [ScheduledSmsController::class, 'deliveredAnalytics']);
 
         });//end
 

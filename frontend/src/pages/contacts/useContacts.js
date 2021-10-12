@@ -1,4 +1,4 @@
-import { ref, watch, computed } from '@vue/composition-api'
+import { ref, computed } from '@vue/composition-api'
 
 // Notification
 import { useToast } from 'vue-toastification/composition'
@@ -42,11 +42,11 @@ export default function useContacts() {
     refContactsTable.value.refresh()
   }
 
-  watch([currentPage, perPage, searchQuery, statusFilter], () => {
-    refetchData()
-  })
+  // watch([currentPage, perPage, searchQuery, statusFilter], () => {
+  //   refetchData()
+  // })
 
-  const fetchContacts = (ctx, callback) => {
+  const fetchContacts = (ctx, callback, callback2) => {
     store
       .dispatch('app-contact/fetchContacts', {
         q: searchQuery.value,
@@ -64,6 +64,7 @@ export default function useContacts() {
       })
       .catch(e => {
         console.log(e)
+        callback2()
         toast({
           component: ToastificationContent,
           props: {
@@ -75,14 +76,23 @@ export default function useContacts() {
       })
   }
 
-  const fetchNext = (pageNumber, callback) => {
-    currentPage.value = pageNumber
-    fetchContacts(null, callback)
+  const fetchAllContacts = (ctx, callback) => {
+    store
+      .dispatch('app-contact/fetchContacts', { option: 'all' })
+      .then(response => callback(response.data.data))
+      .catch(e => {
+        console.log(e)
+      })
   }
 
-  const fetchSearch = (q, callback) => {
+  const fetchNext = (pageNumber, callback, callback2) => {
+    currentPage.value = pageNumber
+    fetchContacts(null, callback, callback2)
+  }
+
+  const fetchSearch = (q, callback, callback2) => {
     searchQuery.value = q
-    fetchContacts(null, callback)
+    fetchContacts(null, callback, callback2)
   }
 
   const uploadContacts = (data, callback, callback2) => {
@@ -101,7 +111,7 @@ export default function useContacts() {
         })
       })
       .catch(e => {
-        console.log(e.response)
+        console.log(e)
         callback2()
         toast({
           component: ToastificationContent,
@@ -122,12 +132,32 @@ export default function useContacts() {
         refetchData()
       })
       .catch(e => {
-        console.log(e.response)
+        console.log(e)
         callback2()
         toast({
           component: ToastificationContent,
           props: {
-            title: "Error deleting contact' list",
+            title: "Error deleting contact's list",
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+  }
+
+  const editContact = (data, callback, callback2) => {
+    store
+      .dispatch('app-contact/editContact', data)
+      .then(() => {
+        callback()
+      })
+      .catch(e => {
+        console.log(e)
+        callback2()
+        toast({
+          component: ToastificationContent,
+          props: {
+            title: 'Error could not save conact',
             icon: 'AlertTriangleIcon',
             variant: 'danger',
           },
@@ -142,7 +172,7 @@ export default function useContacts() {
         callback()
       })
       .catch(e => {
-        console.log(e.response)
+        console.log(e)
         toast({
           component: ToastificationContent,
           props: {
@@ -162,7 +192,6 @@ export default function useContacts() {
     totalContacts,
     dataMeta,
     perPageOptions,
-    searchQuery,
     sortBy,
     isSortDirDesc,
     refContactsTable,
@@ -172,8 +201,10 @@ export default function useContacts() {
     uploadContacts,
     deleteContact,
     send,
+    editContact,
 
     fetchNext,
     fetchSearch,
+    fetchAllContacts,
   }
 }

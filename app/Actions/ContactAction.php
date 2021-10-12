@@ -46,12 +46,25 @@ class ContactAction
     //get
     public function all($request)
     {
-        if (auth()->user()->role_id == 1) {
-            $contacts = $this->model->with(['user', 'groups'])->latest()->paginate(20);
+        if($request->option == 'all'){
+            $contacts = $this->model->where('user_id', auth()->user()->id)->get();
+
+            return ContactResource::collection($contacts);
+        }
+
+        if($request->q != ''){
+            $search = $request->q;
+            $contacts = $this->model->with('groups')->where('user_id', auth()->user()->id)->where(function($query) use($search) {
+                $query->where('phone_number', 'LIKE', '%'.$search.'%')
+                    ->orWhere('surname', 'LIKE', '%'.$search.'%')
+                    ->orWhere('firstname', 'LIKE', '%'.$search.'%')
+                    ->orWhere('emr_id', 'LIKE', '%'.$search.'%')
+                    ->orWhere('email', 'LIKE', '%'.$search.'%');
+            })->latest()->paginate($request->perPage, ['*'], 'page', $request->page);
         } else {
             $contacts = $this->model->with('groups')->where('user_id', auth()->user()->id)->latest()->paginate($request->perPage, ['*'], 'page', $request->page);
         }
-
+            
         return ContactResource::collection($contacts);
     }
 
@@ -122,15 +135,17 @@ class ContactAction
     {
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
-            $plan = $this->model->find($id);
-            $update = $plan->update([
-                'surname' => empty($request->surname) ? $plan->surname : $request->surname,
-                'firstname' => empty($request->firstname) ? $plan->firstname : $request->firstname,
-                'email' => empty($request->email) ? $plan->email : $request->email,
-                'scheme' => empty($request->scheme) ? $plan->scheme : $request->scheme,
-                'gender' => empty($request->gender) ? $plan->gender : $request->gender,
-                'dob' => empty($request->dob) ? $plan->dob : $request->dob,
-                'phone_number' => empty($request->phone_number) ? $plan->phone_number : $request->phone_number
+            $contact = $this->model->find($id);
+            $update = $contact->update([
+                'emr_id' => empty($request->emr_id) ? $contact->emr_id : $request->emr_id,
+                'surname' => empty($request->surname) ? $contact->surname : $request->surname,
+                'firstname' => empty($request->firstname) ? $contact->firstname : $request->firstname,
+                'phone_number' => empty($request->phone_number) ? $contact->phone_number : $request->phone_number,
+                'gender' => empty($request->gender) ? $contact->gender : $request->gender,
+                'email' => empty($request->email) ? $contact->email : $request->email,
+                'scheme' => empty($request->scheme) ? $contact->scheme : $request->scheme,
+                'dob' => empty($request->dob) ? $contact->dob : $request->dob,
+                'address' => empty($request->address) ? $contact->address : $request->address,
             ]);
             if ($update) {
                 return response()->json([
@@ -179,7 +194,7 @@ class ContactAction
         $series->name = 'Contacts';
         $series->data = [0, 0, 0, 0, 0];
 
-        $result->series = $series;
+        $result->series[] = $series;
 
         return response()->json([
             'result' => $result
