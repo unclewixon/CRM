@@ -12,10 +12,6 @@ interface SendMessageRepositoryInterface
 
     public function sendMessageToAllContact($request);
 
-    public function smsAnalytics();
-
-    public function deliveredAnalytics();
-
     public function receipt(Request $request);
 
 }
