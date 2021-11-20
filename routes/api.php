@@ -106,7 +106,6 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::post('/send-bulk-message', [SendMessageController::class, 'sendBulk']);
             Route::post('/send-single-message', [SendMessageController::class, 'sendSingle']);
             Route::post('/message-contacts', [SendMessageController::class, 'sendSingle']);
-            Route::get('/delivery-receipt', [SendMessageController::class, 'deliveryReceipt']);
 
             Route::post('/logout', [AuthController::class, 'logout']);
             Route::post('/refresh', [AuthController::class, 'refresh']);
@@ -145,5 +144,7 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
     Route::get('/', function () {
         return response()->json(['message' => 'SendSwift API']);
     });
+
+    Route::get('/delivery-receipt', [SendMessageController::class, 'deliveryReceipt']);
 
 });
