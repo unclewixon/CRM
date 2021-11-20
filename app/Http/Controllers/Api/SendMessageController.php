@@ -13,7 +13,6 @@ class SendMessageController extends Controller
     public function __construct(SendMessageRepositoryInterface $sendMessageRepository)
     {
         $this->sendMessageRepository = $sendMessageRepository;
-        $this->middleware('auth:api');
     }
 
     //send bulk sms
