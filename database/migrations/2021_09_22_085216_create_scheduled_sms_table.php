@@ -16,10 +16,12 @@ class CreateScheduledSmsTable extends Migration
         Schema::create('scheduled_sms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('contact_id')->constrained();
+            $table->string('message_id')->nullable();
             $table->longText('message')->nullable();
             $table->foreignId('scheduled_by')->constrained('users');
             $table->jsonb('response');
             $table->string('status')->default('pending');
+            $table->dateTime('delivered_at')->nullable();
             $table->timestamps();
         });
     }

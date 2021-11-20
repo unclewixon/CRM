@@ -242,6 +242,7 @@
       v-if="openModal"
       v-model="openModal"
       :contacts="selectedUsers"
+      :user-data="userData"
       :is-selected-all="isSelectedAll"
     />
   </b-card>
@@ -299,6 +300,7 @@ export default {
       loading: true,
       searchQuery: '',
       allUsers: [],
+      userData: JSON.parse(localStorage.getItem('userData')),
     }
   },
   setup() {

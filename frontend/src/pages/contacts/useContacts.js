@@ -172,11 +172,12 @@ export default function useContacts() {
         callback()
       })
       .catch(e => {
-        console.log(e)
+        console.log(e.response)
+        const error = e.response?.data?.message || 'Error could not schedule sms'
         toast({
           component: ToastificationContent,
           props: {
-            title: 'Error could not schedule sms',
+            title: error,
             icon: 'AlertTriangleIcon',
             variant: 'danger',
           },

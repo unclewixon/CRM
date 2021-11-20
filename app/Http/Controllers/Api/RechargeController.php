@@ -17,9 +17,9 @@ class RechargeController extends Controller
     }
 
     //my recharge units
-    public function index()
+    public function index(Request $request)
     {
-        $recharges = $this->rechargeRepository->rechargeHistory();
+        $recharges = $this->rechargeRepository->rechargeHistory($request);
         return $recharges;
     }
 
@@ -33,7 +33,7 @@ class RechargeController extends Controller
     //show recharge details
     public function show($id)
     {
-        $recharge = $this->rechargeRepository->singelRechargeHistory($id);
+        $recharge = $this->rechargeRepository->singleRechargeHistory($id);
         return $recharge;
     }
 

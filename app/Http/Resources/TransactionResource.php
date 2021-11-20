@@ -20,7 +20,7 @@ class TransactionResource extends JsonResource
             'id'        => $this->id,
             'trans_ref'      => $general_helper->clean($this->trans_ref),
             'type'  => $general_helper->clean($this->type),
-            'status'    => $general_helper->clean($this->paid),
+            'status'    => $this->status,
             'user'     => new UserResource($this->whenLoaded('user')),
             'created_at'=> $this->created_at,
             'updated_at'=> $this->updated_at

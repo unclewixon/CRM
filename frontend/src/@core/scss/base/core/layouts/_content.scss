@@ -34,6 +34,9 @@ html {
     margin-left: $menu-expanded-width;
     &.app-content {
       padding: calc(#{$content-padding} + #{$navbar-height} + #{$floating-nav-margin}) #{$content-padding} 0;
+      &.no-extra-padding {
+        padding: #{$content-padding} #{$content-padding} 0 !important;
+      }
       &.show-overlay {
         .content-overlay {
           z-index: 10;
@@ -328,6 +331,9 @@ html {
       }
       .app-content {
         padding: calc(#{$content-padding} + #{$navbar-height} + #{$floating-nav-margin}) #{$content-padding} 0 #{$content-padding} !important; // ? need to check all navbar types case
+        &.no-extra-padding {
+          padding: #{$content-padding} #{$content-padding} 0 !important;
+        }
       }
       &.footer-fixed {
         .app-content {

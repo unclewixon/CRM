@@ -10,7 +10,7 @@ class Recharge extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'unit_id', 'number', 'amount'
+        'user_id', 'unit_id', 'number', 'amount', 'transaction_id'
     ];
 
     public function user() {
@@ -19,6 +19,10 @@ class Recharge extends Model
 
     public function unit() {
       return $this->belongsTo(Unit::class, 'unit_id');
+    }
+
+    public function transaction() {
+      return $this->belongsTo(Transaction::class, 'transaction_id');
     }
 
 }

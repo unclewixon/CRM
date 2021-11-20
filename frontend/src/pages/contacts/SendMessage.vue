@@ -68,8 +68,17 @@
         />
       </div>
 
+      <!-- Field: Sender ID -->
+      <div class="compose-sms-form-field mt-1">
+        <label for="sender-id">Sender ID: </label>
+        <b-form-input
+          id="sender-id"
+          v-model="composeData.sender"
+        />
+      </div>
+
       <!-- Field: Message - Quill Editor -->
-      <div class="message-editor">
+      <div class="message-editor mt-1">
         <label for="textarea-auto-height">Message:</label>
         <b-form-textarea
           id="textarea-auto-height"
@@ -121,6 +130,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    userData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const toast = useToast()
@@ -128,6 +141,7 @@ export default {
     const composeData = ref({
       to: props.isSelectedAll ? 'All Contacts' : props.contacts.map(u => u.phone_number).join(','),
       chosen: props.isSelectedAll ? 'All Contacts' : `${props.contacts.length} contact${props.contacts.length > 1 ? 's' : ''}`,
+      sender: props.userData?.sender_id || '',
     })
 
     const discardSms = () => {
@@ -138,7 +152,19 @@ export default {
     const { send } = useContacts()
 
     const sendSMS = () => {
-      const { to, message } = composeData.value
+      const { to, message, sender } = composeData.value
+
+      if (!sender || sender === '') {
+        toast({
+          component: ToastificationContent,
+          props: {
+            title: 'Enter your sender id',
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+          },
+        })
+        return
+      }
 
       if (!message || message === '') {
         toast({
@@ -152,7 +178,10 @@ export default {
         return
       }
 
-      const data = { to, message }
+      const pages = Math.ceil(message.length / process.env.MIX_SMS_LENGTH)
+      const data = {
+        to, message, pages, sender_id: sender,
+      }
 
       send(data, () => {
         toast({

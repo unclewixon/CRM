@@ -2,13 +2,15 @@
 
 namespace App\Repositories\Contracts;
 
+use Illuminate\Http\Request;
+
 interface RechargeRepositoryInterface
 {
     public function rechargeAcct($request);
 
-    public function rechargeHistory();
+    public function rechargeHistory(Request $request);
 
-    public function singelRechargeHistory($id);
+    public function singleRechargeHistory($id);
 
     public function deleteRecharge($id);
 }

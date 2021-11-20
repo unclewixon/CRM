@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Models\Transaction;
 use App\Http\Resources\TransactionResource;
+use Illuminate\Http\Request;
 
 class TransactionAction
 {
@@ -18,19 +19,8 @@ class TransactionAction
     //get
     public function all()
     {
-        $user_roles = auth()->user()->roles->pluck('name');
-        if ($user_roles->contains('SuperAdmin')) {
-            $contacts = $this->model->with(['user'])->latest()->paginate(20);
-        }else {
-            $contacts = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);
-        }
-        if (count($contacts) < 1) {
-            return response()->json([
-                'message' => 'Sorry no transaction found'
-            ], 400);
-        }else {
-            return TransactionResource::collection($contacts);
-        }
+        $contacts = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);
+        return TransactionResource::collection($contacts);
     }
 
     //get
@@ -45,6 +35,15 @@ class TransactionAction
                'message' => 'Sorry this data do not exist'
            ], 400);
       }
+    }
+
+    public function create(Request $request)
+    {
+        $transaction = $this->model->create([
+
+        ]);
+
+        return new TransactionResource($transaction);
     }
 
     //delete

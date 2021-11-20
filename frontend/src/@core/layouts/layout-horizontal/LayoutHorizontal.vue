@@ -13,8 +13,8 @@
         boxShadow: navbarType === 'static' && scrolledTo ? 'rgba(0, 0, 0, 0.05) 0px 4px 20px 0px' : null,
       }"
       :toggleable="false"
-      class="header-navbar navbar-shadow align-items-center navbar-brand-center navbar-fixed"
-      :class="{'fixed-top': $store.getters['app/currentBreakPoint'] !== 'xl'}"
+      class="header-navbar navbar-shadow align-items-center navbar-brand-center"
+      :class="{'fixed-top': $store.getters['app/currentBreakPoint'] !== 'xl' && $store.getters['appConfig/header'] === 'fixed', 'navbar-fixed': $store.getters['appConfig/header'] === 'fixed'}"
     >
       <slot
         name="navbar"
@@ -26,7 +26,10 @@
     </b-navbar>
     <!--/ NAVBAR -->
 
-    <div class="horizontal-menu-wrapper">
+    <div
+      class="horizontal-menu-wrapper"
+      :class="$store.getters['appConfig/header'] !== 'fixed' && navbarType === 'static' ? 'horizontal-menu-top':''"
+    >
       <div
         v-if="!isNavMenuHidden"
         class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-light navbar-shadow menu-border d-none d-xl-block"
@@ -213,4 +216,7 @@ export default {
 
 <style lang="scss">
 @import "~@core/scss/base/themes/bordered-layout.scss";
+.horizontal-menu-top {
+  top: 12px !important;
+}
 </style>

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Actions\RechargeAction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Contracts\RechargeRepositoryInterface;
 
@@ -33,13 +34,13 @@ class RechargeRepository implements RechargeRepositoryInterface
     }
 
     //all
-    public function rechargeHistory()
+    public function rechargeHistory(Request $request)
     {
-        return $this->action->all();
+        return $this->action->all($request);
     }
 
     //show
-    public function singelRechargeHistory($id)
+    public function singleRechargeHistory($id)
     {
         return $this->action->get($id);
     }

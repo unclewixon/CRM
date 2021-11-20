@@ -151,9 +151,4 @@ class ContactRepository implements ContactRepositoryInterface
     {
         return $this->action->delete($id);
     }
-
-    public function analytics()
-    {
-        return $this->action->analytics();
-    }
 }

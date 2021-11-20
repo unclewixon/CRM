@@ -9,4 +9,9 @@ export default [
     route: 'contacts',
     icon: 'UserIcon',
   },
+  {
+    title: 'Groups',
+    route: 'groups',
+    icon: 'UsersIcon',
+  },
 ]

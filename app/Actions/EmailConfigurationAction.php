@@ -43,19 +43,8 @@ class EmailConfigurationAction
     //get
     public function all()
     {
-        $user_roles = auth()->user()->roles->pluck('name');
-        if ($user_roles->contains('SuperAdmin')) {
-            $configuration = $this->model->with(['user'])->latest()->paginate(20);
-        }else {
-            $configuration = $this->model->where('user_id', auth()->user()->id)->latest();
-        }
-        if (count($configuration) < 1) {
-            return response()->json([
-                'message' => 'Sorry no configuration found'
-            ], 400);
-        }else {
-            return EmailConfigurationResoucrce::collection($configuration);
-        }
+        $configuration = $this->model->where('user_id', auth()->user()->id)->latest()->paginate(20);
+        return EmailConfigurationResoucrce::collection($configuration);
     }
 
     //get

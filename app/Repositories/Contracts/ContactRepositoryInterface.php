@@ -25,6 +25,4 @@ interface ContactRepositoryInterface
     public function batchContactUpload($request);
 
     public function deleteContact($id);
-
-    public function analytics();
 }

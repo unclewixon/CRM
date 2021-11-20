@@ -43,7 +43,6 @@
      public function calculateCost($id, $unit_number)
      {
           $unit = Unit::find($id);
-          $cost_per_unit = $unit->cost_per_unit;
           $total = $unit_number * $unit->cost_per_unit;
           return $total;
      }

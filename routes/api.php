@@ -42,16 +42,16 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
         Route::get('/plans', [PlanController::class, 'index']);
         Route::get('/plans/{id}', [PlanController::class, 'show']);
 
+        Route::post('/verify-account', [EmailVerificationController::class, 'verify']);
+    });
+
+    Route::group(['middleware' => ['jwt.verify']], function () {
         Route::get('/units', [UnitController::class, 'index']);
         Route::get('/units/{id}', [UnitController::class, 'show']);
 
         Route::get('/recharges', [RechargeController::class, 'index']);
         Route::get('/recharges/{id}', [RechargeController::class, 'show']);
 
-        Route::post('/verify-account', [EmailVerificationController::class, 'verify']);
-    });
-
-    Route::group(['middleware' => ['jwt.verify']], function () {
         //admin routes
         Route::group(['middleware' => ['user']], function () {
         });
@@ -77,6 +77,7 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::delete('/groups/{id}', [GroupController::class, 'destroy']);
 
             Route::get('/transactions', [TransactionController::class, 'index']);
+            Route::post('/transactions', [TransactionController::class, 'store']);
             Route::get('/transactions/{id}', [TransactionController::class, 'show']);
             Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);
 
@@ -86,7 +87,6 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::patch('/contacts/{id}', [ContactController::class, 'update']);
             Route::delete('/contacts/{id}', [ContactController::class, 'destroy']);
             Route::post('/contacts-batch', [ContactController::class, 'storeBatch']);
-            Route::get('/contacts-analytics', [ContactController::class, 'analytics']);
 
             Route::get('/configurations', [EmailConfigurationController::class, 'index']);
             Route::get('/configurations/{id}', [EmailConfigurationController::class, 'show']);
@@ -116,7 +116,6 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::get('/verify/{id}', [App\Helpers\Payment::class, 'verify']);
 
             Route::get('/sms-analytics', [ScheduledSmsController::class, 'smsAnalytics']);
-            Route::get('/delivered-analytics', [ScheduledSmsController::class, 'deliveredAnalytics']);
 
         });//end
 

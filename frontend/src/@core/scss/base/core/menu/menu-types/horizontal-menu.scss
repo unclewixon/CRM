@@ -84,7 +84,7 @@
     &.navbar-brand-center {
       .navbar-header {
         position: absolute;
-        left: calc(50% - 56px); // left 50% - branding width
+        left: 56px; // calc(50% - 56px); // left 50% - branding width
         padding: 0;
         z-index: 1000;
         .navbar-brand {
@@ -421,8 +421,8 @@
       min-height: calc(100% - calc(#{$horizontal-menu-height} + calc(#{$footer-height} + 0.2rem)));
     }
     .header-navbar {
-      background-color: $body-bg;
-      box-shadow: none;
+      // background-color: $body-bg;
+      // box-shadow: none;
     }
     .horizontal-menu-wrapper {
       position: relative;

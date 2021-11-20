@@ -22,11 +22,4 @@ class ScheduledSmsController extends Controller
         $sms = $this->scheduledSmsRepository->smsAnalytics();
         return $sms;
     }
-
-    //send sms to all contacts
-    public function deliveredAnalytics()
-    {
-        $delivered = $this->scheduledSmsRepository->deliveredAnalytics();
-        return $delivered;
-    }
 }

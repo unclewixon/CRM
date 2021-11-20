@@ -11,7 +11,7 @@ class Transaction extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'trans_ref', 'type', 'paid'
+        'user_id', 'trans_ref', 'type', 'status', 'amount'
     ];
 
     public function users() {

@@ -49,19 +49,8 @@ class SubscriberAction
     //get
     public function all()
     {
-        $user_roles = auth()->user()->roles->pluck('name');
-        if ($user_roles->contains('SuperAdmin')) {
-            $subscriber = $this->model->with(['plan','user'])->latest()->paginate(20);
-        }else {
-            $subscriber = $this->model->with(['plan'])->where('user_id', auth()->user()->id)->latest()->paginate(20);
-        }
-        if (count($subscriber) < 1) {
-          return response()->json([
-              'message' => 'Sorry no subscriber found'
-          ], 400);
-        }else {
-            return SubscriberResource::collection($subscriber);
-        }
+        $subscriber = $this->model->with(['plan'])->where('user_id', auth()->user()->id)->latest()->paginate(20);
+        return SubscriberResource::collection($subscriber);
     }
 
     //activate subscription

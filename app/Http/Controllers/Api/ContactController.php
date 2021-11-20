@@ -23,13 +23,6 @@ class ContactController extends Controller
         return $contacts;
     }
 
-    //analytics
-    public function analytics()
-    {
-        $analytics = $this->contactRepository->analytics();
-        return $analytics;
-    }
-
     //create account
     public function store(Request $request)
     {

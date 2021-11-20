@@ -19,4 +19,9 @@ export default [
     name: 'contact-edit',
     component: () => import('@/pages/contacts/ContactEdit.vue'),
   },
+  {
+    path: '/groups',
+    name: 'groups',
+    component: () => import('@/pages/groups/Groups.vue'),
+  },
 ]

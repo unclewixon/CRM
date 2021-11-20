@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Models\Contact;
 use App\Models\ScheduledSms;
 use App\Repositories\Contracts\ScheduledSmsRepositoryInterface;
-use Illuminate\Http\Request;
 
 class ScheduledSmsRepository implements ScheduledSmsRepositoryInterface
 {
@@ -18,35 +18,40 @@ class ScheduledSmsRepository implements ScheduledSmsRepositoryInterface
 
     public function smsAnalytics()
     {
-        $result = (object)null;
-        $result->total = $this->model->where('status', 'sent')->count();
+        $user = auth()->user();
 
-        $series = (object)null;
-        $series->name = 'SMS Sent';
-        $series->data = [0, 0, 0, 0, 0];
+        $units = (object)null;
+        $units->icon = 'DollarSignIcon';
+        $units->color = 'light-success';
+        $units->title = $user->unit;
+        $units->subtitle = 'Units';
+        $units->customClass = '';
 
-        $result->series[] = $series;
+        $contacts = (object)null;
+        $contacts->icon = 'TrendingUpIcon';
+        $contacts->color = 'light-primary';
+        $contacts->title = Contact::where('user_id', $user->id)->count();
+        $contacts->subtitle = 'Contacts';
+        $contacts->customClass = 'mb-2 mb-xl-0';
+
+        $sent = (object)null;
+        $sent->icon = 'UserIcon';
+        $sent->color = 'light-info';
+        $sent->title = $this->model->where('scheduled_by', $user->id)->count();
+        $sent->subtitle = 'Sent';
+        $sent->customClass = 'mb-2 mb-xl-0';
+
+        $delivered = (object)null;
+        $delivered->icon = 'BoxIcon';
+        $delivered->color = 'light-danger';
+        $delivered->title = $this->model->where('status', 'DELIVRD')->where('scheduled_by', $user->id)->count();
+        $delivered->subtitle = 'Delivered';
+        $delivered->customClass = 'mb-2 mb-sm-0';
+
+        $analytics = [$units, $contacts, $sent, $delivered];
 
         return response()->json([
-            'result' => $result
+            'result' => $analytics
         ], 200);
     }
-
-    public function deliveredAnalytics()
-    {
-        $result = (object)null;
-        $result->total = $this->model->where('status', 'sent')->count();
-
-        $series = (object)null;
-        $series->name = 'SMS Delivered';
-        $series->data = [0, 0, 0, 0, 0];
-
-        $result->series[] = $series;
-
-        return response()->json([
-            'result' => $result
-        ], 200);
-    }
-
 }
-

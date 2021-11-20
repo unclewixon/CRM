@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { ToastPlugin, ModalPlugin } from 'bootstrap-vue'
 import VueCompositionAPI from '@vue/composition-api'
+import vueNumeralFilterInstaller from 'vue-numeral-filter'
 
 import i18n from '@/libs/i18n'
 import router from './router'
@@ -26,6 +27,9 @@ import '@/@fake-db/db'
 // BSV Plugin Registration
 Vue.use(ToastPlugin)
 Vue.use(ModalPlugin)
+Vue.use(require('vue-moment'))
+
+Vue.use(vueNumeralFilterInstaller, { locale: 'en-gb' })
 
 // Composition API
 Vue.use(VueCompositionAPI)

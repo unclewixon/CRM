@@ -58,6 +58,7 @@ class SendSMS implements ShouldQueue
             $response = (new Sms)->sendToOne($this->contactPhone, $this->message, $this->senderId);
 
             $schedule->response = json_encode($response);
+            $schedule->message_id = $response['messages'][0]['id'] ?? null;
             $schedule->status = $response['messages'][0]['status'] ?? 'pending';
             $schedule->save();
         } catch (\Exception $e) {

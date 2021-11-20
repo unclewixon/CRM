@@ -25,88 +25,97 @@ class Payment
     //make paystack payment
     public function initialize($request, $type, $cost)
     {
-        $paymentReference = "VS".sprintf("%0.9s",str_shuffle(rand(12,30000) * time()));
+        $paymentReference = "VS" . sprintf("%0.9s", str_shuffle(rand(12, 30000) * time()));
 
-         $tr = Transaction::create([
+        $tr = Transaction::create([
             'type' => $type,
             'user_id' => auth()->user()->id,
             'trans_ref' => $paymentReference
-         ]);
+        ]);
         $payStack = new Paystack(config('paystack.paystack_secret'));
         $trx = $payStack->transaction->initialize(
             [
-                'amount'=> $cost * 100, /* in kobo */
-                'email'=>auth()->user()->email,
+                'amount' => $cost * 100, /* in kobo */
+                'email' => auth()->user()->email,
                 'reference' => $paymentReference,
-                'callback_url'=>"http://127.0.0.1:8000/api/v0.01/verify/$paymentReference",
-                'metadata'=> [
-                    'user_id'=> auth()->user()->id,
-                    'reference'=> $paymentReference,
+                'callback_url' => "http://127.0.0.1:8000/api/v0.01/verify/$paymentReference",
+                'metadata' => [
+                    'user_id' => auth()->user()->id,
+                    'reference' => $paymentReference,
                     'transaction_id' => $tr->id,
                     'total' => $cost,
                 ],
             ]
         );
-        if(!$trx) {
+        if (!$trx) {
             exit($trx->data->message);
         }
         return $trx->data->authorization_url;
     }
 
     //verify paystack payment
-    public function verify($reference)
+    public function verify($request, $type, $recharge_id)
     {
-        if (!$reference) {
-            die('No reference supplied');
-        }
-        $payStack = new Paystack( config('paystack.paystack_secret') );
+        $recharge = Recharge::where('id', $recharge_id)->first();
+
+        $payStack = new Paystack(config('paystack.paystack_secret'));
         $trx = $payStack->transaction->verify([
-            'reference'=>$reference
+            'reference' => $request->reference
         ]);
 
-        if(!$trx->data->status="success"){
-            exit($trx->message);
-        }
-        $trans_ref = $trx->data->metadata->reference;
-          $transType = Transaction::where('trans_ref',$trans_ref)->where('user_id',auth()->user()->id)->first();
-          $update = $transType->update([
-                'paid' => true,
-         ]);
-        if ($transType->type == "Subscription") {
+        $status = $trx->data->status;
+        $amount = $trx->data->amount;
 
-            $active = Subscriber::where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->first();
-            $update =  $active->update([
-                'status' => true
+        if ($status == 'abandoned') {
+            $recharge->delete();
+        } else {
+            $trans_ref = $trx->data->reference;
+
+            $transaction = Transaction::create([
+                'user_id' => auth()->user()->id,
+                'trans_ref' => $trans_ref,
+                'type' => $type,
+                'status' => $status,
+                'amount' => $amount / 100,
             ]);
-            if ($update) {
-                  $this->user_action->isSubscribed(auth()->user()->id, true);
+
+            $recharge->transaction_id = $transaction->id;
+            $recharge->save();
+
+            $recharge->transaction = $transaction;
+
+            if ($type == "Subscription") {
+                $active = Subscriber::where('user_id', '=', auth()->user()->id)->whereDate('created_at', '=', Carbon::today())->first();
+                $update = $active->update([
+                    'status' => true
+                ]);
+                if ($update) {
+                    $this->user_action->isSubscribed(auth()->user()->id, true);
+                }
+                $details = [
+                    'title' => 'Subscription',
+                    'body' => 'You have successfully subscribed',
+                    'url' => 'siteurl'
+                ];
+                Mail::to(auth()->user()->email)->send(new SubscriptionMail($details));
+                return $recharge;
             }
-            $details = [
-                'title' => 'Subscription',
-                'body'  => 'You have successfully subscribed',
-                'url' => 'siteurl'
-            ];
-            Mail::to(auth()->user()->email)->send(new SubscriptionMail($details));
-            return response()->json([
-                'message' => 'You have subscribed successfully',
-            ], 200);
-        }elseif ($transType->type == "Unit") {
-            $recharge = Recharge::where('user_id', '=', auth()->user()->id)->whereDate('created_at' , '=', Carbon::today())->whereTime('created_at' , '>', Carbon::now()->subMinutes(15))->last();
-            $sub = $this->user_action->addUpUnit(auth()->user()->id, $recharge->number);
-            $detail = [
-                'title' => 'SMS Unit',
-                'body'  => 'You have bought some units',
-                'url' => 'siteurl'
-            ];
-            Mail::to(auth()->user()->email)->send(new BuyUnitsMail($detail));
-            return response()->json([
-                'message' => "You have successfully bought $transType->unit_number of units",
-            ], 200);
+            elseif ($type == "Unit") {
+                if ($status == 'success') {
+                    $sub = $this->user_action->addUpUnit(auth()->user()->id, $recharge->number);
+                    $detail = [
+                        'title' => 'SMS Unit',
+                        'body' => 'You have bought some units',
+                        'url' => ''
+                    ];
+                    Mail::to(auth()->user()->email)->send(new BuyUnitsMail($detail));
+                }
+
+                return $recharge;
+            }
         }
 
-        return response()->json([
-            'error' => "",
-        ], 400);
+        return $recharge;
     }
 
 }

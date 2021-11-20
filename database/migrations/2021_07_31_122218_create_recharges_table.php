@@ -15,9 +15,10 @@ class CreateRechargesTable extends Migration
     {
         Schema::create('recharges', function (Blueprint $table) {
             $table->id();
-            $table->uuid('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('unit_id')->constrained()->onDelete('cascade');
-            $table->string('number');
+            $table->foreignId('transaction_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('number');
             $table->string('amount');
             $table->softDeletes();
             $table->timestamps();

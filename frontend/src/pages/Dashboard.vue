@@ -1,78 +1,109 @@
 <template>
-  <div>
+  <section id="dashboard-ecommerce">
     <b-row>
       <b-col
-        md="4"
-        sm="6"
+        xl="4"
+        md="6"
       >
-        <statistic-card-with-line-chart
-          icon="UserCheckIcon"
-          :statistic="contacts.total || 0"
-          statistic-title="Contacts"
-          :chart-data="contacts.series"
-        />
+        <bundle-table :table-data="units" />
       </b-col>
       <b-col
-        md="4"
-        sm="6"
+        xl="8"
+        md="6"
       >
-        <statistic-card-with-line-chart
-          icon="MessageCircleIcon"
-          color="success"
-          :statistic="sms.total || 0"
-          statistic-title="SMS Sent"
-          :chart-data="sms.series"
+        <statistics :data="analytics" />
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col
+        lg="4"
+        md="6"
+      >
+        <bundle-purchase
+          :units="units"
+          @update="addTransaction"
         />
       </b-col>
-      <b-col
-        md="4"
-        sm="6"
-      >
-        <statistic-card-with-line-chart
-          icon="CheckCircleIcon"
-          color="success"
-          :statistic="delivered.total || 0"
-          statistic-title="SMS Delivered"
-          :chart-data="delivered.series"
+      <b-col lg="8">
+        <transaction-table
+          :table-data="recharges"
+          :per-page="perPage"
+          :total="total"
+          :page="currentPage"
+          @nextPage="nextPage"
         />
       </b-col>
     </b-row>
-  </div>
+  </section>
 </template>
 
 <script>
 import { BRow, BCol } from 'bootstrap-vue'
-import StatisticCardWithLineChart from '@core/components/statistics-cards/StatisticCardWithLineChart.vue'
-import { kFormatter } from '@core/utils/filter'
+
+import Statistics from './dashboard/Statistics.vue'
+import TransactionTable from './dashboard/TransactionTable.vue'
+import BundleTable from './dashboard/BundleTable.vue'
+import BundlePurchase from './dashboard/BundlePurchase.vue'
 
 export default {
   components: {
     BRow,
     BCol,
-    StatisticCardWithLineChart,
+
+    Statistics,
+    TransactionTable,
+    BundleTable,
+    BundlePurchase,
   },
   data() {
     return {
-      contacts: { total: 0, series: [{ name: 'Contacts', data: [0, 0, 0, 0, 0] }] },
-      sms: { total: 0, series: [{ name: 'SMS Sent', data: [0, 0, 0, 0, 0] }] },
-      delivered: { total: 0, series: [{ name: 'SMS Delivered', data: [0, 0, 0, 0, 0] }] },
+      units: [],
+      analytics: [],
+
+      recharges: [],
+      perPage: 10,
+      currentPage: 1,
+      total: 0,
     }
   },
   created() {
-    // Contacts
-    this.$http.get('/contacts-analytics')
-      .then(response => { this.contacts = response.data.result })
+    // Units
+    this.$http.get('/units')
+      .then(response => { this.units = response.data.data })
 
-    // Active Users
-    this.$http.get('/sms-analytics')
-      .then(response => { this.sms = response.data.result })
+    // Transactions
+    this.getRecharges(this.currentPage)
 
-    // Active Users
-    this.$http.get('/delivered-analytics')
-      .then(response => { this.delivered = response.data.result })
+    // Analytics
+    this.getAnalytics()
   },
   methods: {
-    kFormatter,
+    addTransaction(item) {
+      this.recharges = [item, ...this.recharges]
+      this.total += 1
+      this.getAnalytics()
+    },
+    getAnalytics() {
+      this.$http.get('/sms-analytics')
+        .then(response => { this.analytics = response.data.result })
+    },
+    getRecharges(page) {
+      this.$http.get(`/recharges?perPage=${this.perPage}&page=${page}`)
+        .then(response => {
+          const { total, data } = response.data
+          this.total = total
+          this.recharges = data
+          this.currentPage = response.data.current_page
+        })
+    },
+    nextPage(page) {
+      this.getRecharges(page)
+    },
   },
 }
 </script>
+
+<style lang="scss">
+@import '@core/scss/vue/pages/dashboard-ecommerce.scss';
+@import '@core/scss/vue/libs/chart-apex.scss';
+</style>

@@ -1,7 +1,7 @@
 <template>
   <div
     class="app-content content"
-    :class="[{'show-overlay': $store.state.app.shallShowOverlay}, $route.meta.contentClass]"
+    :class="[{'show-overlay': $store.state.app.shallShowOverlay}, $route.meta.contentClass, {'no-extra-padding': $store.getters['appConfig/header'] !== 'fixed'}]"
   >
     <div class="content-overlay" />
     <div class="header-navbar-shadow" />

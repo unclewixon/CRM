@@ -15,10 +15,11 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->uuid('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('trans_ref')->unique();
             $table->string('type');
-            $table->boolean('paid')->default(false);
+            $table->decimal('amount', 20, 2)->default(0);
+            $table->string('status')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

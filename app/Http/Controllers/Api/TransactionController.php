@@ -19,21 +19,28 @@ class TransactionController extends Controller
     //all transactoin
     public function index()
     {
-        $transactions = $this->contactGroupRepository->allTransactions();
+        $transactions = $this->transactionRepository->allTransactions();
         return $transactions;
+    }
+
+    //create transaction
+    public function store(Request $request)
+    {
+        $transaction = $this->transactionRepository->create($request);
+        return $transaction;
     }
 
     //show details
     public function show($id)
     {
-        $transaction = $this->contactGroupRepository->showTransaction($id);
+        $transaction = $this->transactionRepository->showTransaction($id);
         return $transaction;
     }
 
     //delete
     public function destroy($id)
     {
-        $transaction = $this->contactGroupRepository->deleteTransaction($id);
+        $transaction = $this->transactionRepository->deleteTransaction($id);
         return $transaction;
     }
 }

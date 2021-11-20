@@ -1,9 +1,10 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
 use App\Actions\TransactionAction;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
+use Illuminate\Http\Request;
 
 
 class TransactionRepository implements TransactionRepositoryInterface
@@ -19,6 +20,12 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function allTransactions()
     {
         return $this->action->all();
+    }
+
+    //create
+    public function create(Request $request)
+    {
+        return $this->action->create($request);
     }
 
     //show

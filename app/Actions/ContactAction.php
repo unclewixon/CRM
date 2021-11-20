@@ -184,20 +184,4 @@ class ContactAction
             ], 404);
         }
     }
-
-    public function analytics()
-    {
-        $result = (object)null;
-        $result->total = $this->model->count();
-
-        $series = (object)null;
-        $series->name = 'Contacts';
-        $series->data = [0, 0, 0, 0, 0];
-
-        $result->series[] = $series;
-
-        return response()->json([
-            'result' => $result
-        ], 200);
-    }
 }

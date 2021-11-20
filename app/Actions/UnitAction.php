@@ -39,13 +39,7 @@ class UnitAction
     public function all()
     {
       $plans = $this->model->latest()->paginate(20);
-      if (count($plans) < 1) {
-        return response()->json([
-            'message' => 'Sorry no unit found'
-        ], 400);
-      }else {
-          return UnitResource::collection($plans);
-      }
+      return UnitResource::collection($plans);
     }
 
     //get

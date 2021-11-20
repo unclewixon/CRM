@@ -17,8 +17,8 @@ class CreateUnitsTable extends Migration
             $table->id();
             $table->string('name');
             $table->longText('description');
-            $table->string('unit');
-            $table->string('cost_per_unit');
+            $table->integer('unit');
+            $table->decimal('cost_per_unit');
             $table->softDeletes();
             $table->timestamps();
         });

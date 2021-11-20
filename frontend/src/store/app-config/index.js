@@ -19,9 +19,12 @@ export default {
       footer: {
         type: $themeConfig.layout.footer.type,
       },
+      header: $themeConfig.layout.header,
     },
   },
-  getters: {},
+  getters: {
+    header: state => state.layout.header,
+  },
   mutations: {
     TOGGLE_RTL(state) {
       state.layout.isRTL = !state.layout.isRTL

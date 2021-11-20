@@ -26,32 +26,6 @@
         />
       </b-avatar>
     </template>
-
-    <b-dropdown-item
-      :to="{ name: 'pages-profile'}"
-      link-class="d-flex align-items-center"
-    >
-      <feather-icon
-        size="16"
-        icon="UserIcon"
-        class="mr-50"
-      />
-      <span>Profile</span>
-    </b-dropdown-item>
-
-    <b-dropdown-divider />
-
-    <b-dropdown-item
-      :to="{ name: 'pages-account-setting' }"
-      link-class="d-flex align-items-center"
-    >
-      <feather-icon
-        size="16"
-        icon="SettingsIcon"
-        class="mr-50"
-      />
-      <span>Settings</span>
-    </b-dropdown-item>
     <b-dropdown-item
       link-class="d-flex align-items-center"
       @click="logout"
@@ -67,7 +41,7 @@
 
 <script>
 import {
-  BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
+  BNavItemDropdown, BDropdownItem, BAvatar,
 } from 'bootstrap-vue'
 import { avatarText } from '@core/utils/filter'
 import { initialAbility } from '@/libs/acl/config'
@@ -77,7 +51,6 @@ export default {
   components: {
     BNavItemDropdown,
     BDropdownItem,
-    BDropdownDivider,
     BAvatar,
   },
   data() {

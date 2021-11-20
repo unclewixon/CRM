@@ -1,10 +1,13 @@
 <template>
   <div
     class="app-content content"
-    :class="[{'show-overlay': $store.state.app.shallShowOverlay}, $route.meta.contentClass]"
+    :class="[{'show-overlay': $store.state.app.shallShowOverlay}, $route.meta.contentClass, {'no-extra-padding': $store.getters['appConfig/header'] !== 'fixed'}]"
   >
     <div class="content-overlay" />
-    <div class="header-navbar-shadow" />
+    <div
+      v-if="$store.getters['appConfig/header'] === 'fixed'"
+      class="header-navbar-shadow"
+    />
     <div
       class="content-wrapper"
       :class="contentWidth === 'boxed' ? 'container p-0' : null"

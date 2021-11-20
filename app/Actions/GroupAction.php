@@ -39,19 +39,8 @@ class GroupAction
     //get all users
     public function all()
     {
-        $user_roles = auth()->user()->roles->pluck('name');
-        if ($user_roles->contains('SuperAdmin')) {
-            $groups = $this->model->with(['user', 'contacts'])->latest()->paginate(20);
-        }else {
-            $groups  = $this->model->with('contacts')->where('user_id', auth()->user()->id)->latest()->paginate(20);
-        }
-        if (count($groups) < 1) {
-        return response()->json([
-            'message' => 'Sorry no group found'
-        ], 400);
-        }else {
-            return GroupResource::collection($groups);
-        }
+        $groups  = $this->model->with('contacts')->where('user_id', auth()->user()->id)->latest()->paginate(20);
+        return GroupResource::collection($groups);
     }
 
     //get single user

@@ -10,6 +10,6 @@ class ScheduledSms extends Model
     use HasFactory;
 
     protected $fillable = [
-        'contact_id', 'message', 'scheduled_by',  'response', 'status'
+        'contact_id', 'message', 'scheduled_by',  'response', 'status', 'message_id', 'delivered_at'
     ];
 }

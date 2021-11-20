@@ -134,15 +134,10 @@ class UserAction
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
             $user = $this->model->find($id);
-            $new_unit = $user->unit + $unit;
-            $update = $user->update([
-                'unit' => $new_unit
-            ]);
-            if ($update) {
-              return true;
-            }else {
-              return false;
-            }
+            $user->unit = $user->unit + $unit;
+            $user->save();
+
+            return true;
         }else {
             return response()->json([
                 'message' => 'Sorry this data do not exist'
@@ -156,15 +151,10 @@ class UserAction
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
             $user = $this->model->find($id);
-            $new_unit = $user->unit - $charge;
-            $update = $user->update([
-                'unit' => $new_unit
-            ]);
-            if ($update) {
-              return true;
-            }else {
-              return false;
-            }
+            $user->unit = $user->unit - $charge;
+            $user->save();
+
+            return true;
         }else {
             return response()->json([
                 'message' => 'Sorry this data do not exist'
