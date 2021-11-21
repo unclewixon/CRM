@@ -5,9 +5,6 @@ import VueRouter from 'vue-router'
 import { canNavigate } from '@/libs/acl/routeProtection'
 import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser } from '@/auth/utils'
 import views from './routes/views'
-import apps from './routes/apps'
-import dashboard from './routes/dashboard'
-import uiElements from './routes/ui-elements/index'
 import pages from './routes/pages'
 
 Vue.use(VueRouter)
@@ -20,10 +17,7 @@ const router = new VueRouter({
   },
   routes: [
     ...views,
-    ...apps,
-    ...dashboard,
     ...pages,
-    ...uiElements,
     {
       path: '*',
       redirect: 'error-404',

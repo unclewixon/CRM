@@ -147,20 +147,9 @@ export default {
   },
   methods: {
     fetchItems() {
-      this.$store.dispatch('app-ecommerce/fetchCartProducts')
-        .then(response => {
-          this.items = response.data.products
-        })
     },
     removeItemFromCart(productId) {
-      this.$store.dispatch('app-ecommerce/removeProductFromCart', { productId })
-        .then(() => {
-          const itemIndex = this.items.findIndex(p => p.id === productId)
-          this.items.splice(itemIndex, 1)
-
-          // Update count in cart items state
-          this.$store.commit('app-ecommerce/UPDATE_CART_ITEMS_COUNT', this.items.length)
-        })
+      console.log(productId)
     },
   },
 }
