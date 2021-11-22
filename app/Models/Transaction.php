@@ -11,11 +11,11 @@ class Transaction extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'trans_ref', 'type', 'status', 'amount'
+        'user_id', 'trans_ref', 'type', 'status', 'amount', 'description'
     ];
 
-    public function users() {
+    public function users()
+    {
         return $this->belongsToMany(User::class);
     }
-
 }

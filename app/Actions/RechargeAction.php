@@ -49,7 +49,7 @@ class RechargeAction
         $perPage = $request->perPage ?? 10;
         $page = $request->page ?? 1;
 
-        $my_units = $this->model->with('transaction:id,status')->where('user_id', auth()->user()->id)->latest()->paginate($perPage, ['*'], 'page', $page);
+        $my_units = $this->model->with('transaction:id,amount,status')->where('user_id', auth()->user()->id)->latest()->paginate($perPage, ['*'], 'page', $page);
 
         return $my_units;
     }

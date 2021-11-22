@@ -3,14 +3,18 @@
 namespace App\Repositories;
 
 use App\Jobs\SendSMS;
+use App\Mail\BuyUnitsMail;
 use App\Models\Contact;
+use App\Models\Recharge;
 use App\Models\ScheduledSms;
+use App\Models\ServiceCharge;
 use App\Models\Transaction;
 use App\Repositories\Contracts\SendMessageRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Helpers\Charge;
 use App\Actions\UserAction;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Log;
 use Yabacon\Paystack;
@@ -170,8 +174,27 @@ class SendMessageRepository implements SendMessageRepositoryInterface
                     'reference' => $transaction->trans_ref
                 ]);
 
+                $status = $trx->data->status;
+
                 $transaction->status = $trx->data->status;
                 $transaction->save();
+
+                $recharge = Recharge::where('transaction_id', $transaction->id)->first();
+
+                if ($status == 'success') {
+                    $sub = $this->user_action->addUpUnit(auth()->user()->id, $recharge->number);
+                    $detail = [
+                        'title' => 'SMS Unit',
+                        'body' => 'You have bought some units',
+                        'url' => ''
+                    ];
+
+                    $update_charges = ServiceCharge::where('transaction_id', $transaction->id)->update(['status => 1']);
+
+                    Mail::to(auth()->user()->email)->send(new BuyUnitsMail($detail));
+                } else if ($status == 'failed') {
+                    $remove_charges = ServiceCharge::where('transaction_id', $transaction->id)->delete();
+                }
             }
         } catch (\Exception $e) {
             Log::error($e->getMessage());

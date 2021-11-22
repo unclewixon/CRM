@@ -66,9 +66,13 @@
                       ₦{{ unitsAmount | numeral('0,0.00') }}
                     </div>
                   </li>
-                  <li class="price-detail">
+                  <li
+                    v-for="(item, i) in userData.charge_unpaid"
+                    :key="i"
+                    class="price-detail"
+                  >
                     <div class="detail-title">
-                      Monthly Service
+                      Monthly Service ({{ item.month }})
                     </div>
                     <div class="detail-amt">
                       ₦25,000.00
@@ -206,7 +210,7 @@ export default {
         }
         const pricing = a.cost
         const unitsAmount = parseFloat(val) * pricing
-        const amount = unitsAmount + 25000
+        const amount = unitsAmount + (this.userData.charge_unpaid.length * 25000)
         const vat = (5 * amount) / 100
         const totalAmount = amount + vat
 
@@ -240,9 +244,16 @@ export default {
     },
     callback(response) {
       this.verifying = true
-      const data = { unit_id: this.unitItem.id, unit_number: this.unit, reference: response.trxref }
+      const data = {
+        unit_id: this.unitItem.id, unit_number: this.unit, reference: response.trxref, service_charges: this.userData.charge_unpaid,
+      }
       this.$http.post('/recharges', data).then(rs => {
         this.resetData(rs.data.recharge, 'payment successful!', 'success')
+        if (this.userData.charge_unpaid.length > 0) {
+          const user = { ...this.userData, charge_unpaid: [] }
+          this.userData = user
+          localStorage.setItem('userData', JSON.stringify(user))
+        }
       }).catch(e => {
         console.log(e.response)
         this.resetData(null, 'payment failed!', 'danger')
@@ -250,7 +261,9 @@ export default {
     },
     async close() {
       this.verifying = true
-      const data = { unit_id: this.unitItem.id, unit_number: this.unit, reference: this.reference }
+      const data = {
+        unit_id: this.unitItem.id, unit_number: this.unit, reference: this.reference, service_charges: [],
+      }
       this.$http.post('/recharges', data).then(rs => {
         this.resetData(rs.data.recharge, 'payment closed/failed!', 'danger')
       }).catch(e => {

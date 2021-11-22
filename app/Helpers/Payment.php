@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\ServiceCharge;
 use Yabacon\Paystack;
 use App\Models\Transaction;
 use App\Actions\UserAction;
@@ -56,6 +57,8 @@ class Payment
     //verify paystack payment
     public function verify($request, $type, $recharge_id)
     {
+        $service_charges = $request->service_charges ?? [];
+
         $recharge = Recharge::where('id', $recharge_id)->first();
 
         $payStack = new Paystack(config('paystack.paystack_secret'));
@@ -76,6 +79,7 @@ class Payment
                 'trans_ref' => $trans_ref,
                 'type' => $type,
                 'status' => $status,
+                'description' => count($service_charges) > 0 ? 'units purchase plus monthly service charge(s)' : 'units purchase',
                 'amount' => $amount / 100,
             ]);
 
@@ -83,6 +87,16 @@ class Payment
             $recharge->save();
 
             $recharge->transaction = $transaction;
+
+            foreach ($service_charges as $charge) {
+                $mcharge = ServiceCharge::create([
+                    'user_id' => auth()->user()->id,
+                    'amount' => 25000,
+                    'paid_at' => Carbon::createFromFormat('M-Y', $charge['month'])->format('Y-m-d'),
+                    'transaction_id' => $transaction->id,
+                    'status' => 0,
+                ]);
+            }
 
             if ($type == "Subscription") {
                 $active = Subscriber::where('user_id', '=', auth()->user()->id)->whereDate('created_at', '=', Carbon::today())->first();
@@ -99,8 +113,7 @@ class Payment
                 ];
                 Mail::to(auth()->user()->email)->send(new SubscriptionMail($details));
                 return $recharge;
-            }
-            elseif ($type == "Unit") {
+            } elseif ($type == "Unit") {
                 if ($status == 'success') {
                     $sub = $this->user_action->addUpUnit(auth()->user()->id, $recharge->number);
                     $detail = [
@@ -108,7 +121,18 @@ class Payment
                         'body' => 'You have bought some units',
                         'url' => ''
                     ];
+
+                    try {
+                        $update_charges = ServiceCharge::where('transaction_id', $transaction->id)->update(['status => 1']);
+                    } catch (\Exception $e) {
+                    }
+
                     Mail::to(auth()->user()->email)->send(new BuyUnitsMail($detail));
+                } else if ($status == 'failed') {
+                    try {
+                        $remove_charges = ServiceCharge::where('transaction_id', $transaction->id)->delete();
+                    } catch (\Exception $e) {
+                    }
                 }
 
                 return $recharge;

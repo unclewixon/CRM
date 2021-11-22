@@ -30,7 +30,7 @@
 
       <!-- price -->
       <template #cell(amount)="data">
-        ₦{{ data.item.amount | numeral('0,0.00') }}
+        ₦{{ (data.item.transaction && data.item.transaction.amount ? data.item.transaction.amount : 0) | numeral('0,0.00') }}
       </template>
 
       <!-- price -->
