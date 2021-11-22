@@ -42,4 +42,11 @@ class SendMessageController extends Controller
         $delivered = $this->sendMessageRepository->receipt($request);
         return $delivered;
     }
+
+    //check paystack transactions
+    public function checkTransactions()
+    {
+        $this->sendMessageRepository->checkTransactions();
+        return true;
+    }
 }

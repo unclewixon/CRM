@@ -14,4 +14,6 @@ interface SendMessageRepositoryInterface
 
     public function receipt(Request $request);
 
+    public function checkTransactions();
+
 }

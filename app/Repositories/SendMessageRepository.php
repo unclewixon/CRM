@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Jobs\SendSMS;
 use App\Models\Contact;
 use App\Models\ScheduledSms;
+use App\Models\Transaction;
 use App\Repositories\Contracts\SendMessageRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use App\Helpers\Charge;
 use App\Actions\UserAction;
 use Illuminate\Support\Facades\Validator;
 use Log;
+use Yabacon\Paystack;
 
 class SendMessageRepository implements SendMessageRepositoryInterface
 {
@@ -158,5 +160,22 @@ class SendMessageRepository implements SendMessageRepositoryInterface
         ], 200);
     }
 
+    public function checkTransactions()
+    {
+        try {
+            $transactions = Transaction::where('status', 'ongoing')->get();
+            foreach ($transactions as $transaction) {
+                $payStack = new Paystack(config('paystack.paystack_secret'));
+                $trx = $payStack->transaction->verify([
+                    'reference' => $transaction->trans_ref
+                ]);
+
+                $transaction->status = $trx->data->status;
+                $transaction->save();
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+    }
 }
 

@@ -36,7 +36,7 @@
       <!-- price -->
       <template #cell(status)="data">
         <b-badge
-          :variant="data.item.transaction ? data.item.transaction.status === 'failed' ? 'danger' : 'success' : 'danger'"
+          :variant="data.item.transaction ? (data.item.transaction.status === 'failed' ? 'danger' : (data.item.transaction.status === 'ongoing' ? 'secondary' : 'success')) : 'danger'"
         >
           {{ data.item.transaction && data.item.transaction.status ? data.item.transaction.status : 'failed' }}
         </b-badge>
