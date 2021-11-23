@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Helpers\General;
+use Illuminate\Support\Facades\DB;
 
 class GroupResource extends JsonResource
 {
@@ -22,6 +23,7 @@ class GroupResource extends JsonResource
             'description'     => $general_helper->clean($this->description),
             'slug'  => $general_helper->clean($this->slug),
             'user'     => new UserResource($this->whenLoaded('user')),
+            'contact_count'     => DB::table('contact_group')->where('group_id', $this->id)->count(),
             'contacts'     => ContactResource::collection($this->whenLoaded('contacts')),
             'created_at'=> $this->created_at,
             'updated_at'=> $this->updated_at

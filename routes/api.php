@@ -113,8 +113,6 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::patch('/change-password/{id}', [AuthController::class, 'changePassword']);
             Route::patch('/update-profile/{id}', [AuthController::class, 'updateUserAcount']);
 
-            Route::get('/verify/{id}', [App\Helpers\Payment::class, 'verify']);
-
             Route::get('/sms-analytics', [ScheduledSmsController::class, 'smsAnalytics']);
 
         });//end

@@ -17,9 +17,9 @@ class GroupController extends Controller
     }
 
     //all groups
-    public function index()
+    public function index(Request $request)
     {
-        $groups = $this->groupRepository->allGroups();        ;
+        $groups = $this->groupRepository->allGroups($request);        ;
         return $groups;
     }
 

@@ -19,28 +19,28 @@ class ContactGroupController extends Controller
     //add mutiple contact to group
     public function addContactM(Request $request)
     {
-        $contact = $this->contactGroupRepository->addContactsToGrouop($request);
+        $contact = $this->contactGroupRepository->addContactsToGroup($request);
         return $contact;
     }
 
     //remove mutiple contact from group
     public function removeContactM(Request $request)
     {
-        $contact = $this->contactGroupRepository->removeContactsFromGrouop($request);
+        $contact = $this->contactGroupRepository->removeContactsFromGroup($request);
         return $contact;
     }
 
     //add single contact to group
     public function addSingleContact(Request $request)
     {
-        $contact = $this->contactGroupRepository->addContactToGrouop($request);
+        $contact = $this->contactGroupRepository->addContactToGroup($request);
         return $contact;
     }
 
     //remove single contact from group
     public function removeSingleContact(Request $request)
     {
-        $contact = $this->contactGroupRepository->removeContactFromGrouop($request);
+        $contact = $this->contactGroupRepository->removeContactFromGroup($request);
         return $contact;
     }
 }

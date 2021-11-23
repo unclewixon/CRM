@@ -141,7 +141,7 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import VuexyLogo from '@core/layouts/components/Logo.vue'
 import {
-  BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BFormCheckbox, BCardText, BCardTitle, BImg, BForm, BButton, BAlert, VBTooltip,
+  BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BCardText, BCardTitle, BImg, BForm, BButton, VBTooltip,
 } from 'bootstrap-vue'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
@@ -162,13 +162,11 @@ export default {
     BFormInput,
     BInputGroupAppend,
     BInputGroup,
-    BFormCheckbox,
     BCardText,
     BCardTitle,
     BImg,
     BForm,
     BButton,
-    BAlert,
     VuexyLogo,
     ValidationProvider,
     ValidationObserver,

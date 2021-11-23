@@ -12,13 +12,13 @@ interface ContactRepositoryInterface
 
     public function showContact($id);
 
-    public function addContactsToGrouop($request);
+    public function addContactsToGroup($request);
 
-    public function removeContactsFromGrouop($request);
+    public function removeContactsFromGroup($request);
 
-    public function addContactToGrouop($request);
+    public function addContactToGroup($request);
 
-    public function removeContactFromGrouop($request);
+    public function removeContactFromGroup($request);
 
     public function updateContact($request, $id);
 

@@ -23,5 +23,19 @@ export default [
     path: '/groups',
     name: 'groups',
     component: () => import('@/pages/groups/Groups.vue'),
+    meta: {
+      contentRenderer: 'sidebar-left',
+      contentClass: 'todo-application',
+    },
+  },
+  {
+    path: '/groups/:slug',
+    name: 'groups-item',
+    component: () => import('@/pages/groups/Groups.vue'),
+    meta: {
+      contentRenderer: 'sidebar-left',
+      contentClass: 'todo-application',
+      navActiveLink: 'apps-todo',
+    },
   },
 ]

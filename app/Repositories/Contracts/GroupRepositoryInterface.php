@@ -2,11 +2,13 @@
 
 namespace App\Repositories\Contracts;
 
+use Illuminate\Http\Request;
+
 interface GroupRepositoryInterface
 {
     public function createGroup($request);
 
-    public function allGroups();
+    public function allGroups(Request $request);
 
     public function showGroup($id);
 

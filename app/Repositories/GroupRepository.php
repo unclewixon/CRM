@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Actions\GroupAction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Contracts\GroupRepositoryInterface;
 
@@ -33,9 +34,9 @@ class GroupRepository implements GroupRepositoryInterface
     }
 
     //all
-    public function allGroups()
+    public function allGroups(Request $request)
     {
-        return $this->action->all();
+        return $this->action->all($request);
     }
 
     //show

@@ -259,7 +259,7 @@ import { onUnmounted } from '@vue/composition-api'
 import Ripple from 'vue-ripple-directive'
 import store from '@/store'
 import useContacts from './useContacts'
-import contactModule from '../contactModule'
+import contactModule from './contactModule'
 import SendMessage from './SendMessage.vue'
 
 export default {

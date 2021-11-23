@@ -242,7 +242,7 @@ import flatPickr from 'vue-flatpickr-component'
 import vSelect from 'vue-select'
 import router from '@/router'
 import store from '@/store'
-import contactModule from '../contactModule'
+import contactModule from './contactModule'
 import useContacts from './useContacts'
 
 export default {
