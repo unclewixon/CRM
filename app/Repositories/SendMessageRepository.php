@@ -43,7 +43,8 @@ class SendMessageRepository implements SendMessageRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             if ($request->to != 'All Contacts') {
@@ -60,6 +61,7 @@ class SendMessageRepository implements SendMessageRepositoryInterface
             if ($my_unit <= 0) {
                 return response()->json([
                     'message' => 'Sorry you do not have enough units to send this message ',
+                    'success' => false
                 ], 422);
             }
 
@@ -67,6 +69,7 @@ class SendMessageRepository implements SendMessageRepositoryInterface
             if ($my_charge > $my_unit) {
                 return response()->json([
                     'message' => 'Sorry you do not have enough units to send this message ',
+                    'success' => false
                 ], 422);
             } else {
                 $remove_charge_from_my_unit = $this->user_action->subtractUnit(auth()->user()->id, $my_charge);
@@ -76,6 +79,7 @@ class SendMessageRepository implements SendMessageRepositoryInterface
 
                 return response()->json([
                     'message' => 'Message scheduled successfully',
+                    'success' => true
                 ], 200);
             }
 

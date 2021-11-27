@@ -32,7 +32,8 @@ class TransactionAction
           return new TransactionResource($contact);
       }else {
            return response()->json([
-               'message' => 'Sorry this data do not exist'
+               'message' => 'Sorry this data do not exist',
+               'success' => false
            ], 400);
       }
     }
@@ -51,19 +52,24 @@ class TransactionAction
     {
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
-            $delete =  $this->model->find($id)->delete();
-            if ($delete) {
-              return response()->json([
-                   'message' => 'Transaction deleted successfully'
-               ], 200);
-            }else {
-               return response()->json([
-                   'message' => 'Sorry unable to delete transaction'
-               ], 400);
+            try {
+                $delete =  $this->model->find($id)->delete();
+                return response()->json([
+                    'message' => 'Transaction deleted successfully',
+                    'data' => $delete,
+                    'success' => true
+                ], 200);
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'message' => 'Sorry unable to delete transaction',
+                    'error' => $e->getMessage(),
+                    'success' => false
+                ], 400);
             }
         }else {
           return response()->json([
-              'message' => 'Sorry this data do not exist'
+              'message' => 'Sorry this data do not exist',
+              'success' => false
           ], 404);
         }
     }

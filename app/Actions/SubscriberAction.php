@@ -26,23 +26,27 @@ class SubscriberAction
     //create
     public function create($request)
     {
-        $subscriber = $this->model->create([
-            'user_id' => auth()->user()->id,
-            'plan_id' => $request->plan_id,
-            'from' => Carbon::now(),
-            'to' => $this->helper->to($request->plan_id)
-        ]);
-        if ($subscriber) {
+        try {
+            $subscriber = $this->model->create([
+                'user_id' => auth()->user()->id,
+                'plan_id' => $request->plan_id,
+                'from' => Carbon::now(),
+                'to' => $this->helper->to($request->plan_id)
+            ]);
             $pay = $this->payment->initialize($request, 'Subscription', $this->helper->getCost($request->plan_id));
             if ($pay) {
                 return response()->json([
-                    'url' => $pay
+                    'url' => $pay,
+                    'data' => $subscriber,
+                    'success' => true
                 ], 200);
             }
-        }else {
-           return response()->json([
-               'message' => 'Sorry unable to subscribe'
-           ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Sorry unable to subscribe',
+                'error' => $e->getMessage(),
+                'success' => true
+            ], 400);
         }
     }
 
@@ -85,7 +89,8 @@ class SubscriberAction
             return new SubscriberResource($subscriber);
         }else {
              return response()->json([
-                 'message' => 'Sorry this subscriber do not exist'
+                 'message' => 'Sorry this subscriber do not exist',
+                 'success' => false
              ], 400);
         }
     }
@@ -95,19 +100,24 @@ class SubscriberAction
     {
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
-            $delete =  $this->model->find($id)->delete();
-            if ($delete) {
-              return response()->json([
-                   'message' => 'Subscriber deleted successfully'
-               ], 200);
-            }else {
-               return response()->json([
-                   'message' => 'Sorry unable to delete  subscriber'
-               ], 400);
+            try {
+                $delete =  $this->model->find($id)->delete();
+                return response()->json([
+                    'message' => 'Subscriber deleted successfully',
+                    'data' => $delete,
+                    'success' => true
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Sorry unable to delete  subscriber',
+                    'error' => $e->getMessage(),
+                    'success' => false
+                ], 400);
             }
         }else {
           return response()->json([
-              'message' => 'Sorry this  subscriber do not exist'
+              'message' => 'Sorry this  subscriber do not exist',
+              'success' => false
           ], 404);
         }
     }

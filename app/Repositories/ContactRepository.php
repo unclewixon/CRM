@@ -33,7 +33,8 @@ class ContactRepository implements ContactRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             return $this->action->create($request);
@@ -62,7 +63,8 @@ class ContactRepository implements ContactRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             return $this->action->addContactsToGroup($request);
@@ -79,7 +81,8 @@ class ContactRepository implements ContactRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             return $this->action->removeContactsFromGroup($request);
@@ -96,7 +99,8 @@ class ContactRepository implements ContactRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             return $this->action->addContactToGroup($request);
@@ -113,7 +117,8 @@ class ContactRepository implements ContactRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             return $this->action->removeContactFromGroup($request);
@@ -128,7 +133,8 @@ class ContactRepository implements ContactRepositoryInterface
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             $count = Excel::toArray(new ContactImport, request()->file('file'));

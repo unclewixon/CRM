@@ -26,7 +26,8 @@ class RechargeRepository implements RechargeRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         }else {
              return  $this->action->create($request);

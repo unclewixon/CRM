@@ -19,7 +19,8 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
 
         }else {
@@ -31,12 +32,14 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface
                 );
                 if ($status) {
                     return response()->json([
-                        'message' => 'Email link sent successfully'
+                        'message' => 'Email link sent successfully',
+                        'success' => true
                     ], 200);
                 }
             }else {
                 return response()->json([
-                        'message' => 'Sorry this email do not exist in our system'
+                        'message' => 'Sorry this email do not exist in our system',
+                        'success' => false
                 ], 404);
             }
         }
@@ -51,7 +54,8 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
 
         }else {
@@ -70,7 +74,8 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface
 
             if ($status) {
                 return response()->json([
-                    'message' => 'Password reset successfully'
+                    'message' => 'Password reset successfully',
+                    'success' => true
                 ], 200);
             }
         }

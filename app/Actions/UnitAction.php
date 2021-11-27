@@ -18,20 +18,24 @@ class UnitAction
     //create
     public function create($request)
     {
-        $unit = $this->model->create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'unit' => $request->unit,
-            'cost_per_unit' => $request->cost_per_unit
-        ]);
-        if ($unit) {
+        try {
+            $unit = $this->model->create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'unit' => $request->unit,
+                'cost_per_unit' => $request->cost_per_unit
+            ]);
             return response()->json([
                 'message' => 'Unit created successfully',
+                'data' => $unit,
+                'success' => true
             ], 200);
-        }else {
-           return response()->json([
-               'message' => 'Sorry unable to create unit'
-           ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Sorry unable to create unit',
+                'error' => $e->getMessage(),
+                'success' => false
+            ], 400);
         }
     }
 
@@ -51,7 +55,8 @@ class UnitAction
           return new UnitResource($unit);
       }else {
            return response()->json([
-               'message' => 'Sorry this data do not exist'
+               'message' => 'Sorry this data do not exist',
+               'success' => false
            ], 400);
       }
     }
@@ -63,24 +68,29 @@ class UnitAction
         if ($data) {
            $plan = $this->model->find($id);
            $plan->slug = null;
-           $update = $plan->update([
-             'name' => empty($request->name) ? $plan->name : $request->name,
-             'description' =>   empty($request->description) ? $plan->description : $request->description,
-             'unit' =>  empty($request->unit) ? $plan->unit : $request->unit,
-             'cost_per_unit' =>  empty($request->cost_per_unit) ? $plan->cost_per_unit : $request->cost_per_unit
-           ]);
-           if ($update) {
-             return response()->json([
-                 'message' => 'Unit updated successfully'
-             ], 200);
-           }else {
-              return response()->json([
-                  'message' => 'Sorry unable to update unit'
-              ], 400);
+           try {
+                $update = $plan->update([
+                    'name' => empty($request->name) ? $plan->name : $request->name,
+                    'description' =>   empty($request->description) ? $plan->description : $request->description,
+                    'unit' =>  empty($request->unit) ? $plan->unit : $request->unit,
+                    'cost_per_unit' =>  empty($request->cost_per_unit) ? $plan->cost_per_unit : $request->cost_per_unit
+                ]);
+                return response()->json([
+                    'message' => 'Unit updated successfully',
+                    'data' => $update,
+                    'success' => true
+                ], 200);
+           } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Sorry unable to update unit',
+                'error' => $th->getMessage(),
+                'success' => false
+            ], 400);
            }
         }else {
           return response()->json([
-              'message' => 'Sorry this data do not exist'
+              'message' => 'Sorry this data do not exist',
+              'success' => false
           ], 404);
         }
     }
@@ -90,19 +100,24 @@ class UnitAction
     {
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
-            $delete =  $this->model->find($id)->delete();
-            if ($delete) {
-              return response()->json([
-                   'message' => 'Unit deleted successfully'
-               ], 200);
-            }else {
-               return response()->json([
-                   'message' => 'Sorry unable to delete unit'
-               ], 400);
+            try {
+                $delete =  $this->model->find($id)->delete();
+                return response()->json([
+                    'message' => 'Unit deleted successfully',
+                    'data' => $delete,
+                    'success' => true
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Sorry unable to delete unit',
+                    'error' => $th->getMessage(),
+                    'success' => false
+                ], 400);
             }
         }else {
           return response()->json([
-              'message' => 'Sorry this data do not exist'
+              'message' => 'Sorry this data do not exist',
+              'success' => false
           ], 404);
         }
     }

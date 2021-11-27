@@ -4,7 +4,6 @@ namespace App\Actions;
 
 use App\Models\Plan;
 use App\Http\Resources\PlanResource;
-use \Cviebrock\EloquentSluggable\Services\SlugService;
 
 class PlanAction
 {
@@ -19,21 +18,24 @@ class PlanAction
     //create user account
     public function create($request)
     {
-        $user = $this->model->create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'duration' => $request->duration,
-            'cost' => $request->cost,
-            'slug' => SlugService::createSlug($this->model, 'slug', $request->name)
-        ]);
-        if ($user) {
+        try {
+            $plan = $this->model->create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'duration' => $request->duration,
+                'cost' => $request->cost
+            ]);
             return response()->json([
                 'message' => 'Plan created successfully',
+                'data' => $plan,
+                'success' => true
             ], 200);
-        }else {
-           return response()->json([
-               'message' => 'Sorry unable to create plan'
-           ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Sorry unable to create plan',
+                'error' => $e->getMessage(),
+                'success' => false
+            ], 400);
         }
     }
 
@@ -43,7 +45,8 @@ class PlanAction
       $plans = $this->model->latest()->paginate(20);
       if (count($plans) < 1) {
         return response()->json([
-            'message' => 'Sorry no plan found'
+            'message' => 'Sorry no plan found',
+            'success' => false
         ], 400);
       }else {
           return PlanResource::collection($plans);
@@ -59,7 +62,8 @@ class PlanAction
           return new PlanResource($plan);
       }else {
            return response()->json([
-               'message' => 'Sorry this data do not exist'
+               'message' => 'Sorry this data do not exist',
+               'success' => false
            ], 400);
       }
     }
@@ -71,24 +75,29 @@ class PlanAction
         if ($data) {
            $plan = $this->model->find($id);
            $plan->slug = null;
-           $update = $plan->update([
-             'name' => empty($request->name) ? $plan->name : $request->name,
-             'description' =>   empty($request->description) ? $plan->description : $request->description,
-             'duration' =>  empty($request->duration) ? $plan->duration : $request->duration,
-             'cost' =>  empty($request->cost) ? $plan->cost : $request->cost
-           ]);
-           if ($update) {
-             return response()->json([
-                 'message' => 'Plan updated successfully'
-             ], 200);
-           }else {
-              return response()->json([
-                  'message' => 'Sorry unable to update plan'
-              ], 400);
+           try {
+                $update = $plan->update([
+                    'name' => empty($request->name) ? $plan->name : $request->name,
+                    'description' =>   empty($request->description) ? $plan->description : $request->description,
+                    'duration' =>  empty($request->duration) ? $plan->duration : $request->duration,
+                    'cost' =>  empty($request->cost) ? $plan->cost : $request->cost
+                ]);
+                return response()->json([
+                    'message' => 'Plan updated successfully',
+                    'data' => $update,
+                    'success' => true
+                ], 200);
+           } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Sorry unable to update plan',
+                    'error' => $th->getMessage(),
+                    'success' => false
+                ], 400);
            }
         }else {
           return response()->json([
-              'message' => 'Sorry this data do not exist'
+              'message' => 'Sorry this data do not exist',
+              'success' => false
           ], 404);
         }
     }
@@ -98,19 +107,24 @@ class PlanAction
     {
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
-            $delete =  $this->model->find($id)->delete();
-            if ($delete) {
-              return response()->json([
-                   'message' => 'Plan deleted successfully'
-               ], 200);
-            }else {
-               return response()->json([
-                   'message' => 'Sorry unable to delete plan'
-               ], 400);
+            try {
+                $delete =  $this->model->find($id)->delete();
+                return response()->json([
+                    'message' => 'Plan deleted successfully',
+                    'data' => $delete,
+                    'success' => true
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Sorry unable to delete plan',
+                    'error' => $e->getMessage(),
+                    'success' => false
+                ], 400);
             }
         }else {
           return response()->json([
-              'message' => 'Sorry this data do not exist'
+              'message' => 'Sorry this data do not exist',
+              'success' => false
           ], 404);
         }
     }

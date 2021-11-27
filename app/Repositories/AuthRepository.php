@@ -34,7 +34,8 @@ class AuthRepository implements AuthRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             return $this->action->create($request);
@@ -51,17 +52,20 @@ class AuthRepository implements AuthRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             if (!$token = auth()->attempt($validator->validated())) {
                 return response()->json([
-                    'error' => 'Unauthorized'
+                    'error' => 'Unauthorized',
+                    'success' => false
                 ], 401);
             }
             if (auth()->user()->email_verified_at == null) {
                 return response()->json([
-                    'error' => 'Email must be verified'
+                    'error' => 'Email must be verified',
+                    'success' => false
                 ], 401);
 
             } else {
@@ -73,7 +77,8 @@ class AuthRepository implements AuthRepositoryInterface
                 }
 
                 return response()->json([
-                    'error' => 'Authentication failed'
+                    'error' => 'Authentication failed',
+                    'success' => false
                 ], 401);
             }
         }
@@ -87,17 +92,20 @@ class AuthRepository implements AuthRepositoryInterface
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             try {
                 JWTAuth::invalidate($request->token);
                 return response()->json([
-                    'message' => 'User logged out successfully.'
+                    'message' => 'User logged out successfully.',
+                    'success' => true
                 ], 200);
             } catch (JWTException $e) {
                 return response()->json([
-                    'message' => 'Failed to logout, please try again.'
+                    'message' => 'Failed to logout, please try again.',
+                    'success' => false
                 ], 500);
             }
         }
@@ -127,7 +135,8 @@ class AuthRepository implements AuthRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $$validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             return $this->action->update($request, $id);
@@ -144,7 +153,8 @@ class AuthRepository implements AuthRepositoryInterface
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         } else {
             return $this->action->password($request);

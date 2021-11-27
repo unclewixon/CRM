@@ -28,7 +28,8 @@ class SendEmailRepository implements SendEmailRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         }else {
             $groupID = $request->group_id;
@@ -45,6 +46,7 @@ class SendEmailRepository implements SendEmailRepositoryInterface
             }
             return response()->json([
                 'message' => 'Message sent successfully',
+                'success' => true
             ], 200);
         }
     }
@@ -60,7 +62,8 @@ class SendEmailRepository implements SendEmailRepositoryInterface
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         }else {
             $contact = $this->model->where('id', '=', $request->contact_id)->where('user_id', auth()->user()->id)->first();
@@ -72,10 +75,12 @@ class SendEmailRepository implements SendEmailRepositoryInterface
            if ($send) {
                 return response()->json([
                     'message' => 'Message sent successfully',
+                    'success' => true
                 ], 200);
            }else {
                 return response()->json([
                     'message' => 'Message not sent',
+                    'success' => false
                 ], 401);
            }
 

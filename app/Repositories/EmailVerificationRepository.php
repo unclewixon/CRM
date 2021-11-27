@@ -30,11 +30,13 @@ class EmailVerificationRepository implements EmailVerificationRepositoryInterfac
                     'email_verified_at' => Carbon::now()
                 ]);
                 return response()->json([
-                    'message' => 'Email have  been  verified'
+                    'message' => 'Email have  been  verified',
+                    'success' => true
                 ], 200);
            }else {
             return response()->json([
-                'message' => 'Token not found'
+                'message' => 'Token not found',
+                'success' => false
             ], 404);
            }
         }

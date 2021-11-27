@@ -15,10 +15,10 @@ use App\Http\Controllers\Api\SendMessageController;
 use App\Http\Controllers\Api\SubscriberController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UnitController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Exports\ContactExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Api\SplitPaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +30,7 @@ use Maatwebsite\Excel\Facades\Excel;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
 
     Route::prefix('auth')->group(function () {
@@ -43,6 +44,10 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
         Route::get('/plans/{id}', [PlanController::class, 'show']);
 
         Route::post('/verify-account', [EmailVerificationController::class, 'verify']);
+
+        Route::post('/initiate-payment', [SplitPaymentController::class, 'makePayment']);
+        Route::get('/verify-payment/{id}', [SplitPaymentController::class, 'verifyTrax']);
+
     });
 
     Route::group(['middleware' => ['jwt.verify']], function () {
@@ -135,6 +140,10 @@ Route::domain('api.' . env('SITE_URL'))->group(function ($router) {
             Route::patch('/units/{id}', [UnitController::class, 'update']);
             Route::delete('/units/{id}', [UnitController::class, 'destroy']);
             Route::patch('/delete-user/{id}', [AuthController::class, 'delete']);
+
+            Route::post('/create-split-account', [SplitPaymentController::class, 'createSplitAccount']);
+            Route::get('/get-split-payment', [SplitPaymentController::class, 'getAllSplitTransaction']);
+            Route::get('/get-split-account', [SplitPaymentController::class, 'getSplitAccount']);
 
         });//end
 

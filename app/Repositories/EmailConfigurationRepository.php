@@ -31,7 +31,8 @@ class EmailConfigurationRepository implements EmailConfigurationRepositoryInterf
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         }else {
              return  $this->action->create($request);
@@ -66,7 +67,8 @@ class EmailConfigurationRepository implements EmailConfigurationRepositoryInterf
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'success' => false
             ], 422);
         }else {
              return  $this->action->update($request, $id);

@@ -22,23 +22,27 @@ class ContactAction
     //create
     public function create($request)
     {
-        $user = $this->model->create([
-            'user_id' => auth()->user()->id,
-            'surname' => $request->surname,
-            'firstname' => $request->firstname,
-            'email' => $request->email,
-            'scheme' => $request->scheme,
-            'gender' => $request->gender,
-            'dob' => $request->dob,
-            'phone_number' => $request->phone_number
-        ]);
-        if ($user) {
+        try {
+            $contact = $this->model->create([
+                'user_id' => auth()->user()->id,
+                'surname' => $request->surname,
+                'firstname' => $request->firstname,
+                'email' => $request->email,
+                'scheme' => $request->scheme,
+                'gender' => $request->gender,
+                'dob' => $request->dob,
+                'phone_number' => $request->phone_number
+            ]);
             return response()->json([
                 'message' => 'Contact created successfully',
+                'data' => $contact,
+                'success' => true
             ], 200);
-        } else {
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Sorry unable to create contact'
+                'message' => 'Sorry unable to create contact',
+                'error' => $e->getMessage(),
+                'success' => false
             ], 400);
         }
     }
@@ -48,7 +52,6 @@ class ContactAction
     {
         if($request->option == 'all'){
             $contacts = $this->model->where('user_id', auth()->user()->id)->get();
-
             return ContactResource::collection($contacts);
         }
 
@@ -77,7 +80,8 @@ class ContactAction
             $attach = $contactPerson->groups()->attach($group->id);
         }
         return response()->json([
-            'message' => 'Contacts add to group successfully'
+            'message' => 'Contacts add to group successfully',
+            'success' => true
         ], 200);
     }
 
@@ -90,7 +94,8 @@ class ContactAction
             $contactPerson->groups()->detach($group->id);
         }
         return response()->json([
-            'message' => 'Contacts removed from group successfully'
+            'message' => 'Contacts removed from group successfully',
+            'success' => true
         ], 200);
     }
 
@@ -101,7 +106,8 @@ class ContactAction
         $contactPerson = $this->model->find($request->contact_id);
         $contactPerson->groups()->attach($group->id);
         return response()->json([
-            'message' => 'Contact add to group successfully'
+            'message' => 'Contact add to group successfully',
+            'success' => true
         ], 200);
     }
 
@@ -112,7 +118,8 @@ class ContactAction
         $contactPerson = $this->model->find($request->contact_id);
         $detach = $contactPerson->groups()->detach($group->id);
         return response()->json([
-            'message' => 'Contact removed from group successfully'
+            'message' => 'Contact removed from group successfully',
+            'success' => true
         ], 200);
     }
 
@@ -125,7 +132,8 @@ class ContactAction
             return new ContactResource($contact);
         } else {
             return response()->json([
-                'message' => 'Sorry this data do not exist'
+                'message' => 'Sorry this data do not exist',
+                'success' => false
             ], 400);
         }
     }
@@ -136,29 +144,34 @@ class ContactAction
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
             $contact = $this->model->find($id);
-            $update = $contact->update([
-                'emr_id' => empty($request->emr_id) ? $contact->emr_id : $request->emr_id,
-                'surname' => empty($request->surname) ? $contact->surname : $request->surname,
-                'firstname' => empty($request->firstname) ? $contact->firstname : $request->firstname,
-                'phone_number' => empty($request->phone_number) ? $contact->phone_number : $request->phone_number,
-                'gender' => empty($request->gender) ? $contact->gender : $request->gender,
-                'email' => empty($request->email) ? $contact->email : $request->email,
-                'scheme' => empty($request->scheme) ? $contact->scheme : $request->scheme,
-                'dob' => empty($request->dob) ? $contact->dob : $request->dob,
-                'address' => empty($request->address) ? $contact->address : $request->address,
-            ]);
-            if ($update) {
+            try {
+                $update = $contact->update([
+                    'emr_id' => empty($request->emr_id) ? $contact->emr_id : $request->emr_id,
+                    'surname' => empty($request->surname) ? $contact->surname : $request->surname,
+                    'firstname' => empty($request->firstname) ? $contact->firstname : $request->firstname,
+                    'phone_number' => empty($request->phone_number) ? $contact->phone_number : $request->phone_number,
+                    'gender' => empty($request->gender) ? $contact->gender : $request->gender,
+                    'email' => empty($request->email) ? $contact->email : $request->email,
+                    'scheme' => empty($request->scheme) ? $contact->scheme : $request->scheme,
+                    'dob' => empty($request->dob) ? $contact->dob : $request->dob,
+                    'address' => empty($request->address) ? $contact->address : $request->address,
+                ]);
                 return response()->json([
-                    'message' => 'Contact updated successfully'
+                    'message' => 'Contact updated successfully',
+                    'data' => $contact,
+                    'success' => true
                 ], 200);
-            } else {
+            } catch (\Exception $e) {
                 return response()->json([
-                    'message' => 'Sorry unable to update contact'
+                    'message' => 'Sorry unable to update contact',
+                    'error' => $e->getMessage(),
+                    'success' => false
                 ], 400);
             }
         } else {
             return response()->json([
-                'message' => 'Sorry this data do not exist'
+                'message' => 'Sorry this data do not exist',
+                'success' => false
             ], 404);
         }
     }
@@ -168,19 +181,24 @@ class ContactAction
     {
         $data = $this->model->where('id', '=', $id)->exists();
         if ($data) {
-            $delete = $this->model->find($id)->delete();
-            if ($delete) {
+            try {
+                $delete = $this->model->find($id)->delete();
                 return response()->json([
-                    'message' => 'Contact deleted successfully'
+                    'message' => 'Contact deleted successfully',
+                    'data' => $delete,
+                    'success' => true
                 ], 200);
-            } else {
+            } catch (\Exception $e) {
                 return response()->json([
-                    'message' => 'Sorry unable to delete contact'
+                    'message' => 'Sorry unable to delete contact',
+                    'error' => $e->getMessage(),
+                    'success' => false
                 ], 400);
             }
         } else {
             return response()->json([
-                'message' => 'Sorry this contact do not exist'
+                'message' => 'Sorry this contact do not exist',
+                'success' => false
             ], 404);
         }
     }
