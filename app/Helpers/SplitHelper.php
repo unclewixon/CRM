@@ -86,39 +86,47 @@ class SplitHelper
         $split_acct = $this->acct_model->first();
         $contact = $this->contact_model->where('emr_id', '=', $request->emr_id)->first();
         $paymentReference = "VS".sprintf("%0.9s",str_shuffle(rand(12,30000) * time()));
-        $transaction = $this->trans_model->create([
-            'emr_id' => $request->emr_id,
-            'type' => 'Hospital Payment',
-            'amount' => $request->amount,
-           //'description' => $request->description,
-            'trans_ref' => $paymentReference
-        ]);
-        $payStack = new Paystack(config('paystack.paystack_secret'));
-        $trx = $payStack->transaction->initialize(
-            [
-                'amount'=> $request->amount * 100, /* in kobo */
-                'email'=> $contact->email,
-                'subaccount' =>  $split_acct->split_code,
-                'bearer' => "subaccount",
-                'reference' => $paymentReference,
-                'callback_url'=>"http://127.0.0.1:8000/api/v0.01/verify/$paymentReference",
-                'metadata'=> [
-                    'reference'=> $paymentReference,
-                    'transaction_id' => $transaction->id,
-                    'total' => $request->amount
-                ],
-            ]
-        );
-        if(!$trx) {
-            exit($trx->data->message);
-        }
-        return response()->json([
-            'message' => 'Transaction created successfully',
-            'payment_url' => $trx->data->authorization_url,
-            'data' => $transaction,
-            'success' => true
-        ], 200);
 
+        try{
+            $transaction = $this->trans_model->create([
+                'emr_id' => $request->emr_id,
+                'type' => 'Hospital Payment',
+                'amount' => $request->amount,
+                'trans_ref' => $paymentReference
+            ]);
+            $payStack = new Paystack(config('paystack.paystack_secret'));
+            $trx = $payStack->transaction->initialize(
+                [
+                    'amount'=> $request->amount * 100, /* in kobo */
+                    'email'=> $contact->email,
+                    'subaccount' =>  $split_acct->split_code,
+                    'bearer' => "subaccount",
+                    'reference' => $paymentReference,
+                    'callback_url'=>"http://127.0.0.1:8000/api/v0.01/verify/$paymentReference",
+                    'metadata'=> [
+                        'reference'=> $paymentReference,
+                        'transaction_id' => $transaction->id,
+                        'total' => $request->amount
+                    ],
+                ]
+            );
+            if(!$trx) {
+                exit($trx->data->message);
+            }else {
+                return response()->json([
+                    'message' => 'Transaction created successfully',
+                    'payment_url' => $trx->data->authorization_url,
+                    'data' => $transaction,
+                    'success' => true
+                ], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Sorry the transaction process failed',
+                'error' => $e->getMessage(),
+                'success' => false
+            ], 400);
+        }
     }
 
     //verify split payment
@@ -134,7 +142,6 @@ class SplitHelper
             $trx = $payStack->transaction->verify([
                 'reference'=> $reference
             ]);
-
             if (!$trx->data->status="success") {
                 exit($trx->message);
             }else {

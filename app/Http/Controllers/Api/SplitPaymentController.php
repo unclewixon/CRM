@@ -47,8 +47,7 @@ class SplitPaymentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'emr_id' => 'required',
-            'amount' => 'required',
-            'description' => 'required'
+            'amount' => 'required'
         ]);
 
         if ($validator->fails()) {
